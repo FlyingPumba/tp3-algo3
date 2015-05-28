@@ -1,0 +1,916 @@
+% New Commands ------------------------------------------
+
+\newcommand{\calcular}[2]{\pgfmathtruncatemacro{#1}{#2}}
+\newcommand{\grafoTikz}[1]{\tikz[every node/.style={draw,circle}] {`#1'}}
+
+\newcommand{\ciudad}[7]{
+
+\calcular\n{#1}
+\calcular\m{#2}
+
+\calcular\np{#1-1}
+\calcular\mp{#2-1}
+
+% Imprimo nodos
+\foreach \x in {1,...,\n}
+    \foreach \y in {1,...,\m}
+      {
+        \calcular{\a}{2*(\y-1)}
+        \calcular{\b}{-2*(\x-1)}
+        \node (v\x\y) at (\a, \b) {$v_{\x\y}$};
+      }
+
+% Imprimo aristas horizontales
+\foreach \x in {1,...,\n}
+    \foreach \y in {1,...,\mp}
+    {
+        \calcular{\i}{((\mp+\m)*(\x-1))+\y}
+        \calcular{\z}{\y+1}
+        \path (v\x\y) edge node[above,draw=none] { #3(\i) } (v\x\z);
+    }
+
+% Imprimo aristas verticales
+\foreach \x in {1,...,\np}
+    \foreach \y in {1,...,\m}
+    {
+        \calcular{\i}{((\mp+\m)*(\x-1))+\y+\mp}
+        \calcular{\z}{\x+1}
+        \path (v\x\y) edge node[right,draw=none] { #3(\i) } (v\z\y);
+    }
+
+% Nodo bunker
+\calcular{\bn}{2*(#7-1)}
+\calcular{\bm}{-2*(#6-1)}
+\node[fill=red!60, text=white, align=center, scale=1] (v#6#7) at (\bn, \bm) {$v_{#6#7}$\\BNK};
+
+% Nodo actual
+\calcular{\pn}{2*(#5-1)}
+\calcular{\pm}{-2*(#4-1)}
+\node[fill=blue!60, text=white, align=center, scale=1] (v#4#5) at (\pn, \pm) {$v_{#4#5}$\\ACT};
+
+}
+
+\newcommand{\ciudadVacia}[3]{
+
+\calcular\n{#1-1}
+\calcular\m{#2-1}
+
+\calcular{\vcols}{\n+1}
+\calcular{\vrows}{\m+1}
+
+% Imprimo nodos
+\foreach \x in {1,...,\vrows}
+    \foreach \y in {1,...,\vcols}
+      {
+        \calcular{\a}{2*(\y-1)}
+        \calcular{\b}{-2*(\x-1)}
+        \node (v\x\y) at (\a, \b) {$v_{\x,\y}$};
+      }
+
+% Imprimo aristas
+\foreach \x in {1,...,\m}
+    \foreach \y in {1,...,\n}
+    {
+        \calcular{\i}{((\n+\m+1)*(\x-1))+\y}
+        \calcular{\z}{\y+1}
+        \path (v\x\y) edge node[above,draw=none,font=\footnotesize,inner sep=0pt,outer sep=-3pt] { #3(\i) } (v\x\z);
+    }
+
+% Imprimo aristas
+\foreach \x in {1,...,\m}
+    \foreach \y in {1,...,\vcols}
+    {
+        \calcular{\i}{((\n+\m+1)*(\x-1))+\y+3}
+        \calcular{\z}{\x+1}
+        \path (v\x\y) edge node[right,draw=none,font=\footnotesize,inner sep=1pt] { #3(\i) } (v\z\y);
+    }
+}
+
+\newcommand{\grafoCiudad}[7]{\grafoTikz{\ciudad{#1}{#2}{#3}{#4}{#5}{#6}{#7}}}
+\newcommand{\grafoCiudadPlus}[8]{\grafoTikz{\ciudad{#1}{#2}{#3}{#4}{#5}{#6}{#7} `#8'}}
+\newcommand{\grafoCiudadPlusVacia}[4]{\grafoTikz{\ciudadVacia{#1}{#2}{#3} `#4'}}
+
+\newcommand{\graficarDatos}[6]{
+  \begin{tikzpicture}
+  \begin{axis}[
+      title={#1},
+      xlabel={#2},
+      ylabel={#3},
+      scaled x ticks=false,
+      scaled y ticks=false,
+      width=0.6\textwidth
+  ]
+  \addplot[only marks, color=black] table[x=#4,y=#5]{#6};
+  \end{axis}
+\end{tikzpicture}
+}
+
+\newcommand{\graficarDatosPlus}[7]{
+  \begin{tikzpicture}
+  \begin{axis}[
+      title={#1},
+      xlabel={#2},
+      ylabel={#3},
+      scaled x ticks=false,
+      scaled y ticks=false,
+      width=0.6\textwidth,
+      #7
+  ]
+  \addplot[only marks, color=black] table[x=#4,y=#5]{#6};
+  \end{axis}
+\end{tikzpicture}
+}
+
+% End New Commands ------------------------------------------
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{imagenes/mirtha.jpg}
+\end{center}
+\end{figure}
+
+\setlength{\multicolsep}{0pt}
+
+\subsection{Problema a resolver}
+
+El problema a resolver consiste en salvar a un científico en una ciudad infestada de zombies. Para hacerlo, debemos recorrer la ciudad con una cantidad de soldados iniciales y llegar a un bunker militar. Estos soldados pelean con los zombies que hay en cada calle y mueren según la cantidad de zombies que haya (si hay mas zombies, mueren tantos soldados como el excedente entre la cantidad de zombies y soldados). Queremos que la cantidad de soldados que llegan al bunker sea la máxima posible.
+
+La ciudad en cuestión consiste en calles horizontales y verticales. Cada calle tiene una cantidad variable de zombies.
+
+\medskip
+Tenemos los siguientes parámetros de entrada:
+\begin{multicols}{2}
+	\begin{itemize}[noitemsep,nolistsep]
+      \item $n$ = calles horizontales
+      \item $m$ = calles verticales
+      \item $s$ = soldados iniciales
+      \item $pi$ = esquina inicial fila
+      \item $pj$ = esquina inicial columna
+  	\end{itemize}
+\columnbreak
+	\begin{itemize}[noitemsep,nolistsep]
+      \item $bi$ = esquina bunker fila
+      \item $bj$ = esquina bunker columna
+      \item $M$ = matriz que le asigna una cantidad $z$ de zombies a cada calle
+  	\end{itemize}
+\end{multicols}
+\medskip
+
+Donde $M$ es una matriz de la pinta:
+\begin{itemize}[]
+    \item $M$ =
+      $
+      \begin{pmatrix}
+      \begin{matrix} ch_{1,1} & ... & ch_{1,m-1} \end{matrix}\\
+      \begin{matrix} cv_{1,1} & & cv_{1,2} & & ... & & cv_{1,m} \end{matrix}\\
+      \begin{matrix} ... \end{matrix}\\
+      \begin{matrix} cv_{n-1,1} & cv_{n-1,2} & ... & cv_{n-1,m} \end{matrix}\\
+      \begin{matrix} ch_{n,1} & ... & ch_{n,m-1} \end{matrix}\\
+      \end{pmatrix}
+      $
+\end{itemize}
+
+Con:
+\begin{itemize}[]
+  \item $ch_{i,j}$ = \#$\lbrace$ zombies en la calle horizontal i,j $\rbrace$ = \#$\lbrace$ zombies entre las esquinas $v_{i,j}$ y $v_{i,j+1}$ $\rbrace$
+  \item $cv_{i,j}$ = \#$\lbrace$ zombies en la calle vertical i,j $\rbrace$ = \#$\lbrace$ zombies entre las esquinas $v_{i,j}$ y $v_{i+1,j}$ $\rbrace$
+\end{itemize}
+
+Se atraviesa una calle sin bajas si la cantidad de soldados ($s$) es mayor o igual a $z$. Cuando $z$ es mayor, los soldados sobrevivientes depende del calculo $z$ - $s$. Si esa operación arroja un número mayor o igual a $s$, no hay sobrevivientes, lo que quiere decir que ese camino es inviable.
+
+Por otro lado, queremos resolver este problema de forma que el algoritmo tenga una complejidad de $\mathcal{O}(s*n*m)$. Esto quiere decir que no podemos considerar todos los caminos del punto inicial al bunker. Si ese fuera el caso, la complejidad seria mucho mayor (ver seccion Complejidad). Por eso, es importante considerar la cantidad de soldados al buscar el mejor camino.
+
+\subsection{Resolución planteada}
+
+\subsubsection{Idea y representacion de datos}
+
+Dado que el problema consiste en encontrar un camino entre las esquinas de un mapa con forma de grilla y un costo/zombies en cada calle, parece natural representar el mapa de la ciudad con un grafo.
+
+A su vez, el grafo lo vamos a representar como una matriz de vertices. Cada vertice $v_{i,j}$ corresponde a la esquina del mapa (i,j). Estos tienen la siguiente estructura:
+
+\medskip
+\begin{itemize}[noitemsep,nolistsep]
+  \item sol_max = maxima cantidad actual de soldados que pueden llegar vivos al vertice
+  \item left = costo de ir al vertice de la izquierda, si esto no es posible, un valor que represente a infinito
+  \item right = costo de ir al vertice de la derecha, si esto no es posible, un valor que represente a infinito
+  \item up = costo de ir al vertice de arriba, si esto no es posible, un valor que represente a infinito
+  \item down = costo de ir al vertice de abajo, si esto no es posible, un valor que represente a infinito
+  \item pred = vertice desde el cual llegue la ultima vez que actualice sol_max
+\end{itemize}
+\medskip
+
+Es importante aclarar que como la ciudad es una grilla, cada esquina puede tener a lo sumo cuatro esquinas adyacentes. Entonces me basta guardarme en cada nodo el costo de ir hacia cada una de ellas para no perder ningun arista del grafo representado. A su vez, esto me va a facilitar mucho la manera en la que recorro el grafo, porque toda la informacion que voy a necesitar esta en un mismo lugar.
+
+\medskip
+
+Por ejemplo, sean:
+
+\medskip
+\begin{multicols}{3}
+  \begin{itemize}[]
+      \item $n$ = 3
+      \item $m$ = 3
+      \item $s$ = 6
+    \end{itemize}
+\columnbreak
+  \begin{itemize}[]
+      \item $pi$ = 1
+      \item $pj$ = 1
+      \item $bi$ = 3
+      \item $bj$ = 2
+    \end{itemize}
+\columnbreak
+  \begin{itemize}[]
+      \item $M$ =
+        $
+        \begin{pmatrix}
+        \begin{matrix} 1 & 2 \end{matrix}\\
+        \begin{matrix}3 & 1 & 2 \end{matrix}\\
+        \begin{matrix} 1 & 2 \end{matrix}\\
+        \begin{matrix}4 & 1 & 2 \end{matrix}\\
+        \begin{matrix} 1 & 2 \end{matrix}\\
+        \end{pmatrix}
+        $
+    \end{itemize}
+\end{multicols}
+\medskip
+
+Lo comprenderiamos como:
+
+\medskip
+
+% Grafo --------------------------
+
+\begin{centering}
+
+\newarray\data
+\readarray{data}{%
+1 & 2 &%
+3 & 1 & 2 &%
+1 & 2 &%
+4 & 1 & 2 &%
+1 & 2 &%
+}%
+
+\grafoCiudad{3}{3}{\data}{1}{1}{3}{2}
+
+\end{centering}
+
+% Grafo --------------------------
+
+\medskip
+
+Donde $BNK$ es la posición del bunker y $ACT$ es la posicion actual, que al principio es donde sale el cientifico con los soldados.
+
+\medskip
+
+Dada toda esta estructura, el algoritmo procede de la forma siguiente: 
+Primero, rellena la matriz de vertices con los parametros de entrada. Luego, empezamos a analizar los nodos desde el punto inicial y, mientras el punto analizado $p$ no sea el bunker, calculamos con que cantidad de soldados podemos arribar a los vértices adyacentes (la cuenta correspondiente fue explicada en la seccion previa). \textbf{Solo si} esa cantidad es superior a la maxima cantidad con la que arribamos previamente (dato que contiene el nodo), actualizamos la información del vértice adyacente con la nueva cantidad máxima de soldados, el vértice desde donde se arribo con esa cantidad y pasamos a analizar de forma recursiva el vértice adyacente. Una vez terminado esto analizamos, si es necesario, los demas vecinos de $p$ tambien de forma recursiva. De esta forma recorremos los nodos mediante Backtracking, pero facilitado por el hecho de que solo visitamos los nodos cuando se puede llegar a estos con mas soldados que antes. Por eso, la cantidad de veces que se visita cada nodo esta acotada por la cantidad de soldados iniciales (esto lo vemos bien en la seccion de Complejidad).
+
+\medskip
+
+Por ejemplo, dados los parametros de entrada:
+
+\medskip
+\begin{multicols}{3}
+  \begin{itemize}[]
+      \item $n$ = 3
+      \item $m$ = 2
+      \item $s$ = 3
+    \end{itemize}
+\columnbreak
+  \begin{itemize}[]
+      \item $pi$ = 1
+      \item $pj$ = 1
+      \item $bi$ = 1
+      \item $bj$ = 2
+    \end{itemize}
+\columnbreak
+  \begin{itemize}[]
+      \item $M$ =
+        $
+        \begin{pmatrix}
+        \begin{matrix} 5 \end{matrix}\\
+        \begin{matrix} 1 & 1 \end{matrix}\\
+        \begin{matrix} 4 \end{matrix}\\
+        \begin{matrix} 1 & 4 \end{matrix}\\
+        \begin{matrix} 1 \end{matrix}\\
+        \end{pmatrix}
+        $
+    \end{itemize}
+\end{multicols}
+\medskip
+
+Sea $v_{i,j}$ = tupla(int sol_max, tupla(int a, int b) pred) la tupla que usamos para ver el estado de cada nodo en las distintas iteraciones del algoritmo.
+Si usamos flechas punteadas para representar desde cual esquina llegue a analizar la actual, el algoritmo procederia asi:
+
+\medskip
+
+% Ejemplo --------------------------
+
+\newarray\data
+\readarray{data}{%
+5 &%
+1 & 1 &%
+4 &%
+1 & 4 &%
+1 &%
+}%
+
+\begin{multicols}{2}
+\columnbreak
+  \grafoCiudad{3}{2}{\data}{1}{1}{1}{2}
+\columnbreak
+  \begin{itemize}[noitemsep]
+      \item[]
+      \item $v_{1,1}$ = (3, ($\infty$, $\infty$))
+      \item $v_{1,2}$ = (0, ($\infty$, $\infty$))
+      \item $v_{2,1}$ = (0, ($\infty$, $\infty$))
+      \item $v_{2,2}$ = (0, ($\infty$, $\infty$))
+      \item $v_{3,1}$ = (0, ($\infty$, $\infty$))
+      \item $v_{3,2}$ = (0, ($\infty$, $\infty$))
+    \end{itemize}
+\end{multicols}
+
+Aca vemos que desde el nodo $v_{1,1}$ se puede llegar a $v_{1,2}$ y $v_{2,1}$ con mas soldados que antes. El algoritmo entonces hace una llamada recursiva a $v_{1,2}$ con la nueva cantidad de soldados y el nuevo predecesor. Despues de resolver aquel subproblema, se fija si todavia se puede llegar a $v_{2,1}$ con mas soldados que todo lo previamente calculado. El proximo grafico parte de la llamada recursiva a $v_{1,2}$.
+
+\begin{multicols}{2}
+\columnbreak
+  \grafoCiudadPlus{3}{2}{\data}{1}{2}{1}{2}{
+    \draw[-latex,bend right,dash pattern=on3pt off2pt]  (v11) edge (v12);
+  }
+\columnbreak
+  \begin{itemize}[noitemsep]
+      \item[]
+      \item $v_{1,1}$ = (3, ($\infty$, $\infty$))
+      \item $v_{1,2}$ = (1, (1,1))
+      \item $v_{2,1}$ = (0, ($\infty$, $\infty$))
+      \item $v_{2,2}$ = (0, ($\infty$, $\infty$))
+      \item $v_{3,1}$ = (0, ($\infty$, $\infty$))
+      \item $v_{3,2}$ = (0, ($\infty$, $\infty$))
+    \end{itemize}
+\end{multicols}
+
+Se podria llegar con mas soldados a $v_{2,2}$, pero como $v_{1,2}$ es el bunker, dejamos de buscar (ver observacion mas abajo).
+Entonces hacemos backtrack a $v_{1,1}$, desde ahi podemos llegar con mas soldados a $v_{2,1}$, asi que procedemos a ese nodo:
+
+\begin{multicols}{2}
+\columnbreak
+  \grafoCiudadPlus{3}{2}{\data}{2}{1}{1}{2}{
+    \draw[-latex,bend right,dash pattern=on3pt off2pt]  (v11) edge (v21);
+  }
+\columnbreak
+  \begin{itemize}[noitemsep]
+      \item[]
+      \item $v_{1,1}$ = (3, ($\infty$, $\infty$))
+      \item $v_{1,2}$ = (1, (1,1))
+      \item $v_{2,1}$ = (3, (1,1))
+      \item $v_{2,2}$ = (0, ($\infty$, $\infty$))
+      \item $v_{3,1}$ = (0, ($\infty$, $\infty$))
+      \item $v_{3,2}$ = (0, ($\infty$, $\infty$))
+    \end{itemize}
+\end{multicols}
+
+Vemos que se puede llegar a $v_{2,2}$ con mas soldados que antes.
+
+\begin{multicols}{2}
+\columnbreak
+  \grafoCiudadPlus{3}{2}{\data}{2}{2}{1}{2}{
+    \draw[-latex,bend right,dash pattern=on3pt off2pt]  (v21) edge (v22);
+  }
+\columnbreak
+  \begin{itemize}[noitemsep]
+      \item[]
+      \item $v_{1,1}$ = (3, ($\infty$, $\infty$))
+      \item $v_{1,2}$ = (1, (1,1))
+      \item $v_{2,1}$ = (3, (1,1))
+      \item $v_{2,2}$ = (2, (2,1))
+      \item $v_{3,1}$ = (0, ($\infty$, $\infty$))
+      \item $v_{3,2}$ = (0, ($\infty$, $\infty$))
+    \end{itemize}
+\end{multicols}
+
+Ahora desde $v_{2,2}$ vamos a proceder a $v_{1,2}$, pero solo porque llegamos con mas soldados que antes. Cuando llegamos al nodo, actualizamos los soldados maximos y el predecesor:
+
+\begin{multicols}{2}
+\columnbreak
+  \grafoCiudadPlus{3}{2}{\data}{1}{2}{1}{2}{
+    \draw[-latex,bend right,dash pattern=on3pt off2pt]  (v22) edge (v12);
+  }
+\columnbreak
+  \begin{itemize}[noitemsep]
+      \item[]
+      \item $v_{1,1}$ = (3, ($\infty$, $\infty$))
+      \item $v_{1,2}$ = (2, (2,2))
+      \item $v_{2,1}$ = (3, (1,1))
+      \item $v_{2,2}$ = (2, (2,1))
+      \item $v_{3,1}$ = (0, ($\infty$, $\infty$))
+      \item $v_{3,2}$ = (0, ($\infty$, $\infty$))
+    \end{itemize}
+\end{multicols}
+
+Despues, hacemos backtrack como antes y desde $v_{2,1}$ vamos a $v_{3,1}$ con mas soldados que antes:
+
+\begin{multicols}{2}
+\columnbreak
+  \grafoCiudadPlus{3}{2}{\data}{3}{1}{1}{2}{
+    \draw[-latex,bend left,dash pattern=on3pt off2pt]  (v21) edge (v31);
+  }
+\columnbreak
+  \begin{itemize}[noitemsep]
+      \item[]
+      \item $v_{1,1}$ = (3, ($\infty$, $\infty$))
+      \item $v_{1,2}$ = (2, (2,2))
+      \item $v_{2,1}$ = (3, (1,1))
+      \item $v_{2,2}$ = (2, (2,1))
+      \item $v_{3,1}$ = (3, (2,1))
+      \item $v_{3,2}$ = (0, ($\infty$, $\infty$))
+    \end{itemize}
+\end{multicols}
+
+Luego procedemos al nodo/esquina $v_{3,2}$:
+
+
+\begin{multicols}{2}
+\columnbreak
+  \grafoCiudadPlus{3}{2}{\data}{3}{2}{1}{2}{
+    \draw[-latex,bend left,dash pattern=on3pt off2pt]  (v31) edge (v32);
+  }
+\columnbreak
+  \begin{itemize}[noitemsep]
+      \item[]
+      \item $v_{1,1}$ = (3, ($\infty$, $\infty$))
+      \item $v_{1,2}$ = (2, (2,2))
+      \item $v_{2,1}$ = (3, (1,1))
+      \item $v_{2,2}$ = (2, (2,1))
+      \item $v_{3,1}$ = (3, (2,1))
+      \item $v_{3,2}$ = (2, (3,1))
+    \end{itemize}
+\end{multicols}
+
+Ahora desde $v_{3,2}$ no vamos a proceder a $v_{2,2}$ ni ningun otro nodo porque llegariamos con menor o igual cantidad de soldados, esta es la \textbf{clave} para entender la complejidad.
+Finalmente, como el nodo $v_{3,2}$ no puede llegar a otro nodo con mas soldados que antes, hacemos backtrack. Como en el backtrack vemos que no podemos llegar a ningun otro nodo con mas soldados que el estado actual, termina la parte principal del algoritmo (solo faltaria reconstruir el camino).
+
+% Ejemplo --------------------------
+
+\medskip
+
+$Observacion$: una vez que llego al bunker, dejo de considerar caminos, es decir, no voy a tratar de llegar a ninguna otra esquina desde el bunker. Esto no nos trae ningun problema porque no existe un camino desde el punto de partida hacia el bunker que pase dos veces por el bunker y sea mejor al sub-camino desde el punto de partida hasta la primera vez que pase por el bunker.
+
+\medskip
+
+De esta forma, reconstruir el camino es facil, dado que tenemos los datos del predecesor de cada nodo y sabemos donde esta el bunker y la posicion inicial (son parametros). Todo lo que habria que hacer es ir recorriendo desde el bunker mediante el predecesor y asi hasta el vertice inicial. Este es el camino que se forma en el ejemplo anterior:
+
+\medskip
+
+\begin{multicols}{2}
+\columnbreak
+  \grafoCiudadPlus{3}{2}{\data}{1}{1}{1}{2}{
+    \node[fill=black!30!green, text=white, align=center, scale=1.5] (v11) at (0, 0) {$v_{11}$};
+    \node[fill=black!30!green, text=white, align=center, scale=1.5] (v12) at (2, 0) {$v_{12}$};
+    \node[fill=black!30!green, text=white, align=center, scale=1.5] (v21) at (0, -2) {$v_{22}$};
+    \node[fill=black!30!green, text=white, align=center, scale=1.5] (v22) at (2, -2) {$v_{22}$};
+    \draw[-latex,bend right]  (v11) edge (v21);
+    \draw[-latex,bend right]  (v21) edge (v22);
+    \draw[-latex,bend right]  (v22) edge (v12);
+  }
+\columnbreak
+  \begin{itemize}[noitemsep]
+      \item[]
+      \item $v_{1,1}$ = (3, ($\infty$, $\infty$)) = BNK.pred.pred.pred
+      \item $v_{1,2}$ = (2, (2,2)) = BNK
+      \item $v_{2,1}$ = (3, (1,1)) = BNK.pred.pred
+      \item $v_{2,2}$ = (2, (2,1)) = BNK.pred
+      \item $v_{3,1}$ = (3, (2,1))
+      \item $v_{3,2}$ = (2, (3,1))
+    \end{itemize}
+\end{multicols}
+
+\medskip
+
+$Observacion$: si no se puede construir un camino, el bunker va a tener como maxima cantidad de soldados 0 y como predecesor ($\infty$, $\infty$). Por eso detectar este caso es simple y no nos produce ningun problema.
+
+\medskip
+
+Como vemos, estamos abarcando de esta manera todos los vértices a los que es posible llegar con los soldados que disponemos en cada caso hasta el bunker. Como vamos a ver en la seccion de Complejidad, visitar los vecinos de un nodo solo cuando se pueda llegar con mas soldados que antes, nos lleva a analizar cada vértice a lo sumo $s$ veces.
+
+\pagebreak
+
+\subsubsection{Pseudocodigo}
+
+\begin{codesnippet}
+Sea Esquina una tupla(sol_max:int, left:int, right:int,
+        up:int, down:int, predecesor:(int, int))
+  con left,...,down la cantidad de zombies entre la esquina y su vecina
+  con sol_max la maxima cantidad de zombies actual que pueden llegar a la esquina
+  con predecesor la esquina desde donde llegue la ultima vez que actualice sol_max
+Sea Mapa un vector(vector(Esquina))
+Sea n = calles horizontales
+Sea m = calles verticales
+Sea s = soldados iniciales
+Sea pi = esquina inicial fila
+Sea pj = esquina inicial columna
+Sea bi = esquina bunker fila
+Sea bj = esquina bunker columna
+Sea M = matriz que le asigna una cantidad $z$ de zombies a cada calle
+
+Parsear Entrada(n, m, s, pi, pj, bi, bj, M):
+  Creamos un mapa llamado map de tamano n*m que es una matriz de vertices
+
+  Inicializamos los vertices de map con los valores de los zombis de cada calle,
+  segun corresponda en los campos left, right, up y down,
+  sol_max en 0 y predecesor en (INFINITO, INFINITO).
+  En caso de no existir un camino a la left, ponemos INFINITO,
+  lo mismo para el resto de las posiciones.
+
+  En el campo sol_max de map[pi][pj], ponemos s.
+
+  Luego llamamos la función auxiliar Resolver, con los parámetros mapa,
+  posición inicial, posición bunker y, como posicion actual, la inicial.
+
+  Reconstruimos el camino hacia el bunker (si es que existe), es decir, vamos
+  desde el bunker recorriendo las esquinas mediante el campo predecesor hasta
+  llegar a la posicion inicial y agregando las esquinas a una pila. Finalmente,
+  mostramos la solución recorriendo los valores de la pila.
+
+Resolver(map, pi, pj, bi, bj, actuali, actualj):
+  Si el vertice <actuali, actualj> es igual a <bi, bj> (el actual es el bunker)
+    hago un return
+  En caso contrario
+    Para cada vecino vcn de map[actuali][actualj] con
+        costo (left..down) segun corresponda
+    Si puedo ir desde el nodo actual hasta vcn (el costo no es infinito)
+    Calculo la cantidad de soldados que llegarian vivos hasta esa esquina
+      comparando map[actuali][actualj].sol_max con los zombies en la calle respectiva
+      si hay mas soldados o igual cantidad, no muere ninguno
+      si hay mas zombies, mueren tantos soldados como el excedente
+          entre los zombies y los soldados
+    Si ademas puedo llegar hasta vcn con mas soldados que todo lo previamente calculado
+      actualizo el campo sol_max de vcn con los sobrevivientes
+      actualizo el campo predecesor con la posicion actual
+      hago una llamada recursiva a Resolver(map, pi, pj, bi, bj, vcn.fila, vcn.columna)
+
+\end{codesnippet}
+
+\pagebreak
+
+\subsection{Complejidad propuesta}
+
+Dados los parámetros de entrada:
+
+\medskip
+
+\begin{centering}
+\begin{multicols}{2}
+  \begin{itemize}[noitemsep,nolistsep]
+      \item $n$ = calles horizontales
+      \item $m$ = calles verticales
+      \item $s$ = soldados iniciales
+      \item $pi$ = esquina inicial fila
+      \item $pj$ = esquina inicial columna
+      \item $bi$ = esquina bunker fila
+      \item $bj$ = esquina bunker columna
+    \end{itemize}
+\columnbreak
+  \begin{itemize}[noitemsep,nolistsep]
+      \item[] Y la matriz de zombies
+      \item[]
+      \item $M$ =
+        $
+        \begin{pmatrix}
+        \begin{matrix} ch_{1,1} & ... & ch_{1,m-1} \end{matrix}\\
+        \begin{matrix} cv_{1,1} & & cv_{1,2} & & ... & & cv_{1,m} \end{matrix}\\
+        \begin{matrix} ... \end{matrix}\\
+        \begin{matrix} cv_{n-1,1} & cv_{n-1,2} & ... & cv_{n-1,m} \end{matrix}\\
+        \begin{matrix} ch_{n,1} & ... & ch_{n,m-1} \end{matrix}\\
+        \end{pmatrix}
+        $
+  \end{itemize}
+\end{multicols}
+\end{centering}
+
+\medskip
+
+Construimos una matriz de vertices de la forma:
+
+\medskip
+
+\begin{centering}
+
+\readarray{data}{%
+$ch_{1,1}$ & & $ch_{1,m-1}$&%
+$cv_{1,1}$ & $cv_{1,2}$ & $cv_{1,m-1}$ & $cv_{1,m}$&%
+$ch_{2,1}$& &$ch_{2,m-1}$&%
+ & & & &%
+$ch_{n-1,1}$& &$ch_{n-1,m-1}$&%
+$cv_{n-1,1}$ & $cv_{n-1,2}$ & $cv_{n-1,m-1}$ & $cv_{n-1,m}$&%
+$ch_{n,1}$ & & $ch_{n,m-1}$&%
+}%
+
+\grafoCiudadPlusVacia{4}{4}{\data}{
+  % Aristas faltantes
+  \path (v41) edge node[below,draw=none,font=\footnotesize] { \data(22) } (v42);
+  \path (v42) edge node[below,draw=none,font=\footnotesize] { \data(23) } (v43);
+  \path (v43) edge node[below,draw=none,font=\footnotesize] { \data(24) } (v44);
+  % Aristas punteados
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v12) edge (v13);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v22) edge (v23);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v32) edge (v33);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v42) edge (v43);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v21) edge (v31);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v22) edge (v32);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v23) edge (v33);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v24) edge (v34);
+  % Nodos Agregados
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v13) at (4, 0) {$v_{1,m-1}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v14) at (6, 0) {$v_{1,m}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v23) at (4, -2) {$v_{2,m-1}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v24) at (6, -2) {$v_{2,m}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v31) at (0, -4) {$v_{n-1,1}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v32) at (2, -4) {$v_{n-1,2}$};
+  \node[fill=white,inner sep=0pt, scale=0.7, minimum size=1.2cm] (v33) at (4, -4) {$v_{n-1,m-1}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v34) at (6, -4) {$v_{n-1,m}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v41) at (0, -6) {$v_{n,1}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v42) at (2, -6) {$v_{n,2}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v43) at (4, -6) {$v_{n,m-1}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v44) at (6, -6) {$v_{n,m}$};
+}
+
+\end{centering}
+
+\medskip
+
+Como vemos, si en total hay $n$ calles horizontales y $m$ verticales, el total de nodos seria $n*m$. Si representara el grafo como una matriz de adyacencia, solo el costo de cargarla tendria una complejidad mayor a $\mathcal{O}(n*m)$. En cambio, con la forma elegida, solo hay que guardar una cantidad constante de informacion en cada uno de los $n*m$ nodos del grafo.
+
+No podemos considerar todos los caminos del punto inicial al bunker. Si ese fuera el caso, la complejidad seria mucho mayor, ya que la complejidad mencionada recorre cada esquina de la ciudad a lo sumo $s$ veces. Considerando todos los posibles caminos la complejidad seria independiente de $s$, pero la cantidad de veces que analizamos cada una de las $n*m$ esquinas no seria constante. Por ejemplo, si representaramos las $n*m$ esquinas como vertices y las calles como aristas de un grafo y usamos alguna variacion de un algoritmo para hallar caminos minimos como el de Dijkstra, entonces la complejidad quedaria $\mathcal{O}(n^2*m^2)$. Aun optimizandolo con una cola de prioridad la complejidad seguiria siendo $\omega(n*m)$.
+
+Como explicamos anteriormente el algoritmo empieza a analizar los nodos desde el punto inicial y, mientras el punto analizado $p$ no sea el bunker, calcula con que cantidad de soldados podemos arribar a los vértices adyacentes. La forma en que recorre los nodos es parecida a Backtracking, prioriza la profundidad del camino, pero dada una esquina, solo hace una llamada recursiva a un nodo vecino cuando podemos llegar a el con mas soldados que todos los caminos antes calculados.
+Lo importante de este procedimiento es el hecho de que cada uno de los $n*m$ nodos es analizado cuando se puede llegar al nodo con una cantidad de soldados mayor a la previamente calculada. Es decir, si yo llegue a un nodo con $k$ soldados, ese nodo no se volvera a analizar con una cantidad de soldados menor o igual a $k$. Entonces, como uno empieza el algoritmo con $s$ soldados y la cantidad de soldados no puede aumentar (solo disminuir o quedar fija), a lo sumo se visita cada nodo con 1, 2, ... , $s$ soldados en ese orden. Entonces, a diferencia de un Backtracking normal, cada nodo puede ser visitado a lo sumo $s$ veces.
+
+Aparte de lo ya mencionado, el algoritmo tambien tiene que reconstruir el camino de la posicion inicial al bunker (si es que existe) e imprimirlo. De todas maneras, esto se resuelve facilmente recorriendo las esquinas desde el bunker hasta el punto inicial con el campo de predecesor que cada una contiene. Mientras visitamos los vertices, los vamos guardando en una pila (pues los queremos imprimir en el orden inverso) y luego los imprimimos. Como a lo sumo pasamos una vez por cada uno de los vertices y hay $n*m$ de ellos, este paso tiene complejidad $\mathcal{O}(n*m)$.
+
+Por lo tanto, vimos que el grafo en cuestion tiene $n*m$ nodos y cargarlo tanto como imprimirlo al final cuesta $\mathcal{O}(n*m)$. Ademas, como cada nodo tiene a lo sumo cuatro vecinos y por cada uno de ellos el algoritmo solo hace comparaciones para saber si hay que analizarlo, podemos decir que se realiza trabajo constante (ademas de las llamadas recursivas) en cada paso de la recursion. Entonces dado que el algoritmo pasa por cada nodo a lo sumo $s$ veces, son $n*m$ nodos y realiza trabajo constante en cada uno, concluimos que la complejidad del algoritmo es $\mathcal{O}(s*n*m)$.
+
+\newpage
+\subsection{Implementación en C++}
+\lstinputlisting[language=C++, breaklines]{codigo/ej2.cpp}
+
+\newpage
+\subsection{Experimentación computacional}
+
+%Esto sirve para arreglar la posicion de los labels en los graficos
+\pgfplotsset{compat=1.5}
+
+Consideraciones:
+\begin{itemize}
+  \item Todos los experimentos fueron hechos bajo las mismas condiciones (computadora, procesos abiertos, alimentacion, etc..)
+  \item Para cada medicion exactamente igual se tomaron 20 pruebas, los valores que aparecen en los graficos son los del promedio entre las diferentes corridas.
+  \item Se midieron los tiempos con la biblioteca chrono y estos fueron convertidos a nanosegundos.
+  \item Los valores aleatorios que fuimos tomando en algunos de los experimentos fueron tomados con una distribucion uniforme para el rango requerido.
+  \item Tomamos entre 100 y 200 valores de entrada diferente en cada experimento. Por ejemplo, si el tamano de entrada va de 1 a 5000, mediriamos los valores con tamano de entrada 1, 50, 100, 150, ..., 5000. Esto sirve para no sobrepopular los graficos.
+  \item Salvo indicado lo contrario, la posicion inicial del cientifico y la posicion del bunker van a ser aleatorias (si bien en un rango valido).
+  \item Vamos a querer medir la rapidez del algoritmo segun los parametros:
+    \begin{itemize}
+      \item $n$ = calles horizontales
+      \item $m$ = calles verticales
+      \item $s$ = soldados iniciales
+      \item y la cantidad de zombies en cada esquina
+    \end{itemize}
+  \item Vamos a querer mostrar que el algoritmo funciona como explicamos y que el trabajo que realiza se condice con nuestra cota analizada en la seccion de Complejidad. Nuestra cota fue $\mathcal{O}(s*n*m)$.
+\end{itemize}
+
+\subsubsection{Experimentación con instancias aleatorias}
+
+En esta seccion, realizamos una serie de experimentos donde la cantidad de zombies en cada calle es aleatoria. Para probar la eficiencia del algoritmo vamos fijando algunos parametros de entrada y variando los otros. Si bien la cantidad de zombies va a ser aleatoria, su rango de valores posibles va a estar entre 0 y $2*s$ (dos veces la cantidad de soldados iniciales). Esto es importante y necesario pues si no lo hicieramos asi, los soldados serian destruidos por los zombies muy rapidamente, ya que habria una cantidad de zombies enorme en cada calle en comparacion a los soldados.
+
+\paragraph{Experimento 1}
+
+Para el primer experimento, vamos a variar los parametros de entrada $s$, $n$ y $m$ uniformemente. Es decir, el tamano de entrada es una variable $L$ donde $s=n=m=L$ que se va incrementando. Los valores de $L$ van a variar entre 1 y 200. Vamos a querer ver que nuestra cota de complejidad es $\mathcal{O}(L^3)=\mathcal{O}(L*L*L)=\mathcal{O}(s*n*m)$. Veamos los resultados:
+
+%Grafico
+\graficarDatos
+{s, n, m variables}
+{$L$}{Tiempo de ejecucion (nanosegundos)}
+{s*n*m}{tiempo}
+{datos/ej2-04.dat}
+
+El grafico tiene cierta pendiente que es claramente no lineal. Queremos ver que es una pendiente como la de una funcion $f(L)=L^3$.Si dividimos los tiempos por $L$, tenemos el siguiente grafico:
+
+%Grafico
+\graficarDatos
+{s, n, m variables, divido los tiempos originales por $L$}
+{$L$}{Tiempo de ejecucion (nanosegundos) / $L$}
+{s*n*m}{tiempo}
+{datos/ej2-042.dat}
+
+Dividiendo por segunda vez los tiempos por $L$ nos queda:
+
+%Grafico
+\graficarDatos
+{s, n, m variables, divido los tiempos originales por $L^2$}
+{$L$}{Tiempo de ejecucion (nanosegundos) / $L^2$}
+{s*n*m}{tiempo}
+{datos/ej2-043.dat}
+
+Esto ultimo parece ser lineal, lo que seria un indicio que estabamos en lo correcto y la complejidad del algoritmo sigue la curva de una funcion tal como $f(L)=L^3$. Veamos el grafico que queda si dividimos los tiempos por $L$ una vez mas:
+
+%Grafico
+\graficarDatosPlus
+{s, n, m variables, divido los tiempos originales por $L^3$}
+{$L$}{Tiempo de ejecucion (nanosegundos) / $L^3$}
+{s*n*m}{tiempo}
+{datos/ej2-044.dat}
+{restrict y to domain = 0:100}
+
+La pendiente tiende a una constante por arriba del 0. Esto quiere decir que estabamos en lo correcto, ya que la funcion sigue una curva al estilo cubico. Entonces se condice con nuestra cota de complejidad $\mathcal{O}(s*n*m)$, pues fijamos $s=n=m=L$ y nos quedo un grafico que sigue la curva de una funcion polinomial de grado 3.
+
+\paragraph{Experimento 2}
+
+Para este experimento, fijamos los valores de $n$ y $m$ en 20 mientras variamos los valores de $s$, los resultados fueron:
+
+%Grafico
+\graficarDatos
+{n=20, m=20, s variable}
+{s (cantidad de soldados)}{Tiempo de ejecucion (nanosegundos)}
+{s}{tiempo}
+{datos/ej2-01.dat}
+
+Esto pareceria ser lineal desde la segunda mitad del dominio, veamos que pasa cuando dividimos los tiempos por el tamano de entrada $s$:
+
+%Grafico
+\graficarDatosPlus
+{n=20, m=20, s variable, divido los tiempos por s}
+{s (cantidad de soldados)}{Tiempo de ejecucion (nanosegundos) / s}
+{s}{tiempo}
+{datos/ej2-012.dat}
+{ymin=75000, ymax=400000}
+
+Parece que la pendiente se vuelve constante y la constante a la que tiende esta por arriba del 0. Esto se condice con nuestra cota de complejidad $\mathcal{O}(s*n*m)$, pues fijamos $n=20, m=20$ y el tiempo varia linealmente con respecto a $s$.
+
+\paragraph{Experimento 3}
+
+En este experimento, fijamos los valores de $m$ en 100 y $s$ en 10000 mientras variamos los valores de $n$, los resultados fueron:
+
+%Grafico
+\graficarDatos
+{n variable, m=100, s=10000}
+{n (cantidad de calles horizontales)}{Tiempo de ejecucion (nanosegundos)}
+{n}{tiempo}
+{datos/ej2-02.dat}
+
+Tiene una clara pinta de lineal, veamos lo que pasa cuando dividimos los tiempos por el tamano de entrada $n$:
+
+%Grafico
+\graficarDatosPlus
+{n=100, m variable, s=10000, divido los tiempos por n}
+{n (cantidad de calles horizontales)}{Tiempo de ejecucion (nanosegundos) / n}
+{n}{tiempo}
+{datos/ej2-022.dat}
+{ymax=20000, ymin=5000}
+
+Como vemos, la pendiente tiende a una constante por arriba del 0. Esto se condice con nuestra cota de complejidad $\mathcal{O}(s*n*m)$, pues fijamos $m=100, s=10000$ y el tiempo varia linealmente con respecto a $n$.
+
+\paragraph{Experimento 4}
+
+Fijamos los valores de $n$ en 100 y $s$ en 10000 mientras variamos los valores de $m$, los resultados fueron:
+
+%Grafico
+\graficarDatos
+{n=100, m variable, s=10000}
+{m (cantidad de calles verticales)}{Tiempo de ejecucion (nanosegundos)}
+{m}{tiempo}
+{datos/ej2-03.dat}
+
+Es muy parecido al experimento anterior. La curva parece lineal, veamos lo que pasa cuando dividimos los tiempos por el tamano de entrada $m$:
+
+%Grafico
+\graficarDatosPlus
+{n=100, m variable, s=10000, divido los tiempos por m}
+{m (cantidad de calles verticales)}{Tiempo de ejecucion (nanosegundos) / m}
+{m}{tiempo}
+{datos/ej2-032.dat}
+{ymax=20000, ymin=5000}
+
+Esta pendiente tambien tiende a una constante por arriba del 0. Esto se condice con nuestra cota de complejidad $\mathcal{O}(s*n*m)$, pues fijamos $n=100, s=10000$ y el tiempo varia linealmente con respecto a $m$.
+
+\subsubsection{Experimentación con instancias particulares}
+
+Cuando analizamos instancias particulares, nos va a interesar fijar la cantidad de zombies en cada calle al contrario que las instancias aleatorias. A la vez vamos a ir variando ciertos parametros de entrada. 
+
+\paragraph{Experimento 1: Mejor caso 1}
+
+En este caso vamos a fijar la cantidad de zombies en cada calle a 0. Variamos los parametros de entrada $n$ y $m$ uniformemente y dejamos la cantidad de soldados fija en 1000:
+
+%Grafico
+\graficarDatos
+{n, m variables}
+{n, m (son iguales)}{Tiempo de ejecucion (nanosegundos)}
+{e}{tiempo}
+{datos/ej2-11.dat}
+
+Dividiendo por $n$ nos queda:
+
+%Grafico
+\graficarDatos
+{n, m variables}
+{n, m (son iguales)}{Tiempo de ejecucion (nanosegundos) / n}
+{e}{tiempo}
+{datos/ej2-112.dat}
+
+Esto es algo de pinta lineal. Si dividimos por $m$ nos queda:
+
+%Grafico
+\graficarDatosPlus
+{n, m variables}
+{n, m (son iguales)}{Tiempo de ejecucion (nanosegundos) / n}
+{e}{tiempo}
+{datos/ej2-113.dat}
+{restrict y to domain = 0:1000}
+
+Que tiende a una constante por encima de 0. Esto se condice con nuestra cota de complejidad $\mathcal{O}(s*n*m)$, pues fijamos $s$ y el tiempo varia linealmente con respecto a $n*m$.
+
+\paragraph{Experimento 2: Mejor caso 2}
+
+Como antes, la cantidad de zombies en cada calle va a ser 0. Pero a diferencia del caso anterior, fijamos los parametros $n$ y $m$ en 100 y variamos la cantidad de soldados:
+
+%Grafico
+\graficarDatosPlus
+{n=100, m=100, s variable}
+{s}{Tiempo de ejecucion (nanosegundos)}
+{s}{tiempo}
+{datos/ej2-13.dat}
+{ymin=0, ymax=3000000}
+
+Si bien la cantidad de soldados varia en un rango muy grande, el tiempo no varia demasiado. Esto tiene sentido ya que tenemos la misma cantidad de esquinas para llegar pero siempre llegamos una vez sola. Es decir, como la cantidad de zombies en cada calle es 0, solo llego a cada esquina una vez (con la maxima cantidad de soldados posibles). Esto se condice con nuestra explicacion sobre la forma en que funciona el algoritmo.
+
+\paragraph{Experimento 3: Peor caso}
+
+Generar una instancia con uno de los peores casos no es simple. En este caso, vamos a generar un peor caso analizando el codigo del algoritmo. Este hace Backtracking y analiza las posibilidades en el orden: izquierda, derecha, arriba, abajo. Vamos a hacer una instancia donde maximizemos la cantidad de veces que pasamos por cada esquina. Sea $k$ una variable, vamos a configurar $n=2k, m=2k$ e ir variando $s$ entre 1 y $k$. Ademas vamos a tener las siguientes cantidades de zombies:
+
+\newarray\data
+\readarray{data}{%
+$2k$ & 1 & 1&%
+1 & 1 & 1 & 1&%
+$2k-1$ & 1 & 1&%
+ & & & &%
+$2$ & 1 & 1&%
+1 & 1 & 1 & 1&%
+$1$ & 1 & 1&%
+}%
+
+\begin{centering}
+
+\grafoCiudadPlusVacia{4}{4}{\data}{
+  % Aristas faltantes
+  \path (v41) edge node[below,draw=none,font=\footnotesize] { \data(22) } (v42);
+  \path (v42) edge node[below,draw=none,font=\footnotesize] { \data(23) } (v43);
+  \path (v43) edge node[below,draw=none,font=\footnotesize] { \data(24) } (v44);
+  % Aristas punteados
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v12) edge (v13);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v22) edge (v23);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v32) edge (v33);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v42) edge (v43);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v21) edge (v31);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v22) edge (v32);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v23) edge (v33);
+  \draw[-latex,white,dash pattern=on2pt off2pt, line width=1pt] (v24) edge (v34);
+  % Nodos Agregados
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v13) at (4, 0) {$v_{1,m-1}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v14) at (6, 0) {$v_{1,m}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v23) at (4, -2) {$v_{2,m-1}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v24) at (6, -2) {$v_{2,m}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v31) at (0, -4) {$v_{n-1,1}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v32) at (2, -4) {$v_{n-1,2}$};
+  \node[fill=white,inner sep=0pt, scale=0.7, minimum size=1.2cm] (v33) at (4, -4) {$v_{n-1,m-1}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v34) at (6, -4) {$v_{n-1,m}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v41) at (0, -6) {$v_{n,1}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v42) at (2, -6) {$v_{n,2}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v43) at (4, -6) {$v_{n,m-1}$};
+  \node[fill=white,inner sep=0pt, scale=0.8, minimum size=1.2cm] (v44) at (6, -6) {$v_{n,m}$};
+}
+
+\end{centering}
+
+Es decir, todas las calles van a tener 1 zombie excepto la primer calle horizontal de cada fila, estas van a tener $2k, 2k-1, 2k-2, ..., 3, 2, 1$ zombies en ese orden.
+Ademas, vamos a fijar la posicion inicial del cientifico en (0,0) y la posicion del bunker en la esquina de abajo a la derecha, garantizando que el ejemplo funcione bien.
+Como el algoritmo analiza ir hacia los nodos vecinos en el orden: izquierda, derecha, arriba y abajo, va a llenar casi todos los nodos de la matriz con un 1, luego con un 2, despues con un 3 y asi hasta $s$.
+Seteando $k=50$, los resultados fueron los siguientes:
+
+%Grafico
+\graficarDatos
+{k=50, s variable entre 1 y k}
+{s}{Tiempo de ejecucion (nanosegundos)}
+{s}{tiempo}
+{datos/ej2-12.dat}
+
+Como esto tiene pinta de lineal en $s$, dividimos los tiempos por $s$:
+
+%Grafico
+\graficarDatosPlus
+{k=50, s variable entre 1 y k, dividimos los tiempo por $s$}
+{s}{Tiempo de ejecucion (nanosegundos) / s}
+{s}{tiempo}
+{datos/ej2-122.dat}
+{ymin=1000000, ymax=2000000}
+
+Y esto parece tender a una constante por encima de 0. Por lo tanto esto se condice con nuestra cota de complejidad porque aun en uno de los peores casos, el tiempo que tarda el algoritmo varia linealmente con respecto a $s$.
