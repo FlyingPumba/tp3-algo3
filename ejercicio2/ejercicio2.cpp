@@ -5,7 +5,11 @@ using namespace std;
 
 #define INFINITO -1
 
-void resolver(vector< pair<int, int> > ejes);
+typedef vector<int> Vec;
+typedef vector<Vec> Matriz;
+
+vector<int> resolver(int n, Matriz matriz);
+vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm);
 
 // Implementacion.
 int main() {
@@ -13,24 +17,72 @@ int main() {
     cin >> n;
     cin >> m;
 
-    vector< pair<int, int> > ejes(m, make_pair(INFINITO, INFINITO));
+    Matriz matriz(n, Vec(n, 0));
 
     int v, w;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < m; i++) {
         cin >> v;
         cin >> w;
-        ejes[i] = make_pair(v,w);
+        matriz[v][w] = 1;
+        matriz[w][v] = 1;
     }
 
-    resolver(ejes);
+    vector<int> cidm = resolver(n, matriz);
+
+    cout << "[";
+    for (int i = 0; i < cidm.size() - 1; i++) {
+        cout << cidm[i] << ",";
+    }
+    cout <<  cidm[cidm.size() - 1] << "]" << endl;
 
     return 0;
 }
 
-void resolver(vector< pair<int, int> > ejes) {
-    // Solución estupida:
-    // 1. Creo A = conjunto de conjuntos dominantes de G
-    // 2. Creo B = conjunto de conjuntos independientes de G
-    // 3. Creo C = interseccion(A, B)
-    // 4. Busco c elemento de C con menor cardinalidad
+vector<int> resolver(int n, Matriz matriz) {
+    // inicializo el primer dominante con todos los vertices del grafo
+    vector <int> dom(n, 0);
+    for (int i = 0; i < n; i++) {
+        dom[i] = i;
+    }
+    return resolver_aux(n, matriz, dom, dom);
+}
+
+vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm) {
+    int dom_size = dom.size();
+    int cidm_size = cidm.size();
+    if (cidm_size == 1) {
+        return cidm;
+    } else {
+        // chequeo si el dominante acutal es independiente
+        bool indep = true;
+        for (int i = 0; i < dom_size; i++) {
+            for (int j = i+1; j < dom_size; j++) {
+                if (matriz[dom[i]][dom[j]] == 1) {
+                    indep = false;
+                    break;
+                }
+            }
+            if(!indep) {
+                break;
+            }
+        }
+        if(indep && (dom_size < cidm_size || cidm_size == n)) {
+            // si el dominante actual es independiente y su cardinal es menor que el minimo, lo guardo como nuevo minimo
+            cidm = dom;
+            cidm_size = dom_size;
+        }
+    }
+
+    for (int i = 0; i < dom_size; i++) {
+        // copio el dominante actual y borro el i-esimo nodo de la copia
+        vector<int> copia(dom);
+        copia.erase(copia.begin() + i);
+        // BUG: la copia no necesariamente es dominante
+        vector<int> nuevo_cidm = resolver_aux(n, matriz, copia, cidm);
+        if (nuevo_cidm.size() < cidm_size) {
+            cidm = nuevo_cidm;
+            cidm_size = nuevo_cidm.size();
+        }
+    }
+    return cidm;
 }
