@@ -41,7 +41,7 @@ int main() {
 
 vector<int> resolver(int n, Matriz matriz) {
     // inicializo el primer conjunto a evaluar con todos los vertices del grafo
-    // Este primer conjunto es dominante
+    // Este primer conjunto es dominante (pero no independiente. A menos que n = 1)
     vector <int> dom(n, 0);
     for (int i = 0; i < n; i++) {
         dom[i] = i;
@@ -69,7 +69,7 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
             }
         }
 
-        if(indep && (dom_size < cidm_size || cidm_size == n)) {
+        if(indep && dom_size < cidm_size) {
             // si dom es independiente y su cardinal es menor que el minimo, lo guardo como nuevo minimo
             cidm = dom;
             cidm_size = dom_size;
