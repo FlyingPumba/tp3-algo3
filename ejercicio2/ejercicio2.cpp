@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <stack>
+#include <algorithm> 
 using namespace std;
 
 #define INFINITO -1
@@ -9,7 +10,7 @@ typedef vector<int> Vec;
 typedef vector<Vec> Matriz;
 
 vector<int> resolver(int n, Matriz matriz);
-vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm);
+vector<int> resolver_aux(int n, Matriz matriz, vector<int> actual, vector<int> cidm);
 
 // Implementacion.
 int main() {
@@ -39,25 +40,25 @@ int main() {
 }
 
 vector<int> resolver(int n, Matriz matriz) {
-    // inicializo el primer dominante con todos los vertices del grafo
-    vector <int> dom(n, 0);
+    // inicializo el primer conjunto a evaluar con todos los vertices del grafo
+    vector <int> actual(n, 0);
     for (int i = 0; i < n; i++) {
-        dom[i] = i;
+        actual[i] = i;
     }
-    return resolver_aux(n, matriz, dom, dom);
+    return resolver_aux(n, matriz, actual, actual);
 }
 
-vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm) {
-    int dom_size = dom.size();
+vector<int> resolver_aux(int n, Matriz matriz, vector<int> actual, vector<int> cidm) {
+    int actual_size = actual.size();
     int cidm_size = cidm.size();
     if (cidm_size == 1) {
         return cidm;
     } else {
-        // chequeo si el dominante acutal es independiente
+        // chequeo si el actual es independiente
         bool indep = true;
-        for (int i = 0; i < dom_size; i++) {
-            for (int j = i+1; j < dom_size; j++) {
-                if (matriz[dom[i]][dom[j]] == 1) {
+        for (int i = 0; i < actual_size; i++) {
+            for (int j = i+1; j < actual_size; j++) {
+                if (matriz[actual[i]][actual[j]] == 1) {
                     indep = false;
                     break;
                 }
@@ -66,18 +67,46 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
                 break;
             }
         }
-        if(indep && (dom_size < cidm_size || cidm_size == n)) {
-            // si el dominante actual es independiente y su cardinal es menor que el minimo, lo guardo como nuevo minimo
-            cidm = dom;
-            cidm_size = dom_size;
+
+        bool dom = true;
+        if (indep) {
+            // chequeo si el actual es dominante
+            for (int i = 0; i < n; i++) {
+                // el i-esimo nodo está en actual ?
+                if(find(actual.begin(), actual.end(), i) != actual.end()) {
+                    // el i-esimo nodo está en actual
+                    // sigo chequeando los siguientes nodos
+                    continue;
+                } else {
+                    // el i-esimo nodo NO está en actual
+                    // el i-esimo nodo es adyacente a alguno en actual ?
+                    bool ady = false;
+                    for (int j = 0; j < actual_size; j++) {
+                        if (matriz[i][actual[j]] == 1) {
+                            ady = true;
+                            break;
+                        }
+                    }
+                    if(!ady) {
+                        dom = false;
+                        break;
+                    }
+
+                }
+            }
+        }
+
+        if(indep && dom && (actual_size < cidm_size || cidm_size == n)) {
+            // si el conjunto actual es dominante e independiente y su cardinal es menor que el minimo, lo guardo como nuevo minimo
+            cidm = actual;
+            cidm_size = actual_size;
         }
     }
 
-    for (int i = 0; i < dom_size; i++) {
+    for (int i = 0; i < actual_size; i++) {
         // copio el dominante actual y borro el i-esimo nodo de la copia
-        vector<int> copia(dom);
+        vector<int> copia(actual);
         copia.erase(copia.begin() + i);
-        // BUG: la copia no necesariamente es dominante
         vector<int> nuevo_cidm = resolver_aux(n, matriz, copia, cidm);
         if (nuevo_cidm.size() < cidm_size) {
             cidm = nuevo_cidm;
