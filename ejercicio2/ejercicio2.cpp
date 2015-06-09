@@ -69,10 +69,14 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
             }
         }
 
-        if(indep && dom_size < cidm_size) {
-            // si dom es independiente y su cardinal es menor que el minimo, lo guardo como nuevo minimo
-            cidm = dom;
-            cidm_size = dom_size;
+        if(indep) {
+            // Sabemos que si Dom es dominante e independiente, entonces cualquier subconjunto de Dom es no-dominante
+            // Luego, devolvemos el que tiene menor cardinal entre dom y cidm
+            if (dom_size < cidm_size) {
+                return dom;
+            } else {
+                return cidm;
+            }
         }
     }
 
