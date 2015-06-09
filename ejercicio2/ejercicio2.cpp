@@ -1,7 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <stack>
-#include <algorithm> 
+#include <algorithm>
 using namespace std;
 
 #define INFINITO -1
@@ -24,17 +24,17 @@ int main() {
     for (int i = 0; i < m; i++) {
         cin >> v;
         cin >> w;
-        matriz[v][w] = 1;
-        matriz[w][v] = 1;
+        matriz[v-1][w-1] = 1;
+        matriz[w-1][v-1] = 1;
     }
 
     vector<int> cidm = resolver(n, matriz);
 
     cout << "[";
     for (int i = 0; i < cidm.size() - 1; i++) {
-        cout << cidm[i] << ",";
+        cout << cidm[i]+1 << ",";
     }
-    cout <<  cidm[cidm.size() - 1] << "]" << endl;
+    cout <<  cidm[cidm.size() - 1]+1 << "]" << endl;
 
     return 0;
 }
