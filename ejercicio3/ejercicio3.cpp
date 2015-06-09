@@ -1,178 +1,85 @@
 #include <vector>
 #include <iostream>
-#include <queue>
+#include <algorithm> 
 using namespace std;
 
-class DisjointSet    {
-    int *id, cantidadDeArboles, *rank;
-    
-public:
-    
-    DisjointSet(int N)   {
-        cantidadDeArboles = N;
-
-        id = new int[N];
-        rank = new int[N];
-
-        for(int i=0; i<N; i++)  {
-            id[i] = i;
-            rank[i] = 1;
-        }
-    }
-    ~DisjointSet()   {
-    delete [] id;
-    delete [] rank;
-    }
-
-    // Devuelve el id de la componente a la que pertenece p
-    int buscar(int p) {
-        int raiz = p;
-        while (raiz != id[raiz])
-            raiz = id[raiz];
-        while (p != raiz) {
-            int newp = id[p];
-            id[p] = raiz;
-            p = newp;
-        }
-        return raiz;
-    }
-    // mergea dos sets
-    void unir(int x, int y)    {
-        int i = buscar(x);
-        int j = buscar(y);
-        if (i == j) return;
-        
-        //hace que la raiz del menor apunte a la del mayor
-        if(rank[i] < rank[j]){
-            id[i] = j;
-        }else{
-            id[j] = i;
-            if(rank[i] == rank[j]){
-                rank[i]++;
-            }   
-        }
-        cantidadDeArboles--;
-    }
-
-    //devuelve true si dos pozos estan en el mismo arbol
-    bool conectados(int x, int y)    {
-        return buscar(x) == buscar(y);
-    }
-
-    // Devuelve la cantidad de arboles
-    int count() {
-        return cantidadDeArboles;
-    }
-
+struct Nodo {
+    int numero;
+    int grado;
+    Nodo() : numero(0), grado(0) {};
+    Nodo(const int n,const bool v,const int g) : numero(n) , grado(g) {};
 };
 
-
-
-struct Tuberia {
-    Tuberia(): desde(0), hasta(0), costo(0){}
-    Tuberia(const int d,const int h,const int c) : desde(d), hasta(h), costo(c) {};
-
-    // desde que pozo va la tuberia
-    int desde;
-
-    //hasta que pozo va la tuberia
-    int hasta;
-
-    //costo de la construccion
-    int costo;
-};
-
-struct compararPorCostos
+struct orden
 {
-  bool operator()(const Tuberia& izq, const Tuberia& der) const
-  {
-    return izq.costo > der.costo;
-  }
+    inline bool operator() (const Nodo& n1, const Nodo& n2)
+    {
+        return (n1.grado > n2.grado);
+    }
 };
 
-typedef vector<Tuberia> Vec;
+typedef vector<int> Vec;
+typedef vector<Vec> Matriz;
+typedef vector<Nodo> Nodos;
 
-// Prototipado de funciones
+vector<int> resolver(int n, Matriz matriz, Nodos nodos);
 
-
-// Implementacion. Contiene el cargado de input más la resolución del ejercicio.
+// Implementacion.
 int main() {
-    // cantidad de pozos
-    int n;
+    int n, m;
     cin >> n;
-
-    // cantidad de pares de pozos en los cuales se puede construir una tuberia
-    int m;
     cin >> m;
 
-    // costo de construir una refineria
-    int c;
-    cin >> c;
-
-    // cargo las potenciales tuberias en una cola de prioridad y guardo en un vector si puedo 
-    //acceder por tuberia o necesito refineria si o si.
-    std::priority_queue<Tuberia, std::vector<Tuberia>, compararPorCostos> tuberias;
-
-    //defino el costo total como el costo de poner una refineria por pozo
-    int costoTotal = n*c;
-
-    //O(m*log(m))
-    for(int i = 0; i < m; i++) {
-        int desde, hasta, costo;
-        cin >> desde;
-        cin >> hasta;
-        cin >> costo;
-
-        //solo agrego las tuberias que tengan costo menor a la refineria ya que
-        //solo es conveniente por costos hacerlo si es asi
-
-        if(costo < c){
-            tuberias.push(Tuberia(desde,hasta,costo));
-        }
+    Matriz matriz(n, Vec(n, 0));
+    Nodos nodos(n, Nodo());
+    for(int i = 0; i < n; i++) {
+        nodos[i].numero = i;
     }
 
-    DisjointSet componentes(n);
+    int v, w;
+    for (int i = 0; i < m; i++) {
+        cin >> v;
+        cin >> w;
+        matriz[v-1][w-1] = 1;
+        matriz[w-1][v-1] = 1;
+        nodos[v-1].grado = nodos[v-1].grado + 1;
+        nodos[w-1].grado = nodos[w-1].grado + 1;
+    }
 
-    //en este vector se guardaran las tuberias que se vayan construyendo, tiene como maximo
-    //el tamano de tuberias que agregue a tuberias, es decir, la cantidad de tuberias con costo menor a c
-    vector<Tuberia> tuberiasConstruidas;
-    tuberiasConstruidas.reserve(tuberias.size());
+    vector<int> cidm = resolver(n, matriz, nodos);
 
+        cout << cidm.size() << " ";
+    for (int i = 0; i < cidm.size(); i++) {
+        cout << cidm[i]+1 << " ";
+    }
     cout << endl;
-    while(!tuberias.empty()){
-        Tuberia t = tuberias.top();
-        tuberias.pop();
 
-        //busco con -1 para que encuentre el indice correcto en el UF
-        if(!componentes.conectados(t.desde - 1,t.hasta - 1)){
-
-            //uno las componentes en el disjoint set
-            componentes.unir(t.desde - 1,t.hasta - 1);
-
-            //agrego la tuberia a tuberias construidas
-            tuberiasConstruidas.push_back(t);
-
-            //bajo el costo total
-            costoTotal = costoTotal - c + t.costo;
-        }
-    }
-
-    cout << costoTotal << " " <<  componentes.count() << " " << tuberiasConstruidas.size() << endl;
-
-    imprimo los pozos que tienen refineria
-    defino que un pozo tiene refineria si es la raiz de su componente
-    for (int i = 0; i < n; i++){
-        if(componentes.buscar(i) == i){
-            cout << i + 1 << " ";
-        }
-    }
-
-    //imprimo las tuberias que se construyeron
-    cout << endl;
-    for(int i = 0; i < tuberiasConstruidas.size();i++){
-        cout << tuberiasConstruidas[i].desde << " " << tuberiasConstruidas[i].hasta << endl;
-    }
-
+    return 0;
 }
+
+vector<int> resolver(int n, Matriz matriz, Nodos nodos) {
+    // Ordeno a los nodos segun su grado
+    std::sort(nodos.begin(), nodos.end(), orden());
+
+    bool visitado[sizeof nodos] = { false };
+    vector<int> cidm;
+    cidm.reserve(n);
+
+    for(int i = 0; i < n ; i++){
+        if(visitado[nodos[i].numero] == false){
+            visitado[nodos[i].numero] = true;
+            cidm.push_back(nodos[i].numero);
+            for(int j = 0; j<n; j++){
+                if(matriz[nodos[i].numero][j] == 1){
+                    visitado[j] = true;
+                }
+            }
+        }
+    }
+
+    return cidm;
+}
+
+
 
 
