@@ -49,7 +49,7 @@ int main() {
     vector<int> cidm = resolver(n, matriz, nodos);
 
         cout << cidm.size() << " ";
-    for (int i = 0; i < cidm.size() - 1; i++) {
+    for (int i = 0; i < cidm.size(); i++) {
         cout << cidm[i]+1 << " ";
     }
     cout << endl;
