@@ -171,7 +171,7 @@ vector<int> vecindad_segundo_criterio(Grafo G, vector<int> solucionInicial) {
       for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end() && !finCiclo; ++itAdyU) {
         int v = *itAdyU;
         int cantMarcados = 0;
-        int z;
+        int z = n;
         for (list<int>::iterator itAdyV=G[v].begin(); itAdyV != G[v].end() && !finCiclo; ++itAdyV) {
           int w = *itAdyV;
           if (u < w && solucionInicial[w] == MARCADO) {
@@ -187,7 +187,13 @@ vector<int> vecindad_segundo_criterio(Grafo G, vector<int> solucionInicial) {
               if (esSolucion(G, solucionAuxiliar)) {
                 solucionInicial = vecindad_segundo_criterio(G, solucionAuxiliar);
                 finCiclo = true;
-              } 
+              } else {
+                // no es solucion, reseteo valores
+                solucionAuxiliar[u] = MARCADO;
+                solucionAuxiliar[w] = MARCADO;
+                solucionAuxiliar[z] = MARCADO;
+                solucionAuxiliar[v] = NO_MARCADO;
+              }
             }
 
           }
