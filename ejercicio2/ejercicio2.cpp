@@ -41,7 +41,7 @@ int main() {
 
 vector<int> resolver(int n, Matriz matriz) {
     // inicializo el primer conjunto a evaluar con todos los vertices del grafo
-    // Este primer conjunto es dominante (pero no independiente. A menos que n = 1)
+    // Este primer conjunto es dominante (pero no necesariamente independiente)
     vector <int> dom(n, 0);
     for (int i = 0; i < n; i++) {
         dom[i] = i;
@@ -81,7 +81,7 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
     }
 
     for (int i = 0; i < dom_size; i++) {
-        // copio dom y borro el i-esimo nodo de la copia
+        // copio dom y borro el i-esimo nodo de la copia (no es el nodo numero i, sino el nodo en la posicion i del vector)
         vector<int> copia(dom);
         copia.erase(copia.begin() + i);
         // chequeo si la copia es dominante
