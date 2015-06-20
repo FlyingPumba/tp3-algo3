@@ -60,13 +60,25 @@ funcion resolver_aux:
     Si el cidm tiene tamaño 1 hacer
         Devuelvo cidm
     Sino hacer
-        Chequeamos si dom es independiente.
+        // Chequeamos si dom es independiente:
+        Para i desde 0 hasta |dom| hacer:
+            Para j desde i+1 hasta |dom| hacer:
+                Si matriz_adyacencia[dom[i]][dom[j]] == TRUE hacer
+                    dom NO es independiente
         Si es independiente hacer
             Devolvemos el conjunto con menor cardinal entre cidm y dom.
     Para i desde 0 hasta |dom| hacer
         Crear un vector nuevo llamado copia con los mismos nodos que dom.
         Borrar el nodo en la posicion i del vector copia.
-        Chequeamos si el conjunto copia es dominante
+        // Chequeamos si el conjunto copia es dominante:
+        Para i desde 0 hasta n hacer:
+            Si i no pertenece a copia hacer
+                Bool adyacente = FALSE
+                Para j desde 0 hasta |copia| hacer:
+                    Si matriz_adyacencia[i][copia[j]] == TRUE hacer
+                        adyacente = TRUE
+                Si adyacente == FALSE hacer
+                    copia NO es dominante
         Si copia es dominante hacer
             Hacer un llamado recursivo a resolver_aux, pasando como parametro la matriz
                 de adyacencia, cidm, copia y la cantidad de nodos en el grafo.
