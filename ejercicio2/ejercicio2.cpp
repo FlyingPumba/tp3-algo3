@@ -87,25 +87,22 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
         // chequeo si la copia es dominante
         bool copia_dominante = true;
         for (int i = 0; i < n; i++) {
-            // el i-esimo nodo está en copia ?
-            if(find(copia.begin(), copia.end(), i) != copia.end()) {
-                // el i-esimo nodo está en copia
-                // sigo chequeando los siguientes nodos
-                continue;
-            } else {
-                // el i-esimo nodo NO está en copia
-                // el i-esimo nodo es adyacente a alguno en copia ?
-                bool ady = false;
-                for (int j = 0; j < copia.size(); j++) {
-                    if (matriz[i][copia[j]] == 1) {
-                        ady = true;
-                        break;
-                    }
-                }
-                if(!ady) {
-                    copia_dominante = false;
+            // chequeo si el nodo i está en copia o es adyacente a alguno en copia
+            bool nodo = false;
+            for (int j = 0; j < copia.size(); j++) {
+                if (copia[j] == i) {
+                    // el nodo i está en copia
+                    nodo = true;
+                    break;
+                } else if (matriz[i][copia[j]] == 1) {
+                    // el nodo i es adyacente a alguno en copia
+                    nodo = true;
                     break;
                 }
+            }
+            if (!nodo) {
+                copia_dominante = false;
+                break;
             }
         }
         // Sabemos que si Copia no es dominante, entonces ningun subconjunto de Copia es dominante, por lo que ni siquiera los evaluo
