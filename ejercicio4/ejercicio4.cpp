@@ -3,6 +3,7 @@
 #include <stack>
 #include <list>
 #include <queue>
+#include <utility>
 using namespace std;
 
 #define VISITADO 1
@@ -10,12 +11,12 @@ using namespace std;
 #define MARCADO 1
 #define NO_MARCADO 0
 
-// NO ESTA TERMINADO, NO LO PROBE
+// Esta version tiene vecindades 2-1 o 3-2 vertices de diferencia
 typedef list<int> listaAdyacencia;
 typedef vector<listaAdyacencia> Grafo;
 
-int mayor_grado(Grafo G);
 vector<int> bfs_cdi(Grafo G, int inicio);
+pair<bool, list<int> > solucionPosible(Grafo G, vector<int> solucionCambiar, int cantCambios);
 vector<int> vecindad_primer_criterio(Grafo G, vector<int> solucionInicial);
 vector<int> vecindad_segundo_criterio(Grafo G, vector<int> solucionInicial);
 
@@ -34,13 +35,23 @@ int main() {
         G[v-1].push_back(w-1);
         G[w-1].push_back(v-1);
     }
-    // Solucion Inicial 1: empiezo por el nodo 0
-    //int inicio = 0;
-    //vector<int> solucionInicial = bfs_cdi(G, inicio);
-
-    // Solucion Inicial 2: empiezo por el nodo con mayor grado
-    int inicio = mayor_grado(G);
+    //Solucion Inicial 1: empiezo por el nodo 0
+    int inicio = 0;
     vector<int> solucionInicial = bfs_cdi(G, inicio);
+
+    cout << "[";
+    for (int i = 0; i < solucionInicial.size() - 1; i++) {
+        cout << solucionInicial[i] << ",";
+    }
+    cout <<  solucionInicial[solucionInicial.size() - 1] << "] ";
+    int tamano = 0;
+    for (int i = 0; i < solucionInicial.size(); i++) {
+      if (solucionInicial[i] == MARCADO) {
+        tamano ++;
+      }
+    }
+    cout << tamano << endl;
+    // Solucion Inicial 2: Usar heuristica golosa
 
     //vector<int> cidm = vecindad_primer_criterio(G, solucionInicial);
 
@@ -51,30 +62,24 @@ int main() {
     for (int i = 0; i < cidm.size() - 1; i++) {
         cout << cidm[i] << ",";
     }
-    cout <<  cidm[cidm.size() - 1] << "]" << endl;
+    cout <<  cidm[cidm.size() - 1] << "] ";
+    tamano = 0;
+    for (int i = 0; i < solucionInicial.size(); i++) {
+      if (cidm[i] == MARCADO) {
+        tamano ++;
+      }
+    }
+    cout << tamano << endl;
 
     return 0;
 }
 
-int mayor_grado(Grafo G) {
-  int n = G.size();
-  int mayorGrado = 0;
-  for (int u = 0; u < n; u++) {
-    if (mayorGrado < G[u].size()) {
-      mayorGrado = u;
-    }
-  }
-
-  return mayorGrado;
-}
-
 vector<int> bfs_cdi(Grafo G, int inicio) {
-  // O(m + n)?
+  // O(m + n)
   int n = G.size();
 	vector<int> estado(n,NO_VISITADO);
-  // n+1 porque guardo en la posicion n la cantidad de nodos marcados
-  vector<int> domIndep(n+1,NO_MARCADO);
-  // Primera componete conexa
+  vector<int> domIndep(n,NO_MARCADO);
+  // Primera componente conexa
   estado[inicio] = VISITADO;
   domIndep[inicio] = MARCADO;
   queue<int> cola;
@@ -121,63 +126,149 @@ vector<int> bfs_cdi(Grafo G, int inicio) {
     }
 
   }
-  // Calculo la cardinalidad del subconjunto de nodos marcados y lo guardo en la posicion n
-  int nodosMarcados = 0;
-  for (int u = 0; u < n; u++) {
-    nodosMarcados += domIndep[u];
-  }
-  domIndep[n] = nodosMarcados;
 
   return domIndep;
 }
 
 vector<int> vecindad_primer_criterio(Grafo G, vector<int> solucionInicial) {
-	// Criterio de Vecindad 1: Las soluciones de la vecindad parten de marcar los nodos no marcados en la solucionInicial
+	// Criterio de Vecindad 1: Cambiamos, al  menos,  dos vectices de la solucion inicial por uno
   int n = G.size();
-  // n+1 porque guardo en la posicion n la cantidad de nodos marcados
-  vector<int> mejorVecino(n+1, MARCADO);
-  mejorVecino[n] = n;
-  // Genero soluciones vecinas y me quedo con la mejor
+  vector<int> solucionAuxiliar = solucionInicial;
+  // Genero soluciones vecinas
   for (int u = 0; u < n; u++) {
-    if (solucionInicial[u] == NO_MARCADO) {
-      vector<int> solucionVecina = bfs_cdi(G, u);
-      if (solucionVecina[n] < mejorVecino[n]) {
-        mejorVecino = solucionVecina;
+    if (solucionInicial[u] == NO_MARCADO && G[u].size() > 1) {
+      int cantMarcados = 0;
+      solucionAuxiliar[u] = MARCADO;
+      // Me fijo si el vectice NO MARCADO tiene al menos dos vectores adyacentes MARCADOS
+      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end(); ++itAdyU) {
+        int v = *itAdyU;
+        if (solucionInicial[v] == MARCADO) {
+          cantMarcados ++;
+          solucionAuxiliar[v] = NO_MARCADO;
+        }
+      }
+      // Necesito al menos 2 MARCADOS
+      if (cantMarcados > 1) {
+        int cantCambiosPosibles = 0;
+        pair<bool, list<int> >  esSolucion = solucionPosible(G, solucionAuxiliar, cantCambiosPosibles);
+        if (esSolucion.first) {
+          // Encontre una solucion Vecina mejor, fin del ciclo
+          solucionInicial = vecindad_primer_criterio(G, solucionAuxiliar);
+          break;
+        } else {
+          // No es solucion, reinicio los valores originales
+          solucionAuxiliar[u] = NO_MARCADO;
+          for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end(); ++itAdyU) {
+            int v = *itAdyU;
+            if (solucionInicial[v] == MARCADO) {
+              solucionAuxiliar[v] = MARCADO;
+            }
+          }
+          }
+        }
+
       }
     }
-  }
-  // Si la solucion vecina es mejor a la inicial, entonces hago otra iteracion
-  if (mejorVecino[n] < solucionInicial[n]) {
-    solucionInicial = vecindad_primer_criterio(G, mejorVecino);
-  }
 
 	return solucionInicial;
 }
 
 vector<int> vecindad_segundo_criterio(Grafo G, vector<int> solucionInicial) {
-	// Criterio de Vecindad 2: Las soluciones de la vecindad parten de no marcar los nodos marcados en la solucionInicial
+  // Criterio de Vecindad 1: Cambiamos, al  menos,  tres vectices de la solucion inicial por dos
   int n = G.size();
-  // n+1 porque guardo en la posicion n la cantidad de nodos marcados
-  vector<int> mejorVecino(n+1, MARCADO);
-  mejorVecino[n] = n;
-  // Genero soluciones vecinas y me quedo con la mejor
+  vector<int> solucionAuxiliar = solucionInicial;
+  // Genero soluciones vecinas
   for (int u = 0; u < n; u++) {
-    if (solucionInicial[u] == MARCADO) {
-      // Me fijo que tenga al menos un nodo adyacente, sino no puedo desmarcarlo
-      if (G[u].size() > 0) {
-        vector<int> solucionVecina = bfs_cdi(G, G[u].front());
-        if (solucionVecina[n] < mejorVecino[n]) {
-          mejorVecino = solucionVecina;
+    if (solucionInicial[u] == NO_MARCADO && G[u].size() > 1) {
+      // Para los marcados en la solucionInicial me fijo en sus adyacentes para encontrar algun adyacente que tambien esta marcado
+      int cantMarcados = 0;
+      int w = n;
+      solucionAuxiliar[u] = MARCADO;
+      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end(); ++itAdyU) {
+        int v = *itAdyU;
+        if (solucionInicial[v] == MARCADO) {
+          cantMarcados ++;
+          solucionAuxiliar[v] = NO_MARCADO;
         }
+
+      }
+      // Necesito al menos 3 MARCADOS
+      if (cantMarcados > 1) {
+        int cantCambiosPosibles = cantMarcados - 2;
+        pair<bool, list<int> > esSolucion = solucionPosible(G, solucionAuxiliar, cantCambiosPosibles);
+        cout <<  "Probe nodo: " << u + 1 << endl;
+        if(esSolucion.first){
+          // Cambios necesarios para que sea solucion
+          cout <<  "Exito" << endl;
+          for (list<int>::iterator itAdyCambiados=(esSolucion.second).begin(); itAdyCambiados != (esSolucion.second).end(); ++itAdyCambiados) {
+            int v = *itAdyCambiados;
+              solucionAuxiliar[v] = MARCADO;
+          }
+          // Encontre una solucion Vecina mejor, fin del ciclo
+          solucionInicial = vecindad_segundo_criterio(G, solucionAuxiliar);
+          break;
+          }
+
+        }
+        // No es solucion, reinicio los valores originales
+        solucionAuxiliar[u] = NO_MARCADO;
+        for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end(); ++itAdyU) {
+          int v = *itAdyU;
+          if (solucionInicial[v] == MARCADO) {
+              solucionAuxiliar[v] = MARCADO;
+          }
+        }
+
       }
 
     }
-  }
-  // Si la solucion vecina es mejor a la inicial, entonces hago otra iteracion
-  if (mejorVecino[n] < solucionInicial[n]) {
-    solucionInicial = vecindad_segundo_criterio(G, mejorVecino);
+
+	return solucionInicial;
+}
+
+
+pair<bool, list<int> > solucionPosible(Grafo G, vector<int> solucionCambiar, int cantCambios) {
+
+  int n = G.size();
+  bool esSolucion = true;
+  bool finCiclo = false;
+  list<int> verticesCambiados;
+  vector<int> solucionAuxiliar = solucionCambiar;
+
+  for (int u = 0; u < n && !finCiclo; u++) {
+    // Si esta MARCADO, sus adyacentes no pueden estar MARCADOS
+    if (solucionAuxiliar[u] == MARCADO && G[u].size() > 0) {
+      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end() && !finCiclo; ++itAdyU) {
+        int v = *itAdyU;
+        if (solucionAuxiliar[v] == MARCADO) {
+          esSolucion = false;
+          finCiclo = true;
+        }
+      }
+    } else if (G[u].size() > 0) {
+      // Si esta NO MARCADO, al menos uno de sus adyacentes tiene que estar MARCADO
+      bool adyMarcado = false;
+      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end() && !finCiclo; ++itAdyU) {
+        int v = *itAdyU;
+        if (solucionAuxiliar[v] == MARCADO) {
+          adyMarcado = true;
+        }
+      }
+      if (!adyMarcado && cantCambios == 0) {
+        esSolucion = false;
+        finCiclo = true;
+      } else if(!adyMarcado) {
+        // Salvo la solucion al marcar el vertice
+        solucionAuxiliar[u] = MARCADO;
+        verticesCambiados.push_front(u);
+        cantCambios --;
+      }
+    } else {
+      // Si es un K1, tiene que estar marcado
+      esSolucion = solucionAuxiliar[u] == MARCADO;
+      finCiclo = !(solucionAuxiliar[u] == MARCADO);
+    }
   }
 
-  return solucionInicial;
-
+  return make_pair(esSolucion, verticesCambiados);
 }
