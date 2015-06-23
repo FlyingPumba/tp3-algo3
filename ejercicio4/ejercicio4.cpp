@@ -16,7 +16,7 @@ typedef list<int> listaAdyacencia;
 typedef vector<listaAdyacencia> Grafo;
 
 vector<int> bfs_cdi(Grafo G, int inicio);
-pair<bool, list<int> > solucionPosible(Grafo G, vector<int>* solucionCambiar, int cantCambios);
+bool solucionPosible(Grafo G, vector<int>* solucionCambiar, int cantCambios);
 vector<int> vecindad_primer_criterio(Grafo G, vector<int> solucionInicial);
 vector<int> vecindad_segundo_criterio(Grafo G, vector<int> solucionInicial);
 
@@ -39,7 +39,6 @@ int main() {
     int inicio = 0;
 
     vector<int> solucionInicial = bfs_cdi(G, inicio);
-    cout << '1' << endl;
     /*
     cout << "[";
     for (int i = 0; i < solucionInicial.size() - 1; i++) {
@@ -162,49 +161,25 @@ vector<int> vecindad_primer_criterio(Grafo G, vector<int> solucionInicial) {
       // Necesito al menos 2 INCLUIDOS
       if (cantINCLUIDOS > 1) {
         int cantCambiosPosibles = 0;
-        pair<bool, list<int> >  esSolucion = solucionPosible(G, &solucionAuxiliar, cantCambiosPosibles);
-        // Cardinal de solucion Auxiliar
-        int tamanoSolVecina = 0;
-        for(int w = 0; w < n; w++) {
-          if (solucionAuxiliar[w] == INCLUIDO) {
-            tamanoSolVecina ++;
-          }
-        }
-        if (esSolucion.first && tamanoSolVecina < tamanoSolInicial) {
+        bool esSolucion = solucionPosible(G, &solucionAuxiliar, cantCambiosPosibles);
+        if (esSolucion) {
           // Encontre una solucion Vecina mejor, fin del ciclo
           solucionInicial = vecindad_primer_criterio(G, solucionAuxiliar);
           break;
-        } else {
-          // No es solucion, reinicio los valores originales
-          solucionAuxiliar[u] = NO_INCLUIDO;
-          for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end(); ++itAdyU) {
-            int v = *itAdyU;
-            if (solucionInicial[v] == INCLUIDO) {
-              solucionAuxiliar[v] = INCLUIDO;
-            }
-          }
-          }
         }
-
       }
-    }
 
+    }
+  }
 	return solucionInicial;
 }
 
 vector<int> vecindad_segundo_criterio(Grafo G, vector<int> solucionInicial) {
   // Criterio de Vecindad 1: Cambiamos, al  menos,  tres vectices de la solucion inicial por dos
   int n = G.size();
-  // Cardinal del Subconjunto CID
-  int tamanoSolInicial = 0;
-  for(int u = 0; u < n; u++) {
-    if (solucionInicial[u] == INCLUIDO) {
-      tamanoSolInicial ++;
-    }
-  }
-  vector<int> solucionAuxiliar = solucionInicial;
   // Genero soluciones vecinas
   for (int u = 0; u < n; u++) {
+    vector<int> solucionAuxiliar = solucionInicial;
     if (solucionInicial[u] == NO_INCLUIDO && G[u].size() > 1) {
       // Para los INCLUIDOS en la solucionInicial me fijo en sus adyacentes para encontrar algun adyacente que tambien esta INCLUIDO
       int cantINCLUIDOS = 0;
@@ -220,49 +195,22 @@ vector<int> vecindad_segundo_criterio(Grafo G, vector<int> solucionInicial) {
       // Necesito al menos 2 INCLUIDOS
       if (cantINCLUIDOS > 1) {
         int cantCambiosPosibles = cantINCLUIDOS - 2;
-        pair<bool, list<int> > esSolucion = solucionPosible(G, &solucionAuxiliar, cantCambiosPosibles);
-        // Cardinal de solucion Auxiliar
-        int tamanoSolVecina = 0;
-        for(int w = 0; w < n; w++) {
-          if (solucionAuxiliar[w] == INCLUIDO) {
-            tamanoSolVecina ++;
-          }
-        }
+        bool esSolucion = solucionPosible(G, &solucionAuxiliar, cantCambiosPosibles);
         //cout <<  "Probe nodo: " << u + 1 << endl;
-        if(esSolucion.first && tamanoSolVecina < tamanoSolInicial){
+        if(esSolucion){
           // Cambios necesarios para que sea solucion
           //cout <<  "Exito" << endl;
           // Encontre una solucion Vecina mejor, fin del ciclo
           solucionInicial = vecindad_segundo_criterio(G, solucionAuxiliar);
           break;
-        } else {
-          // No es solucion, reinicio los valores originales
-          for (list<int>::iterator itAdyCambiados=(esSolucion.second).begin(); itAdyCambiados != (esSolucion.second).end(); ++itAdyCambiados) {
-            int v = *itAdyCambiados;
-              solucionAuxiliar[v] = INCLUIDO;
-          }
         }
-
-        }
-        // No es solucion, termino de reiniciar los valores originales
-        solucionAuxiliar[u] = NO_INCLUIDO;
-        for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end(); ++itAdyU) {
-          int v = *itAdyU;
-          if (solucionInicial[v] == INCLUIDO) {
-              solucionAuxiliar[v] = INCLUIDO;
-          }
-        }
-
-
       }
-
     }
-
+  }
 	return solucionInicial;
 }
 
-
-pair<bool, list<int> > solucionPosible(Grafo G, vector<int>* solucionCambiar, int cantCambios) {
+bool solucionPosible(Grafo G, vector<int>* solucionCambiar, int cantCambios) {
 
   int n = G.size();
   bool esSolucion = true;
@@ -295,7 +243,6 @@ pair<bool, list<int> > solucionPosible(Grafo G, vector<int>* solucionCambiar, in
       } else if(!adyINCLUIDO) {
         // Salvo la solucion al marcar el vertice
         solucionAuxiliar[u] = INCLUIDO;
-        verticesCambiados.push_front(u);
         cantCambios --;
       }
     } else {
@@ -305,5 +252,5 @@ pair<bool, list<int> > solucionPosible(Grafo G, vector<int>* solucionCambiar, in
     }
   }
 
-  return make_pair(esSolucion, verticesCambiados);
+  return esSolucion;
 }
