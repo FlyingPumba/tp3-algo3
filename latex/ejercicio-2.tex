@@ -95,7 +95,7 @@ funcion resolver_aux:
 
 Veamos las distintas partes del algoritmo.
 
-En la función \textit{resolver} tenemos un ciclo de $\Theta(n)$ más un llamado al constructor de la estructura vector para construir el primer conjunto dominante que se realiza solo una vez. Este constructor tiene costo \Theta(n)\footnote{Referencia: \url{http://www.cplusplus.com/reference/vector/vector/vector/}}, y dentro del ciclo solo tenemos operaciones constantes (asignación), por lo que el costo, sin contar el llamado a la función \textit{resolver_aux}, es de $\Theta(n)$.
+En la función \textit{resolver} tenemos un ciclo de $\Theta(n)$ más un llamado al constructor de la estructura vector para construir el primer conjunto dominante que se realiza solo una vez. Este constructor tiene costo $\Theta(n)$\footnote{Referencia: \url{http://www.cplusplus.com/reference/vector/vector/vector/}}, y dentro del ciclo solo tenemos operaciones constantes (asignación), por lo que el costo, sin contar el llamado a la función \textit{resolver_aux}, es de $\Theta(n)$.
 En la función \textit{resolver_aux} tenemos 5 ciclos distintos, 2 anidados entre sí y otros 3 anidados entre sí.
 
 Los primeros 2 corresponden al chequeo de indepedencia. Dentro de ellos solo hay operaciones de costo constante (una asignacion y dos comparaciones) y se repiten cada uno $|dom|$ veces, donde $dom$ es el conjunto dominante actual. Luego, el chequeo de independencia toma: $\mathcal{O}(|dom|*|dom|)$, que en el peor caso es $\mathcal{O}(n^2)$.
