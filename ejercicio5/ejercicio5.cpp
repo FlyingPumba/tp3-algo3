@@ -14,6 +14,7 @@ using namespace std;
 #define NO_VISITADO 0
 #define INCLUIDO 1
 #define NO_INCLUIDO 0
+#define ALPHA_GREEDY_RANDOM 0.2
 
 // ESTRUCTURAS
 struct Nodo {
@@ -23,10 +24,8 @@ struct Nodo {
     Nodo(const int n, const int g) : numero(n) , grado(g) {};
 };
 
-struct orden
-{
-    inline bool operator() (const Nodo& n1, const Nodo& n2)
-    {
+struct orden {
+    inline bool operator() (const Nodo& n1, const Nodo& n2) {
         return (n1.grado > n2.grado);
     }
 };
@@ -87,6 +86,7 @@ void imprimir_resultado(vector<int>& cidm) {
     for (int i = 0; i < solucion.size(); i++) {
         cout << solucion[i] << " ";
     }
+    cout << endl;
 }
 
 void grasp(Grafo& G, vector<int>& cidm) {
@@ -122,7 +122,16 @@ void construir_greedy_random(Grafo& G, vector<int>& solucion) {
 
     int nodos_agregados = 0;
     while (nodos_agregados < n) {
-        int window_size = 5; // definir en porcentaje del grado que tiene el optimo (indice 0 de no visitados)
+        int mejor_grado = nodos[0].grado;
+        int window_size; // definir en porcentaje del grado que tiene el optimo (indice 0 de no visitados)
+        for (int i = 0; i < nodos.size(); i++) {
+            if (nodos[i].grado >= mejor_grado - mejor_grado * ALPHA_GREEDY_RANDOM) {
+                window_size = i;
+            } else {
+                break;
+            }
+        }
+
         int indice = random_in_range(0, min(window_size, (int)nodos.size()-1));
 
         int nodo = nodos[indice].numero;
