@@ -30,11 +30,11 @@ int main() {
 
     vector<int> cidm = resolver(n, matriz);
 
-    cout << "[";
-    for (int i = 0; i < cidm.size() - 1; i++) {
-        cout << cidm[i]+1 << ",";
+    cout << cidm.size() << " ";
+    for (int i = 0; i < cidm.size(); i++) {
+        cout << cidm[i] << " ";
     }
-    cout <<  cidm[cidm.size() - 1]+1 << "]" << endl;
+    cout << endl;
 
     return 0;
 }
