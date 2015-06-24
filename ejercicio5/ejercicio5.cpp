@@ -75,13 +75,18 @@ void recibir_parametros(Grafo& G) {
 }
 
 void imprimir_resultado(vector<int>& cidm) {
-    cout << cidm.size();
+    vector<int> solucion;
+    solucion.reserve(cidm.size());
     for (int i = 0; i < cidm.size(); i++) {
         if(cidm[i] == INCLUIDO) {
-            cout << " " << i + 1;
+            solucion.push_back(i+1);
         }
     }
-    cout << endl;
+
+    cout << solucion.size() << " ";
+    for (int i = 0; i < solucion.size(); i++) {
+        cout << solucion[i] << " ";
+    }
 }
 
 void grasp(Grafo& G, vector<int>& cidm) {
