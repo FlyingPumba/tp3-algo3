@@ -73,14 +73,10 @@ int main() {
         vector<int> cidm = resolver(n, matriz);
 
         FILE* file_out = fopen(files[1].c_str(),"w+");
-        fprintf(file_out, "[");
-        // cout << "[";
-        for (int i = 0; i < cidm.size() - 1; i++) {
-            fprintf(file_out, "%d,", cidm[i]+1);
-            // cout << cidm[i]+1 << ",";
+        fprintf(file_out, "%d ", (int)cidm.size());
+        for (int i = 0; i < cidm.size(); i++) {
+            fprintf(file_out, "%d ", cidm[i]+1);
         }
-        fprintf(file_out, "%d]", cidm[cidm.size() - 1]+1);
-        // cout <<  cidm[cidm.size() - 1]+1 << "]" << endl;
         fclose(file_out);
     }
 
