@@ -39,8 +39,8 @@ typedef vector<listaAdyacencia> Grafo;
 // FUNCIONES
 void recibir_parametros(Grafo& G);
 void imprimir_resultado(vector<int>& cidm);
-vector<int> grasp(Grafo& G);
-vector<int> construir_greedy_random(Grafo& G);
+void grasp(Grafo& G, vector<int>& cidm);
+void construir_greedy_random(Grafo& G, vector<int>& solucion);
 void busqueda_local(Grafo& G, vector<int>& solucionInicial);
 bool solucion_posible(Grafo& G, vector<int>& solucionCambiar, int cantCambios);
 int get_indice_nodo(Nodos& nodos, int v);
@@ -48,11 +48,12 @@ int random_in_range(int min, int max);
 
 // IMPLEMENTACION
 int main() {
-    srand(time(0)); // use current time as seed for random generator
+    srand(time(0)); // configuro el seed del random generator
 
     Grafo G;
     recibir_parametros(G);
-    vector<int> cidm = grasp(G);
+    vector<int> cidm;
+    grasp(G, cidm);
     imprimir_resultado(cidm);
     return 0;
 }
@@ -74,32 +75,34 @@ void recibir_parametros(Grafo& G) {
 }
 
 void imprimir_resultado(vector<int>& cidm) {
-    cout << "[";
+    cout << cidm.size();
     for (int i = 0; i < cidm.size(); i++) {
         if(cidm[i] == INCLUIDO) {
-          cout << i + 1 << ",";
+            cout << " " << i + 1;
         }
     }
-    cout << "]"<< endl;
+    cout << endl;
 }
 
-vector<int> grasp(Grafo& G) {
-    vector<int> mejor_solucion = construir_greedy_random(G);
+void grasp(Grafo& G, vector<int>& cidm) {
+    vector<int> mejor_solucion;
+    construir_greedy_random(G, mejor_solucion);
     // Criterio de parada: hace tantas iteraciones como nodos en el grafo.
     for (int i = 0; i < G.size(); i++) {
-        //Construir Solucion Greedy Random
-        vector<int> nueva_solucion = construir_greedy_random(G);
-        //Hacer busqueda local
+        // Construir Solucion Greedy Random
+        vector<int> nueva_solucion;
+        construir_greedy_random(G, nueva_solucion);
+        // Hacer busqueda local
         busqueda_local(G, nueva_solucion);
-        //Actualizar Mejor Solucion
+        // Actualizar Mejor Solucion
         if (nueva_solucion.size() < mejor_solucion.size()) {
             mejor_solucion = nueva_solucion;
         }
     }
-    return mejor_solucion;
+    cidm = mejor_solucion;
 }
 
-vector<int> construir_greedy_random(Grafo& G) {
+void construir_greedy_random(Grafo& G, vector<int>& solucion) {
     int n = G.size();
     Nodos nodos(n, Nodo());
 
@@ -117,7 +120,7 @@ vector<int> construir_greedy_random(Grafo& G) {
 
     sort(nodos.begin(), nodos.end(), orden());
 
-    vector<int> solucion(n, NO_INCLUIDO);
+    solucion = vector<int>(n, NO_INCLUIDO);
 
     int nodos_agregados = 0;
     while (nodos_agregados < n) {
@@ -136,7 +139,6 @@ vector<int> construir_greedy_random(Grafo& G) {
             nodos_agregados++;
         }
     }
-    return solucion;
 }
 
 void busqueda_local(Grafo& G, vector<int>& solucionInicial) {
