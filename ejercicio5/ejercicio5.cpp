@@ -48,7 +48,7 @@ int random_in_range(int min, int max);
 
 // IMPLEMENTACION
 int main() {
-    srand(time(0)); // use current time as seed for random generator
+    srand(time(0)); // configuro el seed del random generator
 
     Grafo G;
     recibir_parametros(G);
@@ -74,25 +74,24 @@ void recibir_parametros(Grafo& G) {
 }
 
 void imprimir_resultado(vector<int>& cidm) {
-    cout << "[";
+    cout << cidm.size();
     for (int i = 0; i < cidm.size(); i++) {
         if(cidm[i] == INCLUIDO) {
-          cout << i + 1 << ",";
+            cout << " " << i + 1;
         }
-
     }
-    cout << "]"<< endl;
+    cout << endl;
 }
 
 vector<int> grasp(Grafo& G) {
     vector<int> mejor_solucion = construir_greedy_random(G);
     // Criterio de parada: hace tantas iteraciones como nodos en el grafo.
     for (int i = 0; i < G.size(); i++) {
-        //Construir Solucion Greedy Random
+        // Construir Solucion Greedy Random
         vector<int> nueva_solucion = construir_greedy_random(G);
-        //Hacer busqueda local
+        // Hacer busqueda local
         busqueda_local(G, nueva_solucion);
-        //Actualizar Mejor Solucion
+        // Actualizar Mejor Solucion
         if (nueva_solucion.size() < mejor_solucion.size()) {
             mejor_solucion = nueva_solucion;
         }
