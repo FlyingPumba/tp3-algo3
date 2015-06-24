@@ -1,9 +1,0 @@
-n = 2 moto = 1 buggy = 1
-1. bmx = 10, moto = 5, buggy = 2
-2. bmx = 10, moto = 9, buggy = 8
-
-Si vengo por el lado de la moto, es decir pongo la moto primero (ahorro de 5 vs 1):
-(1,0) = 1.moto 2. bmx
-Agrego el buggy, y va a reemplazar la moto, no el bmx (ahorro de 3 vs 2), por lo que tengo que reubicar la moto:
-(1,1) = 1.buggy 2.moto
-
