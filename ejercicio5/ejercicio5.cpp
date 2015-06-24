@@ -76,9 +76,9 @@ void recibir_parametros(Grafo& G) {
 void imprimir_resultado(vector<int>& cidm) {
     cout << "[";
     for (int i = 0; i < cidm.size() - 1; i++) {
-        cout << cidm[i]+1 << ",";
+        cout << cidm[i] << ",";
     }
-    cout <<  cidm[cidm.size() - 1]+1 << "]" << endl;
+    cout <<  cidm[cidm.size() - 1] << "]" << endl;
 }
 
 vector<int> grasp(Grafo& G) {
