@@ -208,7 +208,7 @@ vector<int> vecindad_primer_criterio(Grafo G, vector<int> solucionInicial) {
 }
 
 vector<int> vecindad_segundo_criterio(Grafo G, vector<int> solucionInicial) {
-  // Criterio de Vecindad 1: Cambiamos, al  menos,  tres vectices de la solucion inicial por dos
+  // Criterio de Vecindad 2: Cambiamos, al  menos,  tres vectices de la solucion inicial por dos
   int n = G.size();
   // Genero soluciones vecinas
   for (int u = 0; u < n; u++) {
