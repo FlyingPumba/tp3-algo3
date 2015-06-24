@@ -108,14 +108,7 @@ void construir_greedy_random(Grafo& G, vector<int>& solucion) {
 
     for(int u = 0; u < n; u++) {
         nodos[u].numero = u;
-    }
-
-    for(int u = 0; u < n; u++) {
-        for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end(); ++itAdyU) {
-            int v = *itAdyU;
-            nodos[u].grado = nodos[u].grado + 1;
-            nodos[v].grado = nodos[v].grado + 1;
-        }
+        nodos[u].grado = G[u].size();
     }
 
     sort(nodos.begin(), nodos.end(), orden());
