@@ -1,6 +1,6 @@
 #include <vector>
 #include <iostream>
-#include <algorithm> 
+#include <algorithm>
 #include <stack>
 #include <list>
 #include <queue>
@@ -52,7 +52,7 @@ int main() {
     }
 
     vector<int> cidm = resolver(n, G, nodos);
-    
+
         cout << cidm.size() << " ";
     for (int i = 0; i < cidm.size(); i++) {
         cout << cidm[i]+1 << " ";
@@ -67,7 +67,7 @@ vector<int> resolver(int n, Grafo G, Nodos nodos) {
     // Ordeno a los nodos segun su grado
     std::sort(nodos.begin(), nodos.end(), orden());
 
-    bool visitado[sizeof nodos] = { false };
+    vector<bool> visitado(n, false);
     vector<int> cidm;
     cidm.reserve(n);
 
@@ -78,14 +78,10 @@ vector<int> resolver(int n, Grafo G, Nodos nodos) {
             for (list<int>::iterator itAdyU=G[nodos[u].numero].begin(); itAdyU != G[nodos[u].numero].end(); ++itAdyU) {
                 int j = *itAdyU;
                 visitado[j] = true;
-                
+
             }
         }
     }
 
     return cidm;
 }
-
-
-
-

@@ -62,7 +62,7 @@ int main() {
                 nodos[i-1].grado = nodos[i-1].grado + 1;
                 nodos[j-1].grado = nodos[j-1].grado + 1;
             }
-        }   
+        }
 
         cout << n <<  "holis"<<endl;
 
@@ -76,19 +76,19 @@ int main() {
 
         cout << n << " " <<  d << endl;
 
-       tiempos[n] = d;         
-        
+       tiempos[n] = d;
+
 
     }
 
-    for (int index = 0; index < N_MAX; index ++) {       
+    for (int index = 0; index < N_MAX; index ++) {
         fprintf(file, "%d %7.8f\n", index, tiempos[index]);
     }
 
     fclose(file);
 
 
-    
+
 
     return 0;
 }
@@ -97,7 +97,7 @@ vector<int> resolver(int n, Matriz matriz, Nodos nodos) {
     // Ordeno a los nodos segun su grado
     std::sort(nodos.begin(), nodos.end(), orden());
 
-    bool visitado[sizeof nodos] = { false };
+    vector<bool> visitado(n, false);
     vector<int> cidm;
     cidm.reserve(n);
 
@@ -115,7 +115,3 @@ vector<int> resolver(int n, Matriz matriz, Nodos nodos) {
 
     return cidm;
 }
-
-
-
-
