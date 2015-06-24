@@ -3,7 +3,7 @@
 #include <stack>
 #include <list>
 #include <queue>
-#include <utility>
+#include <algorithm>
 using namespace std;
 
 #define VISITADO 1
@@ -12,10 +12,27 @@ using namespace std;
 #define NO_INCLUIDO 0
 
 // Esta version tiene vecindades 2-1 o 3-2 vertices de diferencia
+struct Nodo {
+    int numero;
+    int grado;
+    Nodo() : numero(0), grado(0) {};
+    Nodo(const int n, const int g) : numero(n) , grado(g) {};
+};
+
+struct orden
+{
+    inline bool operator() (const Nodo& n1, const Nodo& n2)
+    {
+        return (n1.grado > n2.grado);
+    }
+};
+
+typedef vector<Nodo> Nodos;
 typedef list<int> listaAdyacencia;
 typedef vector<listaAdyacencia> Grafo;
 
 vector<int> bfs_cdi(Grafo G, int inicio);
+vector<int> goloso(Grafo G);
 bool solucionPosible(Grafo G, vector<int>* solucionCambiar, int cantCambios);
 vector<int> vecindad_primer_criterio(Grafo G, vector<int> solucionInicial);
 vector<int> vecindad_segundo_criterio(Grafo G, vector<int> solucionInicial);
@@ -37,22 +54,9 @@ int main() {
     }
     //Solucion Inicial 1: empiezo por el nodo 0
     int inicio = 0;
-
-    vector<int> solucionInicial = bfs_cdi(G, inicio);
-    /*
-    cout << "[";
-    for (int i = 0; i < solucionInicial.size() - 1; i++) {
-        cout << solucionInicial[i] << ",";
-    }
-    cout <<  solucionInicial[solucionInicial.size() - 1] << "] ";
-    int tamano = 0;
-    for (int i = 0; i < solucionInicial.size(); i++) {
-      if (solucionInicial[i] == INCLUIDO) {
-        tamano ++;
-      }
-    }
-    cout << tamano << endl; */
-    // Solucion Inicial 2: Usar heuristica golosa
+    //vector<int> solucionInicial = bfs_cdi(G, inicio);
+    // Solucion Inicial 2: Heuristica golosa
+    vector<int> solucionInicial = goloso(G);
 
     //vector<int> cidm = vecindad_primer_criterio(G, solucionInicial);
 
@@ -134,19 +138,48 @@ vector<int> bfs_cdi(Grafo G, int inicio) {
   return domIndep;
 }
 
+vector<int> goloso(Grafo G) {
+  int n = G.size();
+  Nodos nodos(n, Nodo());
+
+  for(int u = 0; u < n; u++) {
+    nodos[u].numero = u;
+  }
+  for(int u = 0; u < n; u++) {
+    for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end(); ++itAdyU) {
+      int v = *itAdyU;
+      nodos[u].grado = nodos[u].grado + 1;
+      nodos[v].grado = nodos[v].grado + 1;
+    }
+  }
+
+  sort(nodos.begin(), nodos.end(), orden());
+
+  vector<int> solucionInicial(n, NO_INCLUIDO);
+  vector<bool> visitado(n, false);
+
+  for(int u = 0; u < n ; u++){
+      if(visitado[nodos[u].numero] == false){
+        visitado[nodos[u].numero] = true;
+        solucionInicial[nodos[u].numero] = INCLUIDO;
+          for (list<int>::iterator itAdyU=G[nodos[u].numero].begin(); itAdyU != G[nodos[u].numero].end(); ++itAdyU) {
+              int v = *itAdyU;
+              visitado[v] = true;
+
+          }
+      }
+  }
+
+  return solucionInicial;
+}
+
+
 vector<int> vecindad_primer_criterio(Grafo G, vector<int> solucionInicial) {
 	// Criterio de Vecindad 1: Cambiamos, al  menos,  dos vectices de la solucion inicial por uno
   int n = G.size();
-  // Cardinal del Subconjunto CID
-  int tamanoSolInicial = 0;
-  for(int u = 0; u < n; u++) {
-    if (solucionInicial[u] == INCLUIDO) {
-      tamanoSolInicial ++;
-    }
-  }
-  vector<int> solucionAuxiliar = solucionInicial;
   // Genero soluciones vecinas
   for (int u = 0; u < n; u++) {
+    vector<int> solucionAuxiliar = solucionInicial;
     if (solucionInicial[u] == NO_INCLUIDO && G[u].size() > 1) {
       int cantINCLUIDOS = 0;
       solucionAuxiliar[u] = INCLUIDO;
