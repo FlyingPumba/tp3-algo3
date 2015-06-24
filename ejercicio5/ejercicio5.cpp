@@ -128,8 +128,11 @@ void construir_greedy_random(Grafo& G, vector<int>& solucion) {
         for (list<int>::iterator itAdyU=G[nodo].begin(); itAdyU != G[nodo].end(); itAdyU++) {
             int v = *itAdyU;
             int index = get_indice_nodo(nodos, v);
-            nodos.erase(nodos.begin()+index);
-            nodos_agregados++;
+            if (index != -1) {
+                // v no esta en el vector de nodos
+                nodos.erase(nodos.begin()+index);
+                nodos_agregados++;
+            }
         }
     }
 }
