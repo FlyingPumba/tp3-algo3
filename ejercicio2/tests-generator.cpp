@@ -32,18 +32,11 @@ string to_string(int value) {
     return oss.str();
 }
 
-vector<string> get_random_filename() {
-    int x = random_in_range(100, 5000);
-    int y = random_in_range(100, 5000);
-    int z = random_in_range(100, 5000);
+vector<string> get_random_filename(int c) {
     vector<string> aux(2, "");
-    aux[0] += to_string(x);
-    aux[0] += to_string(y);
-    aux[0] += to_string(z);
+    aux[0] += to_string(c);
     aux[0] += ".in";
-    aux[1] += to_string(x);
-    aux[1] += to_string(y);
-    aux[1] += to_string(z);
+    aux[1] += to_string(c);
     aux[1] += ".out";
     return aux;
 }
@@ -52,7 +45,7 @@ int main() {
     srand(time(0)); // use current time as seed for random generator
 
     for (int c = 0; c < CANT_TESTS; c++) {
-        vector<string> files = get_random_filename();
+        vector<string> files = get_random_filename(c);
         FILE* file_in = fopen(files[0].c_str(),"w+");
 
         int n = random_in_range(CANT_NODOS_MIN, CANT_NODOS_MAX);
