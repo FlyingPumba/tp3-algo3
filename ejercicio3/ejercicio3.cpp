@@ -1,6 +1,6 @@
 #include <vector>
 #include <iostream>
-#include <algorithm> 
+#include <algorithm>
 using namespace std;
 
 struct Nodo {
@@ -61,7 +61,7 @@ vector<int> resolver(int n, Matriz matriz, Nodos nodos) {
     // Ordeno a los nodos segun su grado
     std::sort(nodos.begin(), nodos.end(), orden());
 
-    bool visitado[sizeof nodos] = { false };
+    vector<bool> visitado(n, false);
     vector<int> cidm;
     cidm.reserve(n);
 
@@ -79,7 +79,3 @@ vector<int> resolver(int n, Matriz matriz, Nodos nodos) {
 
     return cidm;
 }
-
-
-
-
