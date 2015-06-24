@@ -75,13 +75,10 @@ void recibir_parametros(Grafo& G) {
 
 void imprimir_resultado(vector<int>& cidm) {
     cout << "[";
-    for (int i = 0; i < cidm.size(); i++) {
-        if(cidm[i] == INCLUIDO) {
-          cout << i + 1 << ",";
-        }
-
+    for (int i = 0; i < cidm.size() - 1; i++) {
+        cout << cidm[i]+1 << ",";
     }
-    cout << "]"<< endl;
+    cout <<  cidm[cidm.size() - 1]+1 << "]" << endl;
 }
 
 vector<int> grasp(Grafo& G) {
