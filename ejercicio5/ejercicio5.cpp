@@ -120,10 +120,10 @@ void construir_greedy_random(Grafo& G, vector<int>& solucion) {
 
     solucion = vector<int>(n, NO_INCLUIDO);
 
-    int nodos_agregados = 0;
-    while (nodos_agregados < n) {
+    int nodos_visitados = 0;
+    while (nodos_visitados < n) {
         int mejor_grado = nodos[0].grado;
-        int window_size; // definir en porcentaje del grado que tiene el optimo (indice 0 de no visitados)
+        int window_size = 0; // definir en porcentaje del grado que tiene el optimo (indice 0 de no visitados)
         for (int i = 0; i < nodos.size(); i++) {
             if (nodos[i].grado >= mejor_grado - mejor_grado * ALPHA_GREEDY_RANDOM) {
                 window_size = i;
@@ -136,7 +136,7 @@ void construir_greedy_random(Grafo& G, vector<int>& solucion) {
 
         int nodo = nodos[indice].numero;
         solucion[nodo] = INCLUIDO;
-        nodos_agregados++;
+        nodos_visitados++;
         nodos.erase(nodos.begin()+indice);
 
         for (list<int>::iterator itAdyU=G[nodo].begin(); itAdyU != G[nodo].end(); itAdyU++) {
@@ -145,7 +145,7 @@ void construir_greedy_random(Grafo& G, vector<int>& solucion) {
             if (index != -1) {
                 // v no esta en el vector de nodos
                 nodos.erase(nodos.begin()+index);
-                nodos_agregados++;
+                nodos_visitados++;
             }
         }
     }
