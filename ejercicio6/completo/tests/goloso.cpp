@@ -1,10 +1,17 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <ctime>
+#include <chrono>
+#include <stdlib.h>
+#include <stdio.h>
 #include <stack>
 #include <list>
 #include <queue>
+
 using namespace std;
+
+
 
 struct Nodo {
     int numero;
@@ -21,7 +28,6 @@ struct orden
     }
 };
 
-
 typedef vector<Nodo> Nodos;
 typedef list<int> listaAdyacencia;
 typedef vector<listaAdyacencia> Grafo;
@@ -30,16 +36,23 @@ vector<int> resolver(int n, Grafo G, Nodos nodos);
 
 // Implementacion.
 int main() {
+
+    FILE* file = fopen("grafo-completo-goloso.txt","a+");
+
+    
     int n, m;
     cin >> n;
     cin >> m;
 
-    Grafo G(n, listaAdyacencia());
 
-    Nodos nodos(n, Nodo());
-    for(int i = 0; i < n; i++) {
-        nodos[i].numero = i;
-    }
+       Grafo G(n, listaAdyacencia());
+
+        Nodos nodos(n, Nodo());
+
+        for(int i = 0; i < n; i++) {
+            nodos[i].numero = i;
+        }
+
 
     int v, w;
     for (int i = 0; i < m; i++) {
@@ -51,14 +64,19 @@ int main() {
         nodos[w-1].grado = nodos[w-1].grado + 1;
     }
 
+    std::chrono::time_point<std::chrono::high_resolution_clock> t1 = std::chrono::high_resolution_clock::now();
+
     vector<int> cidm = resolver(n, G, nodos);
+                                         
+    std::chrono::time_point<std::chrono::high_resolution_clock> t2 = std::chrono::high_resolution_clock::now();
 
-        cout << cidm.size() << " ";
-    for (int i = 0; i < cidm.size(); i++) {
-        cout << cidm[i]+1 << " ";
-    }
-    cout << endl;
+    double d = double(std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count());
 
+    fprintf(file, "%d %d %lu %7.8f\n",n, m, cidm.size() , d);
+    
+
+    fclose(file);
+   
 
     return 0;
 }
@@ -85,3 +103,7 @@ vector<int> resolver(int n, Grafo G, Nodos nodos) {
 
     return cidm;
 }
+
+
+
+
