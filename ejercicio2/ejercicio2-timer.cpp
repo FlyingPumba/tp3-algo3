@@ -17,10 +17,9 @@ using namespace std;
 typedef vector<int> Vec;
 typedef vector<Vec> Matriz;
 
-void medir_tiempos(FILE* file, int n, int m, Matriz matriz);
+void medir_tiempos(ofstream &data_file, int n, int m, Matriz matriz);
 void start_timer();
 double stop_timer();
-void get_test_files(const char* path, vector<char*> &files);
 vector<int> resolver(int n, Matriz matriz);
 vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm);
 
@@ -30,19 +29,39 @@ static chrono::time_point<chrono::high_resolution_clock> start_time;
 
 // Implementacion.
 int main() {
-    vector<char*> tests;
     char* path = "../tests/";
-    get_test_files(path, tests);
 
-    FILE* file = fopen("datos_ej2.dat","w+");
-    fprintf(file, "%s %s %s %s %s %s\n", "n", "m", "sin_podas", "poda_A", "poda_B", "ambas_podas");
+    // obtengo los nombres de los tests
+    DIR* dirFile = opendir(path);
+    vector<string> tests;
+    if (dirFile) {
+       struct dirent* hFile;
+       errno = 0;
+       while (( hFile = readdir( dirFile )) != NULL )
+       {
+          if (!strcmp( hFile->d_name, ".")) continue;
+          if (!strcmp( hFile->d_name, "..")) continue;
+          if (hFile->d_name[0] == '.') continue;
+
+          if (strstr( hFile->d_name, ".in")) {
+              string str(hFile->d_name);
+              tests.push_back(str);
+          }
+       }
+       closedir(dirFile);
+    }
+
+    // abro archivo de output
+    ofstream data_file;
+    data_file.open("datos_ej2.dat");
+    data_file << "n m sin_podas poda_A poda_B ambas_podas\n";
 
     for (int i = 0; i < tests.size(); i++) {
         cout << tests[i] << endl;
-        char str[50];
-        strcpy(str, path);
-        strcat(str, tests[i]);
-        ifstream infile(str);
+        string test_file(path);
+        test_file += tests[i];
+
+        ifstream infile(test_file);
 
         string line;
         getline(infile, line);
@@ -65,15 +84,17 @@ int main() {
             matriz[w-1][v-1] = 1;
         }
 
-        //cout << n << " " << m << endl;
-        medir_tiempos(file, n, m, matriz);
+        cout << n << " " << m << endl;
+        medir_tiempos(data_file, n, m, matriz);
+        infile.close();
+        infile.clear();
     }
 
-    fclose(file);
+    data_file.close();
     return 0;
 }
 
-void medir_tiempos(FILE* file, int n, int m, Matriz matriz) {
+void medir_tiempos(ofstream &data_file, int n, int m, Matriz matriz) {
     poda_A = false;
     poda_B = false;
     start_timer();
@@ -98,7 +119,7 @@ void medir_tiempos(FILE* file, int n, int m, Matriz matriz) {
     resolver(n, matriz);
     double time_ambas_podas = stop_timer();
 
-    fprintf(file, "%d %d %.2f %.2f %.2f %.2f\n", n, m, time_sin_podas, time_poda_A, time_poda_B, time_ambas_podas);
+    data_file << n << " " << m << " " << time_sin_podas << " " << time_poda_A << " " << time_poda_B << " " << time_ambas_podas << "\n";
 }
 
 
@@ -109,26 +130,6 @@ void start_timer() {
 double stop_timer() {
     chrono::time_point<chrono::high_resolution_clock> end_time = chrono::high_resolution_clock::now();
     return double(chrono::duration_cast<chrono::nanoseconds>(end_time - start_time).count());
-}
-
-void get_test_files(const char* path, vector<char*> &files) {
-   DIR* dirFile = opendir(path);
-
-   if (dirFile) {
-      struct dirent* hFile;
-      errno = 0;
-      while (( hFile = readdir( dirFile )) != NULL )
-      {
-         if (!strcmp( hFile->d_name, ".")) continue;
-         if (!strcmp( hFile->d_name, "..")) continue;
-         if (hFile->d_name[0] == '.') continue;
-
-         if (strstr( hFile->d_name, ".in")) {
-             files.push_back(hFile->d_name);
-         }
-      }
-      closedir(dirFile);
-   }
 }
 
 vector<int> resolver(int n, Matriz matriz) {
