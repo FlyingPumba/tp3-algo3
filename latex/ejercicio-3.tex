@@ -1,9 +1,56 @@
 
 \subsection{Ejercicio A}
-Realizamos una heurística golosa para resolver el problema. Lo que hace el algoritmo es lo siguiente. Primero toma los datos de entrada del problema, arma la matriz de adyacencia del grafo y además crea un vector de nodos de tamaño $n$ donde cada nodo contiene guardado su número de nodo y el grado que tiene en el grafo. \\ 
+Realizamos una heurística golosa para resolver el problema. Lo que hace el algoritmo es lo siguiente. Primero toma los datos de entrada del problema, y se arma la matriz o las listas de adyacencia del grafo (según la implementación elegida). Además, se crea un vector de nodos de tamaño $n$ donde cada nodo contiene guardado su número de nodo y el grado que tiene en el grafo. \\ 
 Una vez que se procesaron los datos de entrada, se procede a resolver el problema. Para esto, se ordena el arreglo de nodos según sus grados de mayor a menor. Luego, se crea un arreglo de booleanos de tamaño n, donde cada uno está inicializado en $false$. En este arreglo se guarda si el nodo ya fue visitado o no. También se crea un arreglo llamado $cidm$ donde se guardará la solución. \\ 
-Por último, se recorre en orden el arreglo de nodos ordenados según su grado. Si un nodo no fue visitado, se agrega el nodo a $cidm$ y luego se recorre su fila en la matriz de adyacencia, marcando como visitados a todos sus adyacentes (ya que queremos que sea dominante y mínimo).
+Por último, se recorre en orden el arreglo de nodos ordenados según su grado. Si un nodo no fue visitado, se agrega el nodo a $cidm$ y luego se marcan como visitados a todos sus adyacentes (ya que queremos que sea dominante y mínimo).
 Una vez que se recorre todo el arreglo, ya tenemos el $cidm$, solo resta mostrarlo por pantalla.
+
+\subsection{Pseudocódigo}
+
+\subsubsection{Implementación sobre listas de adyacencia}
+\begin{codesnippet}
+Crear listas de adyacencia con el input
+Crear arreglo nodos que guarda numero de nodo y grado para cada nodo
+
+Ordenar arreglo nodos segun su grado
+Crear vector de booleanos visitado de tamano n para guardar nodos visitados
+Crear vector cidm para guardar la solucion
+
+Para cada nodo u en el arreglo ordenado:
+	Si el nodo no fue visitado:
+		agregar el nodo a cidm
+		Para cada nodo w en su lista de adyacencia:
+			marcar w como visitado
+		fin Para
+	fin Si
+fin Para
+
+mostrar cidm			
+\end{codesnippet}
+
+\subsubsection{Implementación sobre matriz de adyacencia}
+\begin{codesnippet}
+Crear matriz de adyacencia con el input
+Crear arreglo nodos que guarda numero de nodo y grado para cada nodo
+
+Ordenar arreglo nodos segun su grado
+Crear vector de booleanos visitado de tamano n para guardar nodos visitados
+Crear vector cidm para guardar la solucion
+
+Para cada nodo u en el arreglo ordenado:
+	Si el nodo no fue visitado:
+		agregar el nodo a cidm
+		Para cada nodo w en su fila de la matriz de adyacencia:
+			Si el nodo w es adyacente:
+				marcar w como visitado
+			fin Si	
+		fin Para
+	fin Si
+fin Para
+
+mostrar cidm			
+\end{codesnippet}
+
 
 
 \subsection{Ejercicio B}
@@ -42,29 +89,37 @@ $$ \mathcal{O}(n*log(n) + m)$$
 
 Veamos un ejemplo de instancias donde la heurística golosa no funciona. Supongamos que tenemos un grafo $G$ con un nodo central $v$ y sean $w_i$ con $1 \leq i \leq k$ sus $k$ vecinos, y supongamos que todo $w_1$ tiene a su vez $k-2$ vecinos de grado 1, llamemoslos $u_{i,j}$ con $1 \leq i \leq k$ y $1 \leq j \leq k-2$. \\ 
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[scale=0.5]{imagenes/grafos-ej3-tp3-1.png}
-\end{center}
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.5\textwidth}
+                \includegraphics[width=\textwidth]{imagenes/grafos-ej3-tp3-1.png}
+                \caption{}
+        \end{subfigure}%
 \end{figure}
+
 
 
  Ahora, al ordenar los nodos según su grado nos quedaría $v$ con $k$ vecinos, luego $w_i$ con $1 \leq i \leq k$, donde cada $w_i$ tiene grado $k-1$, y por último los $k * (k-2)$ nodos $u$ de grado 1. Al correr el algoritmo goloso, este arrojaría un DCIM con cardinalidad $k * (k-2) + 1$ ya que el algoritmo seleccionará a $v$ y a $u_{i,j}$ con $1 \leq i \leq k$ y $1 \leq j \leq k-2$. \\ 
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[scale=0.5]{imagenes/grafos-ej3-tp3-2.png}
-\end{center}
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.5\textwidth}
+                \includegraphics[width=\textwidth]{imagenes/grafos-ej3-tp3-2.png}
+                \caption{}
+        \end{subfigure}%
 \end{figure}
 
 
  Sin embargo, si seleccionamos a todos los  $w_i$ con $1 \leq i \leq k$, tendríamos un DCIM real con cardinalidad $k$ que es mucho menor que el arrojado por el algoritmo.
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[scale=0.5]{imagenes/grafos-ej3-tp3-3.png}
-\end{center}
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.5\textwidth}
+                \includegraphics[width=\textwidth]{imagenes/grafos-ej3-tp3-3.png}
+                \caption{}
+        \end{subfigure}%
 \end{figure}
+
 
 Veamos que en este grafo $G=(V,E)$ tenemos $|V| = 1 + k*(k-1)$ nodos y nuestro algoritmo goloso arroja una solución de tamaño $1 + k*(k-2)$ es decir, solo quedan sin seleccionar $k$ nodos. Sin embargo, la solución optima sólo utiliza $k$ nodos. Notemos que el error es cuadrático.
 
@@ -90,6 +145,10 @@ En la implementación sobre matrices arrojo los siguientes resultados:\\
                 \caption{Dividiendo a los tiempos por $n$}
         \end{subfigure}
 
+\end{figure}
+
+\begin{figure}[H]
+        \centering
         \begin{subfigure}[b]{0.5\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/completo-matriz-3.pdf}
                 \caption{Dividiendo a los tiempos por $n^2$}
@@ -99,10 +158,9 @@ En la implementación sobre matrices arrojo los siguientes resultados:\\
                 \includegraphics[width=\textwidth]{imagenes/completo-matriz-4.pdf}
                 \caption{Dividiendo a los tiempos por $n + n*log(n)$}
         \end{subfigure}
-
 \end{figure}
 
-A continuación, adjuntamos una tabla con los últimos 20 valores obtenidos en las instancias aleatorias, teniendo en cuenta que los casos fueron previamente ordenados según el tamaño ($n$):
+A continuación, adjuntamos una tabla con los últimos 20 valores obtenidos en las instancias, teniendo en cuenta que los casos fueron previamente ordenados según el tamaño ($n$):
 
 \begin{table}[H]
 \parbox{0.3\textwidth}{
@@ -149,8 +207,11 @@ Veamos ahora los resultados en la implementación sobre listas de adyacencia:
                 \includegraphics[width=\textwidth]{imagenes/completo-listas-2.pdf}
                 \caption{Dividiendo a los tiempos por $n$}
         \end{subfigure}
+\end{figure}
 
-        \begin{subfigure}[b]{0.5\textwidth}
+\begin{figure}[H]
+        \centering
+         \begin{subfigure}[b]{0.5\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/completo-listas-3.pdf}
                 \caption{Dividiendo a los tiempos por $n^2$}
         \end{subfigure}
@@ -159,10 +220,8 @@ Veamos ahora los resultados en la implementación sobre listas de adyacencia:
                 \includegraphics[width=\textwidth]{imagenes/completo-listas-4.pdf}
                 \caption{Dividiendo a los tiempos por $n + n*log(n)$}
         \end{subfigure}
-
 \end{figure}
-
-A continuación, adjuntamos una tabla con los últimos 20 valores obtenidos en las instancias aleatorias, teniendo en cuenta que los casos fueron previamente ordenados según el tamaño ($n$):
+A continuación, adjuntamos una tabla con los últimos 20 valores obtenidos en las instancias, teniendo en cuenta que los casos fueron previamente ordenados según el tamaño ($n$):
 
 \begin{table}[H]
 \parbox{0.3\textwidth}{
@@ -206,29 +265,34 @@ En la implementación sobre matrices arrojo los siguientes resultados:\\
 
 \begin{figure}[H]
         \centering
-\begin{subfigure}[b]{0.25\textwidth}
+\begin{subfigure}[b]{0.5\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-matriz-1.pdf}
                 \caption{Tiempos sin procesar, en milisegundos}
         \end{subfigure}%
 
-        \begin{subfigure}[b]{0.25\textwidth}
+        \begin{subfigure}[b]{0.5\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-matriz-2.pdf}
                 \caption{Dividiendo a los tiempos por $n$}
         \end{subfigure}
 
-        \begin{subfigure}[b]{0.25\textwidth}
+
+
+\end{figure}
+
+\begin{figure}[H]
+        \centering
+        \begin{subfigure}[b]{0.5\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-matriz-3.pdf}
                 \caption{Dividiendo a los tiempos por $n^2$}
         \end{subfigure}
 
-        \begin{subfigure}[b]{0.25\textwidth}
+        \begin{subfigure}[b]{0.5\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-matriz-4.pdf}
                 \caption{Dividiendo a los tiempos por $n + n*log(n)$}
         \end{subfigure}
-
 \end{figure}
 
-A continuación, adjuntamos una tabla con los últimos 20 valores obtenidos en las instancias aleatorias, teniendo en cuenta que los casos fueron previamente ordenados según el tamaño ($n$):
+A continuación, adjuntamos una tabla con los últimos 20 valores obtenidos en las instancias, teniendo en cuenta que los casos fueron previamente ordenados según el tamaño ($n$):
 
 \begin{table}[H]
 \parbox{0.3\textwidth}{
@@ -266,29 +330,34 @@ Veamos ahora los resultados en la implementación sobre listas de adyacencia:
 
 \begin{figure}[H]
         \centering
-\begin{subfigure}[b]{0.25\textwidth}
+\begin{subfigure}[b]{0.5\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-listas-1.pdf}
                 \caption{Tiempos sin procesar, en milisegundos}
         \end{subfigure}%
 
-        \begin{subfigure}[b]{0.25\textwidth}
+        \begin{subfigure}[b]{0.5\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-listas-2.pdf}
                 \caption{Dividiendo a los tiempos por $n$}
         \end{subfigure}
 
-        \begin{subfigure}[b]{0.25\textwidth}
+
+\end{figure}
+
+\begin{figure}[H]
+        \centering
+        \begin{subfigure}[b]{0.5\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-listas-3.pdf}
                 \caption{Dividiendo a los tiempos por $n^2$}
         \end{subfigure}
 
-        \begin{subfigure}[b]{0.25\textwidth}
+        \begin{subfigure}[b]{0.5\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-listas-4.pdf}
                 \caption{Dividiendo a los tiempos por $n + n*log(n)$}
         \end{subfigure}
 
 \end{figure}
 
-A continuación, adjuntamos una tabla con los últimos 20 valores obtenidos en las instancias aleatorias, teniendo en cuenta que los casos fueron previamente ordenados según el tamaño ($n$):
+A continuación, adjuntamos una tabla con los últimos 20 valores obtenidos en las instancias, teniendo en cuenta que los casos fueron previamente ordenados según el tamaño ($n$):
 
 \begin{table}[H]
 \parbox{0.3\textwidth}{
