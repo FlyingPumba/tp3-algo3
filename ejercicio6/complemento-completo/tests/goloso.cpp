@@ -37,7 +37,7 @@ vector<int> resolver(int n, Grafo G, Nodos nodos);
 // Implementacion.
 int main() {
 
-    FILE* file = fopen("grafo-completo-goloso.txt","a+");
+    FILE* file = fopen("grafo-complemento-goloso.txt","a+");
 
     
     int n, m;
@@ -72,17 +72,7 @@ int main() {
 
     double d = double(std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count());
 
-    long l = cidm.size();
-
-  
-    fprintf(file, "%d %d %l %7.8f\n",n, m, l , d);
-
-    cout << cidm.size() << " ";
-    for (int i = 0; i < cidm.size(); i++) {
-        cout << cidm[i]+1 << " ";
-        fprintf(file, "%d ", cidm[i]+1);
-    }
-    cout << endl;
+    fprintf(file, "%d %d %lu %7.8f\n",n, m, cidm.size() , d);
     
 
     fclose(file);
