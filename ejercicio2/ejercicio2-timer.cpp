@@ -84,8 +84,10 @@ int main() {
             matriz[w-1][v-1] = 1;
         }
 
-        // cout << n << " " << m << endl;
-        medir_tiempos(data_file, n, m, matriz);
+        cout << n << " " << m << endl;
+        if (n < 10) {
+            medir_tiempos(data_file, n, m, matriz);
+        }
         infile.close();
         infile.clear();
     }
@@ -163,19 +165,45 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
         }
 
         if(indep) {
-            if (poda_A == true) {
-                // Sabemos que si Dom es dominante e independiente, entonces cualquier subconjunto de Dom es no-dominante
-                // Luego, devolvemos el que tiene menor cardinal entre dom y cidm
-                if (dom_size < cidm_size) {
-                    return dom;
-                } else {
-                    return cidm;
+            bool dom_dominante = true;
+            if (poda_B == false) {
+                // no se todavia si Dom es dominante o no, lo chequeo:
+                for (int i = 0; i < n; i++) {
+                    // chequeo si el nodo i está en copia o es adyacente a alguno en copia
+                    bool nodo = false;
+                    for (int j = 0; j < dom.size(); j++) {
+                        if (dom[j] == i) {
+                            // el nodo i está en dom
+                            nodo = true;
+                            break;
+                        } else if (matriz[i][dom[j]] == 1) {
+                            // el nodo i es adyacente a alguno en dom
+                            nodo = true;
+                            break;
+                        }
+                    }
+                    if (!nodo) {
+                        dom_dominante = false;
+                        break;
+                    }
                 }
-            } else {
-                // sin aplicar la poda
-                if (dom_size < cidm_size) {
-                    cidm = dom;
-                    cidm_size = dom_size;
+            }
+
+            if (dom_dominante) {
+                if (poda_A == true) {
+                    // Sabemos que si Dom es dominante e independiente, entonces cualquier subconjunto de Dom es no-dominante
+                    // Luego, devolvemos el que tiene menor cardinal entre dom y cidm
+                    if (dom_size < cidm_size) {
+                        return dom;
+                    } else {
+                        return cidm;
+                    }
+                } else {
+                    // sin aplicar la poda A
+                    if (dom_size < cidm_size) {
+                        cidm = dom;
+                        cidm_size = dom_size;
+                    }
                 }
             }
         }
@@ -185,28 +213,29 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
         // copio dom y borro el i-esimo nodo de la copia (no es el nodo numero i, sino el nodo en la posicion i del vector)
         vector<int> copia(dom);
         copia.erase(copia.begin() + i);
-        // chequeo si la copia es dominante
-        bool copia_dominante = true;
-        for (int i = 0; i < n; i++) {
-            // chequeo si el nodo i está en copia o es adyacente a alguno en copia
-            bool nodo = false;
-            for (int j = 0; j < copia.size(); j++) {
-                if (copia[j] == i) {
-                    // el nodo i está en copia
-                    nodo = true;
-                    break;
-                } else if (matriz[i][copia[j]] == 1) {
-                    // el nodo i es adyacente a alguno en copia
-                    nodo = true;
+        if (poda_B == true) {
+            // chequeo si la copia es dominante
+            bool copia_dominante = true;
+            for (int i = 0; i < n; i++) {
+                // chequeo si el nodo i está en copia o es adyacente a alguno en copia
+                bool nodo = false;
+                for (int j = 0; j < copia.size(); j++) {
+                    if (copia[j] == i) {
+                        // el nodo i está en copia
+                        nodo = true;
+                        break;
+                    } else if (matriz[i][copia[j]] == 1) {
+                        // el nodo i es adyacente a alguno en copia
+                        nodo = true;
+                        break;
+                    }
+                }
+                if (!nodo) {
+                    copia_dominante = false;
                     break;
                 }
             }
-            if (!nodo) {
-                copia_dominante = false;
-                break;
-            }
-        }
-        if (poda_B == true) {
+
             // Sabemos que si Copia no es dominante, entonces ningun subconjunto de Copia es dominante, por lo que ni siquiera los evaluo
             if (copia_dominante) {
                 vector<int> nuevo_cidm = resolver_aux(n, matriz, copia, cidm);
