@@ -9,7 +9,7 @@
 \subsubsection{Estrategia}
 El algoritmo implementado se basa en la Técnica Algorítmica de \textit{Backtracking}.
 
-En primer lugar notese que un conjunto dominante trivial es el conjunto de todos los nodos del grafo. Si bien este conjunto en principio no es independiente (a menos que $X(G) = \emptyset$), es el conjunto dominante más grande posible (no hay ningún nodo que quede afuera, es decir: $V(G) \setminus D = \emptyset$).
+En primer lugar notese que un conjunto dominante 'D' trivial es el conjunto de todos los nodos del grafo. Si bien este conjunto en principio no es independiente (a menos que $X(G) = \emptyset$), es el conjunto dominante más grande posible (no hay ningún nodo que quede afuera, es decir: $V(G) \setminus D = \emptyset$).
 
 Luego, la idea principal del algorítmo es empezar con este primer conjunto dominante e ir sacando nodos recursivamente mientras chequeamos dominancia e independencia. Cada vez que encontramos un conjunto dominante e independiente, nos fijamos su cardinal. Si el cardinal de este nuevo conjunto es menor que el mínimo hasta ese momento nos quedamos con el nuevo y lo guardamos como mínimo. En caso de que el cardinal sea mayor, seguimos quitando nodos para encontrar un conjunto más chico.
 
@@ -21,7 +21,7 @@ Antes de mostrar cuales son las podas que utilizamos en el algoritmo, veamos alg
         Sea C un conjunto dominante e independiente de un grafo G. Entonces, cualquier subconjunto de C (distinto de C) es no-dominante respecto a G.
     \end{lemma}
     \begin{proof}[Demostración]
-        Veamos que vale por absurdo. Supongamos H un subconjunto de C tal que $H \subset C$ y H es dominante de G. Como H está estrictamente incluido en C, entonces $\exists\ v \in C$ tal que $v \notin H$.
+        Veamos que vale por absurdo. Supongamos H un subconjunto propio de C tal que $H \subset C$ y H es dominante de G. Como H está estrictamente incluido en C, entonces $\exists\ v \in C$ tal que $v \notin H$.
 
         Ahora, como C es independiente, no hay nodos de C que sean adyacentes en G, en particular: $\forall\ w \in C,\ (v,w) \notin X(G)$.
 
