@@ -43,12 +43,9 @@ typedef vector<listaAdyacencia> Grafo;
 void recibir_parametros(Grafo& G);
 void imprimir_resultado(vector<int>& cidm);
 
-void grasp(Grafo& G, vector<int>& cidm, bool criterio_grasp,
- bool criterio_greedy, bool criterio_busqueda);
-void grasp_primer_criterio(Grafo& G, vector<int>& cidm,
- bool criterio_greedy, bool criterio_busqueda);
-void grasp_segundo_criterio(Grafo& G, vector<int>& cidm,
- bool criterio_greedy, bool criterio_busqueda);
+void grasp(Grafo& G, vector<int>& cidm, bool criterio_grasp, bool criterio_greedy, bool criterio_busqueda);
+void grasp_primer_criterio(Grafo& G, vector<int>& cidm, bool criterio_greedy, bool criterio_busqueda);
+void grasp_segundo_criterio(Grafo& G, vector<int>& cidm, bool criterio_greedy, bool criterio_busqueda);
 
 void construir_greedy_random(Grafo& G, vector<int>& solucion, bool criterio_greedy);
 void construir_greedy_random_primer_criterio(Grafo& G, vector<int>& solucion);
