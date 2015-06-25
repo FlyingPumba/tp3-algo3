@@ -84,7 +84,7 @@ int main() {
             matriz[w-1][v-1] = 1;
         }
 
-        cout << n << " " << m << endl;
+        // cout << n << " " << m << endl;
         medir_tiempos(data_file, n, m, matriz);
         infile.close();
         infile.clear();
