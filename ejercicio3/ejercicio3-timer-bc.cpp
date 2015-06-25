@@ -34,9 +34,9 @@ vector<int> resolver(int n, Matriz matriz, Nodos nodos);
 // Implementacion.
 int main() {
 
-    FILE* file = fopen("tiempos-2.txt","w+");
+    FILE* file = fopen("tiempos-bc.txt","w+");
 
-    int N_MAX = 1001;
+    int N_MAX = 3001;
     //int M = N_MAX*(N_MAX-1)/2;
 
     // int n, m;
@@ -90,7 +90,7 @@ int main() {
     }
 
     for (int index = 0; index < N_MAX; index ++) {
-        fprintf(file, "%d %7.8f\n", index, tiempos[index]);
+        fprintf(file, "%d %7.8f  %d\n", index, tiempos[index], aristas[index]);
     }
 
     fclose(file);
