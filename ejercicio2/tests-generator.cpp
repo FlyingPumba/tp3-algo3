@@ -20,13 +20,13 @@ typedef vector<Vec> Matriz;
 vector<int> resolver(int n, Matriz matriz);
 vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm);
 int random_in_range(int min, int max);
-string to_string(int value);
+string to_string_custom(int value);
 
 int random_in_range(int min, int max) {
   return min + (rand() % (max - min + 1));
 }
 
-string to_string(int value) {
+string to_string_custom(int value) {
     ostringstream oss;
     oss << value;
     return oss.str();
@@ -34,9 +34,9 @@ string to_string(int value) {
 
 vector<string> get_random_filename(int c) {
     vector<string> aux(2, "");
-    aux[0] += to_string(c);
+    aux[0] += to_string_custom(c);
     aux[0] += ".in";
-    aux[1] += to_string(c);
+    aux[1] += to_string_custom(c);
     aux[1] += ".out";
     return aux;
 }
