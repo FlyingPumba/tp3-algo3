@@ -14,7 +14,11 @@ using namespace std;
 #define NO_VISITADO 0
 #define INCLUIDO 1
 #define NO_INCLUIDO 0
-#define ALPHA_GREEDY_RANDOM 0.2
+#define GREEDY_RANDOM_ALPHA 0.4
+#define GREEDY_RANDOM_BETA 10
+#define GRASP_MAX_ITER_COUNTER 10
+#define PRIMER_CRITERIO 0
+#define SEGUNDO_CRITERIO 1
 
 // ESTRUCTURAS
 struct Nodo {
@@ -38,9 +42,19 @@ typedef vector<listaAdyacencia> Grafo;
 // FUNCIONES
 void recibir_parametros(Grafo& G);
 void imprimir_resultado(vector<int>& cidm);
-void grasp(Grafo& G, vector<int>& cidm);
-void construir_greedy_random(Grafo& G, vector<int>& solucion);
-void busqueda_local(Grafo& G, vector<int>& solucionInicial);
+
+void grasp(Grafo& G, vector<int>& cidm, bool criterio_grasp, bool criterio_greedy, bool criterio_busqueda);
+void grasp_primer_criterio(Grafo& G, vector<int>& cidm, bool criterio_greedy, bool criterio_busqueda);
+void grasp_segundo_criterio(Grafo& G, vector<int>& cidm, bool criterio_greedy, bool criterio_busqueda);
+
+void construir_greedy_random(Grafo& G, vector<int>& solucion, bool criterio_greedy);
+void construir_greedy_random_primer_criterio(Grafo& G, vector<int>& solucion);
+void construir_greedy_random_segundo_criterio(Grafo& G, vector<int>& solucion);
+
+void busqueda_local(Grafo& G, vector<int>& solucionInicial, bool criterio_busqueda);
+void busqueda_local_primer_criterio(Grafo& G, vector<int>& solucionInicial);
+void busqueda_local_segundo_criterio(Grafo& G, vector<int>& solucionInicial);
+
 bool solucion_posible(Grafo& G, vector<int>& solucionCambiar, int cantCambios);
 int get_indice_nodo(Nodos& nodos, int v);
 int random_in_range(int min, int max);
@@ -50,10 +64,12 @@ int main() {
     srand(time(0)); // configuro el seed del random generator
 
     Grafo G;
-    recibir_parametros(G);
     vector<int> cidm;
-    grasp(G, cidm);
+
+    recibir_parametros(G);
+    grasp(G, cidm, PRIMER_CRITERIO, PRIMER_CRITERIO, PRIMER_CRITERIO);
     imprimir_resultado(cidm);
+    
     return 0;
 }
 
@@ -89,16 +105,24 @@ void imprimir_resultado(vector<int>& cidm) {
     cout << endl;
 }
 
-void grasp(Grafo& G, vector<int>& cidm) {
+void grasp(Grafo& G, vector<int>& cidm, bool criterio_grasp, bool criterio_greedy, bool criterio_busqueda) {
+    if (criterio_grasp == PRIMER_CRITERIO) {
+        grasp_primer_criterio(G, cidm, criterio_greedy, criterio_busqueda);
+    } else {
+        grasp_segundo_criterio(G, cidm, criterio_greedy, criterio_busqueda);
+    }
+}
+
+void grasp_primer_criterio(Grafo& G, vector<int>& cidm, bool criterio_greedy, bool criterio_busqueda) {
     vector<int> mejor_solucion;
-    construir_greedy_random(G, mejor_solucion);
-    // Criterio de parada: hace tantas iteraciones como nodos en el grafo.
+    construir_greedy_random(G, mejor_solucion, criterio_greedy);
+    // Criterio de parada 1: hace tantas iteraciones como nodos en el grafo.
     for (int i = 0; i < G.size(); i++) {
         // Construir Solucion Greedy Random
         vector<int> nueva_solucion;
-        construir_greedy_random(G, nueva_solucion);
+        construir_greedy_random(G, nueva_solucion, criterio_greedy);
         // Hacer busqueda local
-        busqueda_local(G, nueva_solucion);
+        busqueda_local(G, nueva_solucion, criterio_busqueda);
         // Actualizar Mejor Solucion
         if (nueva_solucion.size() < mejor_solucion.size()) {
             mejor_solucion = nueva_solucion;
@@ -107,7 +131,39 @@ void grasp(Grafo& G, vector<int>& cidm) {
     cidm = mejor_solucion;
 }
 
-void construir_greedy_random(Grafo& G, vector<int>& solucion) {
+void grasp_segundo_criterio(Grafo& G, vector<int>& cidm, bool criterio_greedy, bool criterio_busqueda) {
+    vector<int> mejor_solucion;
+    construir_greedy_random(G, mejor_solucion, criterio_greedy);
+    // Criterio de parada 2: sigue iterando hasta que no mejore la mejor solucion durante 'GRASP_MAX_ITER_COUNTER' cantidad de ciclos.
+    int counter = GRASP_MAX_ITER_COUNTER;
+    while (counter > 0) {
+        // Construir Solucion Greedy Random
+        vector<int> nueva_solucion;
+        construir_greedy_random(G, nueva_solucion, criterio_greedy);
+        // Hacer busqueda local
+        busqueda_local(G, nueva_solucion, criterio_busqueda);
+        // Actualizar Mejor Solucion
+        if (nueva_solucion.size() < mejor_solucion.size()) {
+            mejor_solucion = nueva_solucion;
+            counter = GRASP_MAX_ITER_COUNTER;
+        } else {
+            counter--;
+        }
+    }
+    cidm = mejor_solucion;
+}
+
+void construir_greedy_random(Grafo& G, vector<int>& solucion, bool criterio_greedy) {
+    if (criterio_greedy == PRIMER_CRITERIO) {
+        construir_greedy_random_primer_criterio(G, solucion);
+    } else {
+        construir_greedy_random_segundo_criterio(G, solucion);
+    }
+}
+
+void construir_greedy_random_primer_criterio(Grafo& G, vector<int>& solucion) {
+    // Criterio de Restricted Candidate List 1: los nodos que cumplan la condicion
+    // de que su grado es por lo menos mejor_grado (de todos los nodos) * GREEDY_RANDOM_ALPHA.
     int n = G.size();
     Nodos nodos(n, Nodo());
 
@@ -123,9 +179,9 @@ void construir_greedy_random(Grafo& G, vector<int>& solucion) {
     int nodos_visitados = 0;
     while (nodos_visitados < n) {
         int mejor_grado = nodos[0].grado;
-        int window_size = 0; // definir en porcentaje del grado que tiene el optimo (indice 0 de no visitados)
+        int window_size = 0; // el maximo indice posible, la RCL va a ser nodos[0...window_size]
         for (int i = 0; i < nodos.size(); i++) {
-            if (nodos[i].grado >= mejor_grado - mejor_grado * ALPHA_GREEDY_RANDOM) {
+            if (nodos[i].grado >= mejor_grado * GREEDY_RANDOM_ALPHA) {
                 window_size = i;
             } else {
                 break;
@@ -151,8 +207,87 @@ void construir_greedy_random(Grafo& G, vector<int>& solucion) {
     }
 }
 
-void busqueda_local(Grafo& G, vector<int>& solucionInicial) {
-  // Criterio de Vecindad 2: Cambiamos, al  menos,  tres vectices de la solucion inicial por dos
+void construir_greedy_random_segundo_criterio(Grafo& G, vector<int>& solucion) {
+    // Criterio de Restricted Candidate List 2: los nodos que cumplan la condicion
+    // de estar entre los 'GREEDY_RANDOM_BETA' (definido antes) mejores nodos.
+    int n = G.size();
+    Nodos nodos(n, Nodo());
+
+    for(int u = 0; u < n; u++) {
+        nodos[u].numero = u;
+        nodos[u].grado = G[u].size();
+    }
+
+    sort(nodos.begin(), nodos.end(), orden());
+
+    solucion = vector<int>(n, NO_INCLUIDO);
+
+    int nodos_visitados = 0;
+    while (nodos_visitados < n) {
+        int mejor_grado = nodos[0].grado;
+        int window_size = GREEDY_RANDOM_BETA;  // el maximo indice posible, la RCL va a ser nodos[0...window_size]
+        int indice = random_in_range(0, min(window_size, (int)nodos.size()-1));
+
+        int nodo = nodos[indice].numero;
+        solucion[nodo] = INCLUIDO;
+        nodos_visitados++;
+        nodos.erase(nodos.begin()+indice);
+
+        for (list<int>::iterator itAdyU=G[nodo].begin(); itAdyU != G[nodo].end(); itAdyU++) {
+            int v = *itAdyU;
+            int index = get_indice_nodo(nodos, v);
+            if (index != -1) {
+                // v no esta en el vector de nodos
+                nodos.erase(nodos.begin()+index);
+                nodos_visitados++;
+            }
+        }
+    }
+}
+
+void busqueda_local(Grafo& G, vector<int>& solucionInicial, bool criterio_busqueda) {
+    if (criterio_busqueda == PRIMER_CRITERIO) {
+        busqueda_local_primer_criterio(G, solucionInicial);
+    } else {
+        busqueda_local_segundo_criterio(G, solucionInicial);
+    }
+}
+
+void busqueda_local_primer_criterio(Grafo& G, vector<int>& solucionInicial) {
+    // Criterio de Vecindad 1: Cambiamos k vertices por 1 vertice, donde k > 1
+  int n = G.size();
+  // Genero soluciones vecinas
+  for (int u = 0; u < n; u++) {
+    vector<int> solucionAuxiliar = solucionInicial;
+    if (solucionInicial[u] == NO_INCLUIDO && G[u].size() > 1) {
+      int cantINCLUIDOS = 0;
+      solucionAuxiliar[u] = INCLUIDO;
+      // Me fijo si el vectice NO INCLUIDO tiene al menos dos vectores adyacentes INCLUIDOS
+      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end(); ++itAdyU) {
+        int v = *itAdyU;
+        if (solucionInicial[v] == INCLUIDO) {
+          cantINCLUIDOS ++;
+          solucionAuxiliar[v] = NO_INCLUIDO;
+        }
+      }
+      // Necesito al menos 2 INCLUIDOS
+      if (cantINCLUIDOS > 1) {
+        int cantCambiosPosibles = 0;
+        bool esSolucion = solucion_posible(G, solucionAuxiliar, cantCambiosPosibles);
+        if (esSolucion) {
+          // Encontre una solucion Vecina mejor, fin del ciclo
+          busqueda_local_primer_criterio(G, solucionAuxiliar);
+          solucionInicial = solucionAuxiliar;
+          break;
+        }
+      }
+
+    }
+  }
+}
+
+void busqueda_local_segundo_criterio(Grafo& G, vector<int>& solucionInicial) {
+  // Criterio de Vecindad 2: Cambiamos k vertices por, a lo sumo, k-1 vertices, , donde k > 1
   int n = G.size();
   // Genero soluciones vecinas
   for (int u = 0; u < n; u++) {
@@ -173,12 +308,9 @@ void busqueda_local(Grafo& G, vector<int>& solucionInicial) {
       if (cantINCLUIDOS > 1) {
         int cantCambiosPosibles = cantINCLUIDOS - 2;
         bool esSolucion = solucion_posible(G, solucionAuxiliar, cantCambiosPosibles);
-        //cout <<  "Probe nodo: " << u + 1 << endl;
         if(esSolucion){
-          // Cambios necesarios para que sea solucion
-          //cout <<  "Exito" << endl;
           // Encontre una solucion Vecina mejor, fin del ciclo
-          busqueda_local(G, solucionAuxiliar);
+          busqueda_local_segundo_criterio(G, solucionAuxiliar);
           solucionInicial = solucionAuxiliar;
           break;
         }

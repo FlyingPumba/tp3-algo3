@@ -5,6 +5,9 @@
 #include <chrono>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stack>
+#include <list>
+#include <queue>
 
 using namespace std;
 
@@ -25,16 +28,16 @@ struct orden
     }
 };
 
-typedef vector<int> Vec;
-typedef vector<Vec> Matriz;
 typedef vector<Nodo> Nodos;
+typedef list<int> listaAdyacencia;
+typedef vector<listaAdyacencia> Grafo;
 
-vector<int> resolver(int n, Matriz matriz, Nodos nodos);
+vector<int> resolver(int n, Grafo G, Nodos nodos);
 
 // Implementacion.
 int main() {
 
-    FILE* file = fopen("tiempos-2.txt","w+");
+    FILE* file = fopen("tiempos2-lista.txt","w+");
 
     int N_MAX = 1001;
     //int M = N_MAX*(N_MAX-1)/2;
@@ -44,39 +47,35 @@ int main() {
     // cin >> m;
 
     std::vector<double> tiempos(N_MAX);
-    std::vector<int> aristas(N_MAX);
-
 
     for(int n = 1; n < N_MAX; n++){
 
-        int m = 0;
+       Grafo G(n, listaAdyacencia());
 
-        Matriz matriz(n, Vec(n, 0));
         Nodos nodos(n, Nodo());
 
         for(int i = 0; i < n; i++) {
             nodos[i].numero = i;
         }
 
+
         // for (int i = 1; i <= n; i++) {
         //     for(int j = i+1; j <=n;j++){
-        //         matriz[i-1][j-1] = 1;
-        //         matriz[j-1][i-1] = 1;
+        //         G[i-1].push_back(j-1);
+        //         G[j-1].push_back(i-1);
 
         //         nodos[i-1].grado = nodos[i-1].grado + 1;
         //         nodos[j-1].grado = nodos[j-1].grado + 1;
-
-        //         m++;
         //     }
-        // }
-
-        aristas[n] = m;
+        // }   
 
         cout << n <<  "holis"<<endl;
 
         std::chrono::time_point<std::chrono::high_resolution_clock> t1 = std::chrono::high_resolution_clock::now();
 
-        vector<int> cidm = resolver(n, matriz, nodos);
+        vector<int> cidm = resolver(n, G, nodos);
+                                             
+
 
         std::chrono::time_point<std::chrono::high_resolution_clock> t2 = std::chrono::high_resolution_clock::now();
 
@@ -84,24 +83,24 @@ int main() {
 
         cout << n << " " <<  d << endl;
 
-       tiempos[n] = d;
-
+       tiempos[n] = d;         
+        
 
     }
 
-    for (int index = 0; index < N_MAX; index ++) {
+    for (int index = 0; index < N_MAX; index ++) {       
         fprintf(file, "%d %7.8f\n", index, tiempos[index]);
     }
 
     fclose(file);
 
 
-
+    
 
     return 0;
 }
 
-vector<int> resolver(int n, Matriz matriz, Nodos nodos) {
+vector<int> resolver(int n, Grafo G, Nodos nodos) {
     // Ordeno a los nodos segun su grado
     std::sort(nodos.begin(), nodos.end(), orden());
 
@@ -109,17 +108,22 @@ vector<int> resolver(int n, Matriz matriz, Nodos nodos) {
     vector<int> cidm;
     cidm.reserve(n);
 
-    for(int i = 0; i < n ; i++){
-        if(visitado[nodos[i].numero] == false){
-            visitado[nodos[i].numero] = true;
-            cidm.push_back(nodos[i].numero);
-            for(int j = 0; j<n; j++){
-                if(matriz[nodos[i].numero][j] == 1){
+    for(int u = 0; u < n ; u++){
+        if(visitado[nodos[u].numero] == false){
+            visitado[nodos[u].numero] = true;
+            cidm.push_back(nodos[u].numero);
+            if(visitado[u] == false){
+                for (list<int>::iterator itAdyU=G[nodos[u].numero].begin(); itAdyU != G[nodos[u].numero].end(); ++itAdyU) {
+                    int j = *itAdyU;
                     visitado[j] = true;
                 }
-            }
+            }           
         }
     }
 
     return cidm;
 }
+
+
+
+
