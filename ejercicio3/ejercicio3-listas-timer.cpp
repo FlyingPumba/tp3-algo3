@@ -112,12 +112,10 @@ vector<int> resolver(int n, Grafo G, Nodos nodos) {
         if(visitado[nodos[u].numero] == false){
             visitado[nodos[u].numero] = true;
             cidm.push_back(nodos[u].numero);
-            if(visitado[u] == false){
-                for (list<int>::iterator itAdyU=G[nodos[u].numero].begin(); itAdyU != G[nodos[u].numero].end(); ++itAdyU) {
-                    int j = *itAdyU;
-                    visitado[j] = true;
-                }
-            }           
+            for (list<int>::iterator itAdyU=G[nodos[u].numero].begin(); itAdyU != G[nodos[u].numero].end(); ++itAdyU) {
+                int j = *itAdyU;
+                visitado[j] = true;
+            }                 
         }
     }
 
