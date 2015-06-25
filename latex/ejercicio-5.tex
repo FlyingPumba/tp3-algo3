@@ -23,10 +23,10 @@ La estructura general de un algoritmo GRASP es:
 
 En nuestro algoritmo se implementó de la siguiente forma:
 \begin{enumerate}
-    \item Se utilizo para la primera solución Random el mismo método ConstruirGreedyRandom que se utiliza al generar una solución golosa randomizada.
+    \item Se utilizo para la primera 'mejor_solución' Random el mismo método ConstruirGreedyRandom que se utiliza al generar una solución golosa randomizada.
     \item Los criterios de parada considerados se detallan más adelante.
     \item La función ConstruirGreedyRandom es una variación del algoritmo goloso implementado para el Ejercicio 3 (agregando lista de candidatos), detallado más adelante.
-    \item La función BusquedaLocal es identica al algoritmo implementado para el Ejercicio 4. En la experimentación se probo con los distintos criterios de vecindad expuestos en ese mismo Ejercicio.
+    \item La función BusquedaLocal es identica al algoritmo implementado para el Ejercicio 4. En la experimentación se probo con los criterios de vecindad 1 y 2 expuestos en ese mismo Ejercicio.
     \item Definimos el costo de una solución como la cantidad de nodos de dicha solución, por lo que decimos que una es mejor que otra si la primera tiene menor cantidad de nodos.
     \item Si encontramos una solución con menor cantidad de nodos que la mejor hasta ese momento, la guardamos como mejor solución.
 \end{enumerate}
@@ -34,8 +34,8 @@ En nuestro algoritmo se implementó de la siguiente forma:
 \subsubsection{Criterios de parada}
 Los criterios de parada que se utilizaron para la implementación se pensaron en función de la cantidad de nodos del grafo original:
 \begin{enumerate}
-    \item Criterio: realizar $n$ iteraciones, con $n$ la cantidad de nodos del grafo.
-    \item Criterio: realizar $f(n)$ iteraciones, con $n$ la cantidad de nodos del grafo y siendo $f(n)=n^2$.
+    \item Criterio 1: realizar $n$ iteraciones, con $n$ la cantidad de nodos del grafo.
+    \item Criterio 2: sea k una constante, seguir iterando hasta que la mejor solucion parcial no se mejore durante k ciclos seguidos.
 \end{enumerate}
 
 \subsubsection{Selección de lista de candidatos (RCL)}
@@ -46,11 +46,13 @@ Al algoritmo con heurística constructiva golosa del Ejercicio 3 se lo modificó
 
     A diferencia del algoritmo goloso original, que elegiamos siempre el nodo con grado más alto no visitado hasta ese momento, ahora vamos a tener una lista de candidatos (nodos) a agregar a la solución, y de todos ellos vamos a elegir alguno de manera aleatoria.
 
-    La lista de candidatos se construye tomando como referencia el nodo con grado más alto no visitado hasta ese momento. Si $d_{max}$ es dicho grado, agregaremos a la lista de candidatos todos los nodos que tengan grado a lo sumo un $\alpha\%$ menos que $d_{max}$, es decir $d \geq d_{max} - d{max} * \alpha$. Donde $\alpha$ es un valor entre 0 y 1.
+    La lista de candidatos se construye de dos formas posibles:
+    \begin{enumerate}
+        \item Criterio 1: tomando como referencia el nodo con grado más alto no visitado hasta ese momento. Si $d_{max}$ es dicho grado, agregaremos a la lista de candidatos todos los nodos que tengan grado al menos $\alpha$ * $d_{max}$ ($\alpha$ constante). Es decir, sea $d$ el grado del nodo, los consideramos si $d \geq d{max} * \alpha$. Donde $\alpha$ es un valor entre 0 y 1.
+        \item Criterio 2: en vez de tomar como referencia el grado de mayor elemento, simplemente tomamos los k elementos de mayor grado no visitados hasta el momento, con k un valor constante entero.
+    \end{enumerate}
 
     Esto nos asegura que, si bien el nodo a agregar a la solución es aleatorio, se encuentra dentro de cierto grupo de nodos mejores que otros.
-
-    Notese además que si $\alpha$ es igual a cero, la solución golosa es la misma que daría el algoritmo del Ejercicio 3, es decir que no hay componente aleatorio. Y si $\alpha$ es igual a 1, la solución es completamente aleatoria.
 
     \item Luego de que se eligió un nodo, se lo agrega a la solución, y luego se lo borra de los nodos posibles para futuras iteraciones (se lo marca como \textit{visitado}). Además, se aumenta en uno la cantidad de nodos visitados.
     \item Por último, se itera sobre todos los nodos adyacentes al elegido, borrandolos de los nodos posibles y aumentando en uno el contador de nodos visitados.
@@ -58,7 +60,7 @@ Al algoritmo con heurística constructiva golosa del Ejercicio 3 se lo modificó
 
 \subsubsection{Pseudocódigo}
 
-El esquema general del algoritmo GRASP ya se mostró en la sección Idea General, y el algoritmo de Busqueda Local es identico al utilizado en el Ejercicio 4, por lo que mostraremos aquí solo el pseudocódigo de la función ConstruirGreedyRandom:
+El esquema general del algoritmo GRASP ya se mostró en la sección Idea General, y el algoritmo de Busqueda Local es identico al utilizado en el Ejercicio 4, por lo que mostraremos aquí solo el pseudocódigo de la función ConstruirGreedyRandom (con el primer criterio de lista de candidatos, el segundo simplemente elige los k nodos de mayor grado, con k una constante):
 
 \begin{codesnippet}
 Poner nodos = un vector de structs Nodo, que tiene el indice del nodo y su grado
