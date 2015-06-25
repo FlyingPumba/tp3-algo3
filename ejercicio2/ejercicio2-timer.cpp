@@ -1,203 +1,227 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <iostream>
 #include <vector>
+#include <iostream>
+#include <fstream>
 #include <stack>
+#include <algorithm>
 #include <ctime>
 #include <chrono>
-
+#include <stdlib.h>
+#include <stdio.h>
+#include <dirent.h>
+#include <string.h>
+#include <sstream>
 using namespace std;
 
 #define INFINITO -1
 
-struct Esquina{
-    int sol_max;
-    int left;
-    int right;
-    int up;
-    int down;
-    pair<int, int> pred;
+typedef vector<int> Vec;
+typedef vector<Vec> Matriz;
 
-    Esquina() : sol_max(0), left(INFINITO), right(INFINITO), up(INFINITO), down(INFINITO), pred(make_pair(INFINITO,INFINITO)){};
-};
+void medir_tiempos(ofstream &data_file, int n, int m, Matriz matriz);
+void start_timer();
+double stop_timer();
+vector<int> resolver(int n, Matriz matriz);
+vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm);
 
-typedef vector< vector < Esquina > > Mapa;
+static bool poda_A = false;
+static bool poda_B = false;
+static chrono::time_point<chrono::high_resolution_clock> start_time;
 
-void resolver(Mapa& map, pair<int, int> pos_actual, pair<int, int> bunker, int& count);
-void imprimir_resultado(Mapa& map, pair<int, int> pos_inicial, pair<int, int> bunker);
-int sobrevivientes(int soldados, int zombies);
-int random_in_range(int min, int max);
-
-// Tiempos
-
-typedef vector< vector< vector<double> > > Tabla;
-
-// Parametros
-
-int n, m, s;
-pair<int, int> p_inicial, p_bunker;
-Mapa mapa;
-
-// Funciones
-
-int random_in_range(int min, int max)
-{
-  return min + (rand() % (max - min + 1));
-}
-
+// Implementacion.
 int main() {
-    FILE* file = fopen("tiempos.txt","w+");
+    char* path = "../tests/";
 
-    int muestras = 20;
+    // obtengo los nombres de los tests
+    DIR* dirFile = opendir(path);
+    vector<string> tests;
+    if (dirFile) {
+       struct dirent* hFile;
+       errno = 0;
+       while (( hFile = readdir( dirFile )) != NULL )
+       {
+          if (!strcmp( hFile->d_name, ".")) continue;
+          if (!strcmp( hFile->d_name, "..")) continue;
+          if (hFile->d_name[0] == '.') continue;
 
-    int s_min = 1;
-    int n_min = 1;
-    int m_min = 1;
-    int zombies_min = 0;
-
-    int s_max = 400;
-    int n_max = 20;
-    int m_max = 20;
-    int zombies_max = s_max;
-
-    int s_itv = s_max - s_min + 1;
-    int n_itv = n_max - n_min + 1;
-    int m_itv = m_max - m_min + 1;
-
-    int s_step = max(1, (s_max-s_min+1)/100);
-    int n_step = max(1, (n_max-n_min+1)/100);
-    int m_step = max(1, (m_max-m_min+1)/100);
-
-    Tabla tiempos = Tabla(s_itv, vector< vector <double> >(n_itv, vector<double>(m_itv, 0)));
-
-    vector<double> tiempos_unificados = vector<double>(s_itv*n_itv*m_itv);
-
-    for (int muestra = 1; muestra <= muestras; muestra++) {
-		for (s = s_min; s <= s_max; s += s_step) {
-			for (n = n_min; n <= n_max; n += n_step) {
-
-				// cout << muestra << " " << n << endl;
-
-				for (m = m_min; m <= m_max; m += m_step) {
-					
-					// cout << muestra << " " << m << endl;
-
-					// Empieza el muestreo
-    				mapa = Mapa(n, vector< Esquina >(m, Esquina()));
-					for (int i = 0; i < n; i++) {
-				        for (int j = 1; j < m; j++){
-				            int c = random_in_range(zombies_min, zombies_max);
-				            mapa[i][j-1].right = c;
-				            mapa[i][j].left = c;
-				        }
-				        if (i < n-1){
-				            for (int j = 0; j < m; j++){
-				            	int c = random_in_range(zombies_min, zombies_max);
-				                mapa[i][j].down = c;
-				                mapa[i+1][j].up = c;
-				            }
-				        }
-				    }
-
-				    p_inicial.first = random_in_range(0, n-1);
-				    p_inicial.second = random_in_range(0, m-1);
-				    p_bunker.first = random_in_range(0 , n-1);
-				    p_bunker.second = random_in_range(0, m-1);
-    				mapa[p_inicial.first][p_inicial.second].sol_max = s;
-    				int count = 0;
-
-    				// Toma de tiempos
-			        std::chrono::time_point<std::chrono::high_resolution_clock> t1 = std::chrono::high_resolution_clock::now();
-			        resolver(mapa, p_inicial, p_bunker, count);
-			        //imprimir_resultado(mapa, p_inicial, p_bunker);
-			        std::chrono::time_point<std::chrono::high_resolution_clock> t2 = std::chrono::high_resolution_clock::now();
-			        
-                    // tiempos[s-s_min][n-n_min][m-m_min] += double(std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count());
-				    tiempos_unificados[(s-s_min)*(n-n_min)*(m-m_min)] += double(std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count());
-                    //Termina el muestreo
-
-				    // cout << count << endl;
-				}
-			}
-		}
+          if (strstr( hFile->d_name, ".in")) {
+              string str(hFile->d_name);
+              tests.push_back(str);
+          }
+       }
+       closedir(dirFile);
     }
 
-    fprintf(file, "s*n*m tiempo\n");
+    // abro archivo de output
+    ofstream data_file;
+    data_file.open("datos_ej2.dat");
+    data_file << "n m sin_podas poda_A poda_B ambas_podas\n";
 
-    // fprintf(file, "s n m tiempo\n");
+    for (int i = 0; i < tests.size(); i++) {
+        cout << tests[i] << endl;
+        string test_file(path);
+        test_file += tests[i];
 
-    // for (s = s_min; s <= s_max; s += s_step) {
-    //     for (n = n_min; n <= n_max; n += n_step) {
-    //         for (m = m_min; m <= m_max; m += m_step) {
-    //             fprintf(file, "%d %d %d %7.8f\n", s, n, m, (double)(tiempos[s-s_min][n-n_min][m-m_min]/(double)muestras));
-    //         }
-    //     }
-    // }
+        ifstream infile(test_file);
 
-    for (int index = 0; index < tiempos_unificados.size(); index ++) {
-        if (tiempos_unificados[index] != 0)
-            fprintf(file, "%d %7.8f\n", index, (double)(tiempos_unificados[index]/(double)muestras));
+        string line;
+        getline(infile, line);
+        istringstream iss(line);
+
+        int n, m;
+        iss >> n;
+        iss >> m;
+
+        Matriz matriz(n, Vec(n, 0));
+
+        int v, w;
+        for (int i = 0; i < m; i++) {
+            getline(infile, line);
+            istringstream iss(line);
+
+            iss >> v;
+            iss >> w;
+            matriz[v-1][w-1] = 1;
+            matriz[w-1][v-1] = 1;
+        }
+
+        // cout << n << " " << m << endl;
+        medir_tiempos(data_file, n, m, matriz);
+        infile.close();
+        infile.clear();
     }
 
-    fclose(file);
-
+    data_file.close();
     return 0;
 }
 
-void imprimir_resultado(Mapa& map, pair<int, int> pos_inicial, pair<int, int> bunker){
-    cout << map[bunker.first][bunker.second].sol_max << endl;
-    if (map[bunker.first][bunker.second].sol_max > 0){
-        stack< pair<int,int> > esquinas;
-        pair<int,int> actual = bunker;
-        while (actual != pos_inicial){
-            esquinas.push(actual);
-            actual = map[actual.first][actual.second].pred;
-        }
-        esquinas.push(pos_inicial);
-        while (esquinas.size() > 0){
-            cout << esquinas.top().first << " " << esquinas.top().second << endl;
-            esquinas.pop();
-        }
-    }
+void medir_tiempos(ofstream &data_file, int n, int m, Matriz matriz) {
+    poda_A = false;
+    poda_B = false;
+    start_timer();
+    resolver(n, matriz);
+    double time_sin_podas = stop_timer();
+
+    poda_A = true;
+    poda_B = false;
+    start_timer();
+    resolver(n, matriz);
+    double time_poda_A = stop_timer();
+
+    poda_A = false;
+    poda_B = true;
+    start_timer();
+    resolver(n, matriz);
+    double time_poda_B = stop_timer();
+
+    poda_A = true;
+    poda_B = true;
+    start_timer();
+    resolver(n, matriz);
+    double time_ambas_podas = stop_timer();
+
+    data_file << n << " " << m << " " << time_sin_podas << " " << time_poda_A << " " << time_poda_B << " " << time_ambas_podas << "\n";
 }
 
-int sobrevivientes(int soldados, int zombies){
-    return soldados < zombies ? max(2*soldados-zombies, 0) : soldados;
+
+void start_timer() {
+    start_time = chrono::high_resolution_clock::now();
 }
 
-void resolver(Mapa& map, pair<int, int> pos_actual, pair<int, int> bunker, int& count){
-	count++;
-    int i = pos_actual.first;
-    int j = pos_actual.second;
+double stop_timer() {
+    chrono::time_point<chrono::high_resolution_clock> end_time = chrono::high_resolution_clock::now();
+    return double(chrono::duration_cast<chrono::nanoseconds>(end_time - start_time).count());
+}
 
-	// cout << "llegue " << endl;
-	// cout << map.size() << " " << map[0].size() << endl;
-	// cout << i << " " << j << endl;
-	// cout << "llegue " << endl;
-    
-    Esquina actual = map[i][j];
-    if (actual.left != INFINITO && sobrevivientes(actual.sol_max, actual.left) > map[i][j-1].sol_max){
-        map[i][j-1].sol_max = sobrevivientes(actual.sol_max, actual.left);
-        map[i][j-1].pred = make_pair(i,j);
-		// cout << "left " << endl;
-        resolver(map, make_pair(i,j-1), bunker, count);
+vector<int> resolver(int n, Matriz matriz) {
+    // inicializo el primer conjunto a evaluar con todos los vertices del grafo
+    // Este primer conjunto es dominante (pero no necesariamente independiente)
+    vector <int> dom(n, 0);
+    for (int i = 0; i < n; i++) {
+        dom[i] = i;
     }
-    if (actual.right != INFINITO && sobrevivientes(actual.sol_max, actual.right) > map[i][j+1].sol_max){
-        map[i][j+1].sol_max = sobrevivientes(actual.sol_max, actual.right);
-        map[i][j+1].pred = make_pair(i,j);
-		// cout << "right " << endl;
-        resolver(map, make_pair(i,j+1), bunker, count);
+    return resolver_aux(n, matriz, dom, dom);
+}
+
+vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm) {
+    int dom_size = dom.size();
+    int cidm_size = cidm.size();
+    if (cidm_size == 1) {
+        return cidm;
+    } else {
+        // chequeo si dom es independiente
+        bool indep = true;
+        for (int i = 0; i < dom_size; i++) {
+            for (int j = i+1; j < dom_size; j++) {
+                if (matriz[dom[i]][dom[j]] == 1) {
+                    indep = false;
+                    break;
+                }
+            }
+            if(!indep) {
+                break;
+            }
+        }
+
+        if(indep) {
+            if (poda_A == true) {
+                // Sabemos que si Dom es dominante e independiente, entonces cualquier subconjunto de Dom es no-dominante
+                // Luego, devolvemos el que tiene menor cardinal entre dom y cidm
+                if (dom_size < cidm_size) {
+                    return dom;
+                } else {
+                    return cidm;
+                }
+            } else {
+                // sin aplicar la poda
+                if (dom_size < cidm_size) {
+                    cidm = dom;
+                    cidm_size = dom_size;
+                }
+            }
+        }
     }
-    if (actual.up != INFINITO && sobrevivientes(actual.sol_max, actual.up) > map[i-1][j].sol_max){
-        map[i-1][j].sol_max = sobrevivientes(actual.sol_max, actual.up);
-        map[i-1][j].pred = make_pair(i,j);
-		// cout << "up " << endl;
-        resolver(map, make_pair(i-1,j), bunker, count);
+
+    for (int i = 0; i < dom_size; i++) {
+        // copio dom y borro el i-esimo nodo de la copia (no es el nodo numero i, sino el nodo en la posicion i del vector)
+        vector<int> copia(dom);
+        copia.erase(copia.begin() + i);
+        // chequeo si la copia es dominante
+        bool copia_dominante = true;
+        for (int i = 0; i < n; i++) {
+            // chequeo si el nodo i está en copia o es adyacente a alguno en copia
+            bool nodo = false;
+            for (int j = 0; j < copia.size(); j++) {
+                if (copia[j] == i) {
+                    // el nodo i está en copia
+                    nodo = true;
+                    break;
+                } else if (matriz[i][copia[j]] == 1) {
+                    // el nodo i es adyacente a alguno en copia
+                    nodo = true;
+                    break;
+                }
+            }
+            if (!nodo) {
+                copia_dominante = false;
+                break;
+            }
+        }
+        if (poda_B == true) {
+            // Sabemos que si Copia no es dominante, entonces ningun subconjunto de Copia es dominante, por lo que ni siquiera los evaluo
+            if (copia_dominante) {
+                vector<int> nuevo_cidm = resolver_aux(n, matriz, copia, cidm);
+                if (nuevo_cidm.size() < cidm_size) {
+                    cidm = nuevo_cidm;
+                    cidm_size = nuevo_cidm.size();
+                }
+            }
+        } else {
+            vector<int> nuevo_cidm = resolver_aux(n, matriz, copia, cidm);
+            if (nuevo_cidm.size() < cidm_size) {
+                cidm = nuevo_cidm;
+                cidm_size = nuevo_cidm.size();
+            }
+        }
     }
-    if (actual.down != INFINITO && sobrevivientes(actual.sol_max, actual.down) > map[i+1][j].sol_max){
-        map[i+1][j].sol_max = sobrevivientes(actual.sol_max, actual.down);
-        map[i+1][j].pred = make_pair(i,j);
-		// cout << "down " << endl;
-        resolver(map, make_pair(i+1,j), bunker, count);
-    }
+    return cidm;
 }

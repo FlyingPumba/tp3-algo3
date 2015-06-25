@@ -14,10 +14,10 @@ El BFS modificado funciona de la siguiente manera:
 \begin{codesnippet}
 Los vertices estan numerados de 0 a n-1.
 
-Creamos un vector, llamado solucionInicial, de tamaño n para guardar el estado de los 
+Creamos un vector, llamado solucionInicial, de tamaño n para guardar el estado de los
 vertices (si fue VISITADO o no)
 
-Creamos un vector de tamaño n en donde para cada posicion guardamos si 
+Creamos un vector de tamaño n en donde para cada posicion guardamos si
 pertence al CID (INCLUIDO o no)
 
 Al vertice inicial v lo ponemos como VISITADO y INCLUIDO y lo incluimos en la cola.
@@ -26,10 +26,10 @@ Luego mientras no este vacia la cola:
     Sacamos el primer elemento de la cola (w) y lo ponemos INCLUIDO.
     Revisamos cada adyacente a w:
         Si algun adyacente esta INCLUIDO entonces hacemos w = NO INCLUIDO.
-        Si el adyacente no fue VISITADO entonces lo ponemos como VISITADO y 
+        Si el adyacente no fue VISITADO entonces lo ponemos como VISITADO y
         lo agregamos a la cola.
 
-Repetimos el procedimiento para el resto de las componentes conexas, empezando por 
+Repetimos el procedimiento para el resto de las componentes conexas, empezando por
 el vertice de menor numeracion de la componente analizada.
 
 
@@ -71,29 +71,26 @@ Para llevar adelante exitosamente este intercambio, debemos buscar aquellos vert
 
 \begin{itemize}
 	\item Ejemplo de un cambio 4 por 1:
-    
+
     \tikz[every node/.style={draw,circle}] {
-\node[fill=blue!40, text=white] (1) at (0, 0)  { 0 };
-\node (2) at (1, -1)  { 1 };
-\node[fill=blue!40, text=white] (5) at (2, -2)  { 3 };
-\node[fill=blue!40, text=white] (7) at (2, 0)  { 2 };
-\node[fill=blue!40, text=white] (8) at (0, -2)  { 4 };
-\node (9) at (5, 0)  { 0 };
-\node[fill=blue!40, text=white] (10) at (6, -1)  { 1 };
-\node (11) at (7, -2)  { 3 };
-\node (12) at (7, 0)  { 2 };
-\node (13) at (5, -2)  { 4 };
-
-\draw (1) edge node[above,draw=none] {} (2);
-\draw (5) edge node[above,draw=none] {} (2);
-\draw (2) edge node[above,draw=none] {} (7);
-\draw (2) edge node[above,draw=none] {} (8);
-
-\draw (9) edge node[above,draw=none] {} (10);
-\draw (11) edge node[above,draw=none] {} (10);
-\draw (10) edge node[above,draw=none] {} (12);
-\draw (10) edge node[above,draw=none] {} (13);
-
+		\node[fill=blue!40, text=white] (1) at (0, 0)  { 0 };
+		\node (2) at (1, -1)  { 1 };
+		\node[fill=blue!40, text=white] (5) at (2, -2)  { 3 };
+		\node[fill=blue!40, text=white] (7) at (2, 0)  { 2 };
+		\node[fill=blue!40, text=white] (8) at (0, -2)  { 4 };
+		\node (9) at (5, 0)  { 0 };
+		\node[fill=blue!40, text=white] (10) at (6, -1)  { 1 };
+		\node (11) at (7, -2)  { 3 };
+		\node (12) at (7, 0)  { 2 };
+		\node (13) at (5, -2)  { 4 };
+		\draw (1) edge node[above,draw=none] {} (2);
+		\draw (5) edge node[above,draw=none] {} (2);
+		\draw (2) edge node[above,draw=none] {} (7);
+		\draw (2) edge node[above,draw=none] {} (8);
+		\draw (9) edge node[above,draw=none] {} (10);
+		\draw (11) edge node[above,draw=none] {} (10);
+		\draw (10) edge node[above,draw=none] {} (12);
+		\draw (10) edge node[above,draw=none] {} (13);
 }
 
 \end{itemize}
@@ -102,33 +99,30 @@ Sin embargo, para lograr una solucion valida, los vertices quitados no pueden te
 
 \begin{itemize}
 	\item Ejemplo de solucion invalida:
-    
+
     \tikz[every node/.style={draw,circle}] {
-\node[fill=blue!40, text=white] (1) at (0, 0)  { 0 };
-\node (2) at (1, -1)  { 1 };
-\node[fill=blue!40, text=white] (5) at (2, -2)  { 3 };
-\node[fill=blue!40, text=white] (7) at (2, 0)  { 2 };
-\node[fill=blue!40, text=white] (8) at (0, -2)  { 4 };
-\node (14) at (3.5, 0)  { 5 };
-\node (9) at (5, 0)  { 0 };
-\node[fill=blue!40, text=white] (10) at (6, -1)  { 1 };
-\node (11) at (7, -2)  { 3 };
-\node (12) at (7, 0)  { 2 };
-\node (13) at (5, -2)  { 4 };
-\node (15) at (8.5, 0)  { 5 };
-
-\draw (1) edge node[above,draw=none] {} (2);
-\draw (5) edge node[above,draw=none] {} (2);
-\draw (2) edge node[above,draw=none] {} (7);
-\draw (2) edge node[above,draw=none] {} (8);
-\draw (7) edge node[above,draw=none] {} (14);
-
-\draw (9) edge node[above,draw=none] {} (10);
-\draw (11) edge node[above,draw=none] {} (10);
-\draw (10) edge node[above,draw=none] {} (12);
-\draw (10) edge node[above,draw=none] {} (13);
-\draw (12) edge node[above,draw=none] {} (15);
-
+		\node[fill=blue!40, text=white] (1) at (0, 0)  { 0 };
+		\node (2) at (1, -1)  { 1 };
+		\node[fill=blue!40, text=white] (5) at (2, -2)  { 3 };
+		\node[fill=blue!40, text=white] (7) at (2, 0)  { 2 };
+		\node[fill=blue!40, text=white] (8) at (0, -2)  { 4 };
+		\node (14) at (3.5, 0)  { 5 };
+		\node (9) at (5, 0)  { 0 };
+		\node[fill=blue!40, text=white] (10) at (6, -1)  { 1 };
+		\node (11) at (7, -2)  { 3 };
+		\node (12) at (7, 0)  { 2 };
+		\node (13) at (5, -2)  { 4 };
+		\node (15) at (8.5, 0)  { 5 };
+		\draw (1) edge node[above,draw=none] {} (2);
+		\draw (5) edge node[above,draw=none] {} (2);
+		\draw (2) edge node[above,draw=none] {} (7);
+		\draw (2) edge node[above,draw=none] {} (8);
+		\draw (7) edge node[above,draw=none] {} (14);
+		\draw (9) edge node[above,draw=none] {} (10);
+		\draw (11) edge node[above,draw=none] {} (10);
+		\draw (10) edge node[above,draw=none] {} (12);
+		\draw (10) edge node[above,draw=none] {} (13);
+		\draw (12) edge node[above,draw=none] {} (15);
 }
 
 \end{itemize}
@@ -137,7 +131,7 @@ El procedimiento de busqueda de los posibles soluciones vecinas funciona de la s
 
 \begin{codesnippet}
 Para todo vertice, u, en el Grafo:
-  Creamos un vector de tamaño n, llamado solucionAuxiliar, al cual le copiamos 
+  Creamos un vector de tamaño n, llamado solucionAuxiliar, al cual le copiamos
   el contenido de la solucionInicial.
   Si solucionInicial[u] = NO INCLUIDO y |adyacentes a u| > 1 entonces:
      solucionAuxiliar[u] = INCLUIDO
@@ -146,12 +140,12 @@ Para todo vertice, u, en el Grafo:
          Si solucionInicial[v] = INCLUIDO entonces:
              cantAdyacentesIncluidos ++
              solucionAuxiliar[v] = NO INCLUIDO
-  
+
   Si cantAdyacentesIncluidos > 1 entonces:
      Si esSolucion?(solucionAuxiliar) entonces:
        Buscar Nuevos Vecinos a partir de la solucionAuxiliar
        Interrumpir el ciclo
-     
+
 \end{codesnippet}
 
 En el procedimiento descripto anteriormente falta detallar el comportamiento de la funciona auxiliar \textit{esSolucion?}, la cual sera descripta en el apartado siguiente, ya que es utilizado por ambos criterios.
@@ -164,69 +158,60 @@ En este caso, para los casos no contemplados en el criterio anterior, debemos bu
 
 \begin{itemize}
 	\item Ejemplo de un caso 4-2, el cual fallaba en el criterio anterior:
-    
+
     \tikz[every node/.style={draw,circle}] {
-\node[fill=blue!40, text=white] (1) at (0, 0)  { 0 };
-\node (2) at (1, -1)  { 1 };
-\node[fill=blue!40, text=white] (5) at (2, -2)  { 3 };
-\node[fill=blue!40, text=white] (7) at (2, 0)  { 2 };
-\node[fill=blue!40, text=white] (8) at (0, -2)  { 4 };
-\node (14) at (3.5, 0)  { 5 };
-\node (9) at (5, 0)  { 0 };
-\node[fill=blue!40, text=white] (10) at (6, -1)  { 1 };
-\node (11) at (7, -2)  { 3 };
-\node (12) at (7, 0)  { 2 };
-\node (13) at (5, -2)  { 4 };
-\node[fill=blue!40, text=white] (15) at (8.5, 0)  { 5 };
-
-\draw (1) edge node[above,draw=none] {} (2);
-\draw (5) edge node[above,draw=none] {} (2);
-\draw (2) edge node[above,draw=none] {} (7);
-\draw (2) edge node[above,draw=none] {} (8);
-\draw (7) edge node[above,draw=none] {} (14);
-
-\draw (9) edge node[above,draw=none] {} (10);
-\draw (11) edge node[above,draw=none] {} (10);
-\draw (10) edge node[above,draw=none] {} (12);
-\draw (10) edge node[above,draw=none] {} (13);
-\draw (12) edge node[above,draw=none] {} (15);
-
+		\node[fill=blue!40, text=white] (1) at (0, 0)  { 0 };
+		\node (2) at (1, -1)  { 1 };
+		\node[fill=blue!40, text=white] (5) at (2, -2)  { 3 };
+		\node[fill=blue!40, text=white] (7) at (2, 0)  { 2 };
+		\node[fill=blue!40, text=white] (8) at (0, -2)  { 4 };
+		\node (14) at (3.5, 0)  { 5 };
+		\node (9) at (5, 0)  { 0 };
+		\node[fill=blue!40, text=white] (10) at (6, -1)  { 1 };
+		\node (11) at (7, -2)  { 3 };
+		\node (12) at (7, 0)  { 2 };
+		\node (13) at (5, -2)  { 4 };
+		\node[fill=blue!40, text=white] (15) at (8.5, 0)  { 5 };
+		\draw (1) edge node[above,draw=none] {} (2);
+		\draw (5) edge node[above,draw=none] {} (2);
+		\draw (2) edge node[above,draw=none] {} (7);
+		\draw (2) edge node[above,draw=none] {} (8);
+		\draw (7) edge node[above,draw=none] {} (14);
+		\draw (9) edge node[above,draw=none] {} (10);
+		\draw (11) edge node[above,draw=none] {} (10);
+		\draw (10) edge node[above,draw=none] {} (12);
+		\draw (10) edge node[above,draw=none] {} (13);
+		\draw (12) edge node[above,draw=none] {} (15);
 }
 
 \end{itemize}
 
 \begin{itemize}
 	\item Caso donde falla el segundo criterio:
-    
+
     \tikz[every node/.style={draw,circle}] {
-\node (1)[fill=blue!40, text=white] at (0, 0)  { 0 };
-\node (2) at (1, -1)  { 1 };
-\node (3)[fill=blue!40, text=white] at (2, 0)  { 2 };
-\node (4)[fill=blue!40, text=white] at (2, -2)  { 3 };
-\node (5) at (3.5, 0)  { 4 };
-\node (6) at (3.5, -2)  { 5 };
-
-\node (7) at (5, 0)  { 0 };
-\node (8)[fill=blue!40, text=white] at (6, -1)  { 1 };
-\node (9) at (7, 0)  { 2 };
-\node (10) at (7, -2)  { 3 };
-\node (11)[fill=blue!40, text=white] at (8.5, 0)  { 4 };
-\node (12) at (8.5, -2)  { 5 };
-
-
-\draw (1) edge node[above,draw=none] {} (2);
-\draw (2) edge node[above,draw=none] {} (3);
-\draw (2) edge node[above,draw=none] {} (4);
-\draw (3) edge node[above,draw=none] {} (5);
-\draw (4) edge node[above,draw=none] {} (6);
-
-\draw (7) edge node[above,draw=none] {} (8);
-\draw (8) edge node[above,draw=none] {} (9);
-\draw (8) edge node[above,draw=none] {} (10);
-\draw (9) edge node[above,draw=none] {} (11);
-\draw (10) edge node[above,draw=none] {} (12);
-
-
+		\node (1)[fill=blue!40, text=white] at (0, 0)  { 0 };
+		\node (2) at (1, -1)  { 1 };
+		\node (3)[fill=blue!40, text=white] at (2, 0)  { 2 };
+		\node (4)[fill=blue!40, text=white] at (2, -2)  { 3 };
+		\node (5) at (3.5, 0)  { 4 };
+		\node (6) at (3.5, -2)  { 5 };
+		\node (7) at (5, 0)  { 0 };
+		\node (8)[fill=blue!40, text=white] at (6, -1)  { 1 };
+		\node (9) at (7, 0)  { 2 };
+		\node (10) at (7, -2)  { 3 };
+		\node (11)[fill=blue!40, text=white] at (8.5, 0)  { 4 };
+		\node (12) at (8.5, -2)  { 5 };
+		\draw (1) edge node[above,draw=none] {} (2);
+		\draw (2) edge node[above,draw=none] {} (3);
+		\draw (2) edge node[above,draw=none] {} (4);
+		\draw (3) edge node[above,draw=none] {} (5);
+		\draw (4) edge node[above,draw=none] {} (6);
+		\draw (7) edge node[above,draw=none] {} (8);
+		\draw (8) edge node[above,draw=none] {} (9);
+		\draw (8) edge node[above,draw=none] {} (10);
+		\draw (9) edge node[above,draw=none] {} (11);
+		\draw (10) edge node[above,draw=none] {} (12);
 }
 
 \end{itemize}
@@ -235,7 +220,7 @@ El procedimiento de busqueda de los posibles soluciones vecinas funciona de la s
 
 \begin{codesnippet}
 Para todo vertice, u, en el Grafo:
-  Creamos un vector de tamaño n, llamado solucionAuxiliar, al cual le copiamos 
+  Creamos un vector de tamaño n, llamado solucionAuxiliar, al cual le copiamos
   el contenido de la solucionInicial.
   Si solucionInicial[u] = NO INCLUIDO y |adyacentes a u| > 1 entonces:
      solucionAuxiliar[u] = INCLUIDO
@@ -244,14 +229,14 @@ Para todo vertice, u, en el Grafo:
          Si solucionInicial[v] = INCLUIDO entonces:
              cantAdyacentesIncluidos ++
              solucionAuxiliar[v] = NO INCLUIDO
-  
+
   Si cantAdyacentesIncluidos > 1 entonces:
      cantCambiosPosibles = cantAdyacentesIncluidos - 2
      arreglarSolucion(solucionAuxiliar, cantCambiosPosibles)
      Si esSolucion?(solucionAuxiliar) entonces:
        Buscar Nuevos Vecinos a partir de la solucionAuxiliar
        Interrumpir el ciclo
-     
+
 \end{codesnippet}
 
 Falta detallar los procedimientos \textit{arreglarSolucion} y \textit{esSolucion?}, los cuales se pueden realizar en una sola funcion que llameremos \textit{esSolucion?} cuyo comportamiento es el siguiente:
@@ -263,14 +248,14 @@ Falta detallar los procedimientos \textit{arreglarSolucion} y \textit{esSolucion
     \begin{enumerate}
     	\item La variable entera que representa la cantidad de cambios posibles es 0. En este caso sabemos que el subconjunto analizado no es solucion valida.
         \item La variable entera que representa la cantidad de cambios posibles es mayor a 0. En este caso el vertice pasa a estar INCLUIDO en el subconjunto, manteniendose la validez de la solucion, ya que el vertice NO tiene adyacentes INCLUIDOS. Tambien reducimos la cantidad de cambios posibles en una unidad.
-    \end{enumerate} 
-    
+    \end{enumerate}
+
     \item En pseudocodigo:
-    
+
 \end{itemize}
 
 \begin{codesnippet}
-Como entrada tenemos el vector solucionAuxiliar con la solucion a analizar y el entero 
+Como entrada tenemos el vector solucionAuxiliar con la solucion a analizar y el entero
 cantCambiosPosibles, que tiene la cantidad de vertices que podemos incluir.
 
 Creamos una variable booleana, esSolucion inicializadas en true.
@@ -281,7 +266,7 @@ Luego, para todo vertice, u, en el Grafo:
          Si solucionInicial[v] = INCLUIDO entonces:
              esSolucion = false
              Interrumpir el ciclo
-             
+
   Sino Si |adyacentes a u| > 0, entonces:
        adyacenteIncluido = false
        Para todo adyacente, v, a u:
@@ -293,10 +278,10 @@ Luego, para todo vertice, u, en el Grafo:
        Sino Si not(adyacenteIncluido) entonces:
          solucionAuxiliar[u] = INCLUIDO
          cantCambiosPosibles --
-  
+
   Sino entonces:
        esSolucion = (solucionAuxiliar[u] = INCLUIDO)
-              
+
 \end{codesnippet}
 
 Es necesario aclarar que para el primer criterio de vecindad, la cantidad de cambios posibles es 0.
@@ -313,7 +298,7 @@ A partir de los procedimientos expuestos en el punto anterior, pasamos a analiza
         \item \underline{BFS modificado}: Las cambios implementos en el BFS no alteran su complejidad original, siendo la misma $\mathcal{O}(n + m)$. \footnote{Referencia \url{https://en.wikipedia.org/wiki/Breadth-first_search}}
     \end{itemize}
   \item \textbf{Primer Criterio de Vecindad}
-  
+
   Tenemos un ciclo que se repite $n$ veces, el cual tiene varias operaciones que se realizan internamente:
   \begin{itemize}
     \item Creacion de un vector tamaño $n$ y copia de contenido: $\Theta{(n)}$
@@ -322,9 +307,9 @@ A partir de los procedimientos expuestos en el punto anterior, pasamos a analiza
     \item Complejidad de la funcion esSolucion?: $\mathcal{O}(n + m)$. Detallada en el punto 4.
   \end{itemize}
   Por lo tanto la complejidad total de este procedimiento es: $\mathcal{O}(n*(n + n + m) + n + m)$, lo cual es: $\mathcal{O}(n*(n + m))$
-  
+
   \item \textbf{Segundo Criterio de Vecindad}
-  
+
     Misma situacion que el punto anterior, tenemos un ciclo que se repite $n$ veces, el cual tiene varias operaciones que se realizan internamente:
   \begin{itemize}
     \item Creacion de un vector tamaño $n$ y copia de contenido: $\Theta{(n)}$
@@ -333,19 +318,19 @@ A partir de los procedimientos expuestos en el punto anterior, pasamos a analiza
     \item Complejidad de la funcion esSolucion?: $\mathcal{O}(n + m)$. Detallada en el punto 4.
   \end{itemize}
   Por lo tanto la complejidad total de este procedimiento es: $\mathcal{O}(n*(n + n + m) + n + m)$, lo cual es: $\mathcal{O}(n*(n + m))$
-  
+
   \item \textbf{Procedimiento esSolucion?}
-  
+
     Tenemos un ciclo que se repite $n$ veces, el cual tiene varias operaciones que se realizan internamente:
   \begin{itemize}
     \item Comparaciones y Asignaciones: $\mathcal{O}(1)$
     \item Ciclo de los adyacentes, cuya complejidad, sumada a la del ciclo principal, es $\mathcal{O}(n + m)$.
   \end{itemize}
   Por lo tanto la complejidad total de este procedimiento es: $\mathcal{O}(n + m)$.
-  
+
 \end{enumerate}
 
-Podemos concluir que la complejidad temporal de la heuristica es independiente del procedimiento utilizado para armar la solucion inicial, y que utilizando el primer o segundo criterio de vecindad la complejidad es la misma: $\mathcal{O}(n*(n + m))$.\\ 
+Podemos concluir que la complejidad temporal de la heuristica es independiente del procedimiento utilizado para armar la solucion inicial, y que utilizando el primer o segundo criterio de vecindad la complejidad es la misma: $\mathcal{O}(n*(n + m))$.\\
 
 \textbf{Cota superior para la cantidad de iteraciones:}
 Sabemos que cada iteracion de las vecindades reduce, como minimo, en 1 el cardinal del subconjunto CID. Por lo tanto, si partimos de una solucion inicial en donde el cardinal del subconjunto es asistonticamente igual a la cantidad de vertices del Grafo, es posible que iteraremos hasta n-1 veces, hasta alcanzar una solucion de 1 vertice. Es evidente que este es un caso extremo, de dificil realizacion, sin embargo brinda una cota supeior a la cantidad de iteraciones.
@@ -389,7 +374,7 @@ La medicion de tiempos de los distintos tipos, arroja los siguientes graficos pa
                 \includegraphics[width=\textwidth]{imagenes/ejer4-grafB1-2.jpg}
                 \caption{figura (a) / n*(n+m)}
         \end{subfigure}
-        
+
 \end{figure}
 
 \item \textbf{Tipo G1:}
@@ -406,7 +391,7 @@ La medicion de tiempos de los distintos tipos, arroja los siguientes graficos pa
                 \includegraphics[width=\textwidth]{imagenes/ejer4-grafG1-2.jpg}
                 \caption{figura (a) / n*(n+m)}
         \end{subfigure}
-        
+
 \end{figure}
 
 
@@ -424,7 +409,7 @@ La medicion de tiempos de los distintos tipos, arroja los siguientes graficos pa
                 \includegraphics[width=\textwidth]{imagenes/ejer4-grafB2-2.jpg}
                 \caption{figura (a) / n*(n+m)}
         \end{subfigure}
-        
+
 \end{figure}
 
 
@@ -443,7 +428,7 @@ La medicion de tiempos de los distintos tipos, arroja los siguientes graficos pa
                 \includegraphics[width=\textwidth]{imagenes/ejer4-grafG2-2.jpg}
                 \caption{figura (a) / n*(n+m)}
         \end{subfigure}
-        
+
 \end{figure}
 
 
@@ -468,7 +453,7 @@ Por el lado de la calidad de las soluciones obtenidas con cada combinacion, debe
                 \includegraphics[width=\textwidth]{imagenes/ejer4-B2vsG2.jpg}
                 \caption{Usando el Segundo Criterio de Vecindad}
         \end{subfigure}
-        
+
 \end{figure}
 
 \end{itemize}
@@ -477,7 +462,7 @@ En ambos casos, se aprecia una paridad entre ambos soluciones, sin embargo hay u
 
 \begin{itemize}
 	\item \textbf{Criterio de Vencindad}. El analisis comparado es el siguiente (utilizando la misma metodologia que en el caso de BFS vs Golosa):
-    
+
     \begin{figure}[H]
         \centering
         \begin{subfigure}[b]{0.5\textwidth}
@@ -490,9 +475,9 @@ En ambos casos, se aprecia una paridad entre ambos soluciones, sin embargo hay u
                 \includegraphics[width=\textwidth]{imagenes/ejer4-G1vsG2.jpg}
                 \caption{Usando Goloso como solucion incial}
         \end{subfigure}
-        
+
 \end{figure}
-    
+
 
 \end{itemize}
 
@@ -503,72 +488,62 @@ Estos resultados nos inclinan a pensar que el segundo criterio de vecindad es el
 \begin{itemize}
 
 	\item Grafo de n = 9 y m = 13
-    
-\tikz[every node/.style={draw,circle}] {
-\node (1) at (0, 0)  { 1 };
-\node (2) at (4.5, 0)  { 2 };
-\node (3) at (2, -2)  { 3 };
-\node (4) at (2, 2)  { 4 };
-\node (5) at (7.5, -1.5)  { 5 };
-\node (6) at (1, -1)  { 6 };
-\node (7) at (3, 0)  { 7 };
-\node (8) at (2.5, -1)  { 8 };
-\node (9) at (4, -1)  { 9 };
-
-
-
-\draw (1) edge node[above,draw=none] {} (6);
-\draw (3) edge node[above,draw=none] {} (5);
-\draw (4) edge node[above,draw=none] {} (6);
-\draw (6) edge node[above,draw=none] {} (7);
-\draw (6) edge node[above,draw=none] {} (3);
-\draw (5) edge node[above,draw=none] {} (4);
-\draw (7) edge node[above,draw=none] {} (4);
-\draw (7) edge node[above,draw=none] {} (8);
-\draw (9) edge node[above,draw=none] {} (8);
-\draw (9) edge node[above,draw=none] {} (5);
-\draw (9) edge node[above,draw=none] {} (2);
-\draw (7) edge node[above,draw=none] {} (2);
-\draw (8) edge node[above,draw=none] {} (3);
-
-
-}
-
-    
-    
-    \item \textbf{Solucion Golosa}: como el mayor grado, 3, es compartido por varios vertices, empezamos por el menor numero de etiqueta, que es el 5, y asi sucesivamente. 
 
 \tikz[every node/.style={draw,circle}] {
-\node (1) at (0, 0)  { 1 };
-\node (2)[fill=blue!40, text=white] at (4.5, 0)  { 2 };
-\node (3) at (2, -2)  { 3 };
-\node (4) at (2, 2)  { 4 };
-\node (5)[fill=blue!40, text=white] at (7.5, -1.5)  { 5 };
-\node (6)[fill=blue!40, text=white] at (1, -1)  { 6 };
-\node (7) at (3, 0)  { 7 };
-\node (8)[fill=blue!40, text=white] at (2.5, -1)  { 8 };
-\node (9) at (4, -1)  { 9 };
-
-
-
-\draw (1) edge node[above,draw=none] {} (6);
-\draw (3) edge node[above,draw=none] {} (5);
-\draw (4) edge node[above,draw=none] {} (6);
-\draw (6) edge node[above,draw=none] {} (7);
-\draw (6) edge node[above,draw=none] {} (3);
-\draw (5) edge node[above,draw=none] {} (4);
-\draw (7) edge node[above,draw=none] {} (4);
-\draw (7) edge node[above,draw=none] {} (8);
-\draw (9) edge node[above,draw=none] {} (8);
-\draw (9) edge node[above,draw=none] {} (5);
-\draw (9) edge node[above,draw=none] {} (2);
-\draw (7) edge node[above,draw=none] {} (2);
-\draw (8) edge node[above,draw=none] {} (3);
-
-
+	\node (1) at (0, 0)  { 1 };
+	\node (2) at (4.5, 0)  { 2 };
+	\node (3) at (2, -2)  { 3 };
+	\node (4) at (2, 2)  { 4 };
+	\node (5) at (7.5, -1.5)  { 5 };
+	\node (6) at (1, -1)  { 6 };
+	\node (7) at (3, 0)  { 7 };
+	\node (8) at (2.5, -1)  { 8 };
+	\node (9) at (4, -1)  { 9 };
+	\draw (1) edge node[above,draw=none] {} (6);
+	\draw (3) edge node[above,draw=none] {} (5);
+	\draw (4) edge node[above,draw=none] {} (6);
+	\draw (6) edge node[above,draw=none] {} (7);
+	\draw (6) edge node[above,draw=none] {} (3);
+	\draw (5) edge node[above,draw=none] {} (4);
+	\draw (7) edge node[above,draw=none] {} (4);
+	\draw (7) edge node[above,draw=none] {} (8);
+	\draw (9) edge node[above,draw=none] {} (8);
+	\draw (9) edge node[above,draw=none] {} (5);
+	\draw (9) edge node[above,draw=none] {} (2);
+	\draw (7) edge node[above,draw=none] {} (2);
+	\draw (8) edge node[above,draw=none] {} (3);
 }
 
-    
+
+
+    \item \textbf{Solucion Golosa}: como el mayor grado, 3, es compartido por varios vertices, empezamos por el menor numero de etiqueta, que es el 5, y asi sucesivamente.
+
+\tikz[every node/.style={draw,circle}] {
+	\node (1) at (0, 0)  { 1 };
+	\node (2)[fill=blue!40, text=white] at (4.5, 0)  { 2 };
+	\node (3) at (2, -2)  { 3 };
+	\node (4) at (2, 2)  { 4 };
+	\node (5)[fill=blue!40, text=white] at (7.5, -1.5)  { 5 };
+	\node (6)[fill=blue!40, text=white] at (1, -1)  { 6 };
+	\node (7) at (3, 0)  { 7 };
+	\node (8)[fill=blue!40, text=white] at (2.5, -1)  { 8 };
+	\node (9) at (4, -1)  { 9 };
+	\draw (1) edge node[above,draw=none] {} (6);
+	\draw (3) edge node[above,draw=none] {} (5);
+	\draw (4) edge node[above,draw=none] {} (6);
+	\draw (6) edge node[above,draw=none] {} (7);
+	\draw (6) edge node[above,draw=none] {} (3);
+	\draw (5) edge node[above,draw=none] {} (4);
+	\draw (7) edge node[above,draw=none] {} (4);
+	\draw (7) edge node[above,draw=none] {} (8);
+	\draw (9) edge node[above,draw=none] {} (8);
+	\draw (9) edge node[above,draw=none] {} (5);
+	\draw (9) edge node[above,draw=none] {} (2);
+	\draw (7) edge node[above,draw=none] {} (2);
+	\draw (8) edge node[above,draw=none] {} (3);
+}
+
+
     \item \textbf{Solucion aplicando el segundo criterio de vecindad a la solucion golosa}: tenemos 4 candidatos que cumplen con el hecho de tener 2 o mas adyacentes incluidos: 3, 4, 7, 9.
     \begin{enumerate}
     	\item Vertice 3: incluimos el 3, quitamos el 5, 6 y 8, por lo tanto podemos incluir un vertice mas, que sera el 1. Sin embargo el 4 no es dominado por nadie, por lo cual no es una solucion valida.
@@ -577,81 +552,60 @@ Estos resultados nos inclinan a pensar que el segundo criterio de vecindad es el
         \item Vertice 9: no es contemplado, ya que obtuvimos una solucion mejor con el vertice 7. Solucion que ya no es posible mejorar.
 	\end{enumerate}
 \tikz[every node/.style={draw,circle}] {
-\node (1)[fill=blue!40, text=white] at (0, 0)  { 1 };
-\node (2) at (4.5, 0)  { 2 };
-\node (3) at (2, -2)  { 3 };
-\node (4) at (2, 2)  { 4 };
-\node (5)[fill=blue!40, text=white] at (7.5, -1.5)  { 5 };
-\node (6) at (1, -1)  { 6 };
-\node (7)[fill=blue!40, text=white] at (3, 0)  { 7 };
-\node (8) at (2.5, -1)  { 8 };
-\node (9) at (4, -1)  { 9 };
-
-
-
-\draw (1) edge node[above,draw=none] {} (6);
-\draw (3) edge node[above,draw=none] {} (5);
-\draw (4) edge node[above,draw=none] {} (6);
-\draw (6) edge node[above,draw=none] {} (7);
-\draw (6) edge node[above,draw=none] {} (3);
-\draw (5) edge node[above,draw=none] {} (4);
-\draw (7) edge node[above,draw=none] {} (4);
-\draw (7) edge node[above,draw=none] {} (8);
-\draw (9) edge node[above,draw=none] {} (8);
-\draw (9) edge node[above,draw=none] {} (5);
-\draw (9) edge node[above,draw=none] {} (2);
-\draw (7) edge node[above,draw=none] {} (2);
-\draw (8) edge node[above,draw=none] {} (3);
-
-
+	\node (1)[fill=blue!40, text=white] at (0, 0)  { 1 };
+	\node (2) at (4.5, 0)  { 2 };
+	\node (3) at (2, -2)  { 3 };
+	\node (4) at (2, 2)  { 4 };
+	\node (5)[fill=blue!40, text=white] at (7.5, -1.5)  { 5 };
+	\node (6) at (1, -1)  { 6 };
+	\node (7)[fill=blue!40, text=white] at (3, 0)  { 7 };
+	\node (8) at (2.5, -1)  { 8 };
+	\node (9) at (4, -1)  { 9 };
+	\draw (1) edge node[above,draw=none] {} (6);
+	\draw (3) edge node[above,draw=none] {} (5);
+	\draw (4) edge node[above,draw=none] {} (6);
+	\draw (6) edge node[above,draw=none] {} (7);
+	\draw (6) edge node[above,draw=none] {} (3);
+	\draw (5) edge node[above,draw=none] {} (4);
+	\draw (7) edge node[above,draw=none] {} (4);
+	\draw (7) edge node[above,draw=none] {} (8);
+	\draw (9) edge node[above,draw=none] {} (8);
+	\draw (9) edge node[above,draw=none] {} (5);
+	\draw (9) edge node[above,draw=none] {} (2);
+	\draw (7) edge node[above,draw=none] {} (2);
+	\draw (8) edge node[above,draw=none] {} (3);
 }
-    
-    
+
+
     \item \textbf{Solucion aplicando el primer criterio de vecindad a la solucion golosa}: los candidatos son los mismos que en el segundo criterio, sin embargo al no poder incluir vertice mas alla del candidato, la solucion probando con el vertice 7 es invalida, ya que el 1 no es dominado por nadie. Por lo tanto probamos con incluir el 9, y quitar el 2, 5 y 8. Al hacer esto nos queda una solucion valida de menor cardinal que en la solucion golosa original y que si hubiesemos utilizado el segundo criterio
 
 
 
 \tikz[every node/.style={draw,circle}] {
-\node (1) at (0, 0)  { 1 };
-\node (2) at (4.5, 0)  { 2 };
-\node (3) at (2, -2)  { 3 };
-\node (4) at (2, 2)  { 4 };
-\node (5) at (7.5, -1.5)  { 5 };
-\node (6)[fill=blue!40, text=white] at (1, -1)  { 6 };
-\node (7) at (3, 0)  { 7 };
-\node (8) at (2.5, -1)  { 8 };
-\node (9)[fill=blue!40, text=white] at (4, -1)  { 9 };
-
-
-
-\draw (1) edge node[above,draw=none] {} (6);
-\draw (3) edge node[above,draw=none] {} (5);
-\draw (4) edge node[above,draw=none] {} (6);
-\draw (6) edge node[above,draw=none] {} (7);
-\draw (6) edge node[above,draw=none] {} (3);
-\draw (5) edge node[above,draw=none] {} (4);
-\draw (7) edge node[above,draw=none] {} (4);
-\draw (7) edge node[above,draw=none] {} (8);
-\draw (9) edge node[above,draw=none] {} (8);
-\draw (9) edge node[above,draw=none] {} (5);
-\draw (9) edge node[above,draw=none] {} (2);
-\draw (7) edge node[above,draw=none] {} (2);
-\draw (8) edge node[above,draw=none] {} (3);
-
-
+	\node (1) at (0, 0)  { 1 };
+	\node (2) at (4.5, 0)  { 2 };
+	\node (3) at (2, -2)  { 3 };
+	\node (4) at (2, 2)  { 4 };
+	\node (5) at (7.5, -1.5)  { 5 };
+	\node (6)[fill=blue!40, text=white] at (1, -1)  { 6 };
+	\node (7) at (3, 0)  { 7 };
+	\node (8) at (2.5, -1)  { 8 };
+	\node (9)[fill=blue!40, text=white] at (4, -1)  { 9 };
+	\draw (1) edge node[above,draw=none] {} (6);
+	\draw (3) edge node[above,draw=none] {} (5);
+	\draw (4) edge node[above,draw=none] {} (6);
+	\draw (6) edge node[above,draw=none] {} (7);
+	\draw (6) edge node[above,draw=none] {} (3);
+	\draw (5) edge node[above,draw=none] {} (4);
+	\draw (7) edge node[above,draw=none] {} (4);
+	\draw (7) edge node[above,draw=none] {} (8);
+	\draw (9) edge node[above,draw=none] {} (8);
+	\draw (9) edge node[above,draw=none] {} (5);
+	\draw (9) edge node[above,draw=none] {} (2);
+	\draw (7) edge node[above,draw=none] {} (2);
+	\draw (8) edge node[above,draw=none] {} (3);
 }
 
 \end{itemize}
 
 Sin embargo estos tipos de instancias son muy particulares, por lo cual podemos afirmar que la \textbf{mejor combinacion} para la \textbf{heuristica de busqueda local} planteada es aquella que toma como \textbf{solucion inicial} la generada por la \textbf{heuristica golosa} y luego es mejorada por el \textbf{segundo criterio de vecindad}.
-
-
-
-
-
-
-
-
-
-
-
