@@ -11,7 +11,7 @@ using namespace std;
 #define INCLUIDO 1
 #define NO_INCLUIDO 0
 
-// Esta version tiene vecindades 2-1 o 3-2 vertices de diferencia
+// Esta version tiene vecindades k-1 o k-k-1 vertices de diferencia
 struct Nodo {
     int numero;
     int grado;
@@ -31,11 +31,12 @@ typedef vector<Nodo> Nodos;
 typedef list<int> listaAdyacencia;
 typedef vector<listaAdyacencia> Grafo;
 
-vector<int> bfs_cdi(Grafo G, int inicio);
-vector<int> goloso(Grafo G);
-bool solucionPosible(Grafo G, vector<int>* solucionCambiar, int cantCambios);
-vector<int> vecindad_primer_criterio(Grafo G, vector<int> solucionInicial);
-vector<int> vecindad_segundo_criterio(Grafo G, vector<int> solucionInicial);
+void bfs_cdi(Grafo& G, vector<int>& solucionInicial, int inicio);
+void goloso(Grafo& G, vector<int>& solucionInicial);
+bool solucion_posible(Grafo& G, vector<int>& solucionAuxiliar, int cantCambios);
+void vecindad_primer_criterio(Grafo& G, vector<int>& solucionInicial);
+void vecindad_segundo_criterio(Grafo& G, vector<int>& solucionInicial);
+void imprimir_resultado(vector<int>& cidm);
 
 // Implementacion.
 int main() {
@@ -52,55 +53,40 @@ int main() {
         G[v-1].push_back(w-1);
         G[w-1].push_back(v-1);
     }
+
+    vector<int> solucionInicial(n, NO_INCLUIDO);
     //Solucion Inicial 1: empiezo por el nodo 0
-    int inicio = 0;
-    //vector<int> solucionInicial = bfs_cdi(G, inicio);
+    //int inicio = 0;
+    //bfs_cdi(G, solucionInicial, inicio);
     // Solucion Inicial 2: Heuristica golosa
-    vector<int> solucionInicial = goloso(G);
+    goloso(G, solucionInicial);
+    //vecindad_primer_criterio(G, solucionInicial);
 
-    //vector<int> cidm = vecindad_primer_criterio(G, solucionInicial);
+    vecindad_segundo_criterio(G, solucionInicial);
 
-    vector<int> cidm = vecindad_segundo_criterio(G, solucionInicial);
-
-
-    cout << "[";
-    for (int i = 0; i < cidm.size(); i++) {
-        if(cidm[i] == INCLUIDO) {
-          cout << i + 1 << ",";
-        }
-
-    }
-    cout << "]"<< endl;
-    /*tamano = 0;
-    for (int i = 0; i < solucionInicial.size(); i++) {
-      if (cidm[i] == INCLUIDO) {
-        tamano ++;
-      }
-    }
-    cout << tamano << endl;*/
+    imprimir_resultado(solucionInicial);
 
     return 0;
 }
 
-vector<int> bfs_cdi(Grafo G, int inicio) {
+void bfs_cdi(Grafo& G, vector<int>& solucionInicial, int inicio) {
   // O(m + n)
   int n = G.size();
 	vector<int> estado(n,NO_VISITADO);
-  vector<int> domIndep(n,NO_INCLUIDO);
   // Primera componente conexa
   estado[inicio] = VISITADO;
-  domIndep[inicio] = INCLUIDO;
+  solucionInicial[inicio] = INCLUIDO;
   queue<int> cola;
   cola.push(inicio);
 
   while(!cola.empty()) {
     int v = cola.front();
     cola.pop();
-    domIndep[v] = INCLUIDO;
+    solucionInicial[v] = INCLUIDO;
     for (list<int>::iterator it=G[v].begin(); it != G[v].end(); ++it) {
       int w = *it;
-      if (domIndep[w] == INCLUIDO) {
-        domIndep[v] = NO_INCLUIDO;
+      if (solucionInicial[w] == INCLUIDO) {
+        solucionInicial[v] = NO_INCLUIDO;
       }
       if (estado[w] == NO_VISITADO) {
         estado[w] = VISITADO;
@@ -112,18 +98,18 @@ vector<int> bfs_cdi(Grafo G, int inicio) {
   for (int u = 0; u < n; u++) {
     if (estado[u] == NO_VISITADO) {
     	estado[u] = VISITADO;
-    	domIndep[u] = INCLUIDO;
+    	solucionInicial[u] = INCLUIDO;
     	queue<int> cola;
     	cola.push(u);
 
     	while(!cola.empty()) {
     		int v = cola.front();
     		cola.pop();
-    		domIndep[v] = INCLUIDO;
+    		solucionInicial[v] = INCLUIDO;
     		for (list<int>::iterator it=G[v].begin(); it != G[v].end(); ++it) {
     			int w = *it;
-    			if (domIndep[w] == INCLUIDO) {
-    				domIndep[v] = NO_INCLUIDO;
+    			if (solucionInicial[w] == INCLUIDO) {
+    				solucionInicial[v] = NO_INCLUIDO;
     			}
     			if (estado[w] == NO_VISITADO) {
     				estado[w] = VISITADO;
@@ -134,11 +120,9 @@ vector<int> bfs_cdi(Grafo G, int inicio) {
     }
 
   }
-
-  return domIndep;
 }
 
-vector<int> goloso(Grafo G) {
+void goloso(Grafo& G, vector<int>& solucionInicial) {
   int n = G.size();
   Nodos nodos(n, Nodo());
 
@@ -149,7 +133,6 @@ vector<int> goloso(Grafo G) {
 
   sort(nodos.begin(), nodos.end(), orden());
 
-  vector<int> solucionInicial(n, NO_INCLUIDO);
   vector<bool> visitado(n, false);
 
   for(int u = 0; u < n ; u++){
@@ -164,12 +147,11 @@ vector<int> goloso(Grafo G) {
       }
   }
 
-  return solucionInicial;
 }
 
 
-vector<int> vecindad_primer_criterio(Grafo G, vector<int> solucionInicial) {
-	// Criterio de Vecindad 1: Cambiamos, al  menos,  dos vectices de la solucion inicial por uno
+void vecindad_primer_criterio(Grafo& G, vector<int>& solucionInicial) {
+	// Criterio de Vecindad 1: Cambiamos k vertices por 1 vertice, donde k > 1
   int n = G.size();
   // Genero soluciones vecinas
   for (int u = 0; u < n; u++) {
@@ -188,21 +170,21 @@ vector<int> vecindad_primer_criterio(Grafo G, vector<int> solucionInicial) {
       // Necesito al menos 2 INCLUIDOS
       if (cantINCLUIDOS > 1) {
         int cantCambiosPosibles = 0;
-        bool esSolucion = solucionPosible(G, &solucionAuxiliar, cantCambiosPosibles);
+        bool esSolucion = solucion_posible(G, solucionAuxiliar, cantCambiosPosibles);
         if (esSolucion) {
           // Encontre una solucion Vecina mejor, fin del ciclo
-          solucionInicial = vecindad_primer_criterio(G, solucionAuxiliar);
+          vecindad_primer_criterio(G, solucionAuxiliar);
+          solucionInicial = solucionAuxiliar;
           break;
         }
       }
 
     }
   }
-	return solucionInicial;
 }
 
-vector<int> vecindad_segundo_criterio(Grafo G, vector<int> solucionInicial) {
-  // Criterio de Vecindad 2: Cambiamos, al  menos,  tres vectices de la solucion inicial por dos
+void vecindad_segundo_criterio(Grafo& G, vector<int>& solucionInicial) {
+  // Criterio de Vecindad 2: Cambiamos k vertices por, a lo sumo, k-1 vertices, , donde k > 1
   int n = G.size();
   // Genero soluciones vecinas
   for (int u = 0; u < n; u++) {
@@ -222,28 +204,23 @@ vector<int> vecindad_segundo_criterio(Grafo G, vector<int> solucionInicial) {
       // Necesito al menos 2 INCLUIDOS
       if (cantINCLUIDOS > 1) {
         int cantCambiosPosibles = cantINCLUIDOS - 2;
-        bool esSolucion = solucionPosible(G, &solucionAuxiliar, cantCambiosPosibles);
-        //cout <<  "Probe nodo: " << u + 1 << endl;
+        bool esSolucion = solucion_posible(G, solucionAuxiliar, cantCambiosPosibles);
         if(esSolucion){
-          // Cambios necesarios para que sea solucion
-          //cout <<  "Exito" << endl;
           // Encontre una solucion Vecina mejor, fin del ciclo
-          solucionInicial = vecindad_segundo_criterio(G, solucionAuxiliar);
+          vecindad_segundo_criterio(G, solucionAuxiliar);
+          solucionInicial = solucionAuxiliar;
           break;
         }
       }
     }
   }
-	return solucionInicial;
 }
 
-bool solucionPosible(Grafo G, vector<int>* solucionCambiar, int cantCambios) {
+bool solucion_posible(Grafo& G, vector<int>& solucionAuxiliar, int cantCambios) {
 
   int n = G.size();
   bool esSolucion = true;
   bool finCiclo = false;
-  list<int> verticesCambiados;
-  vector<int>& solucionAuxiliar = (*solucionCambiar);
 
   for (int u = 0; u < n && !finCiclo; u++) {
     // Si esta INCLUIDO, sus adyacentes no pueden estar INCLUIDOS
@@ -278,6 +255,21 @@ bool solucionPosible(Grafo G, vector<int>* solucionCambiar, int cantCambios) {
       finCiclo = !(solucionAuxiliar[u] == INCLUIDO);
     }
   }
+return esSolucion;
+}
 
-  return esSolucion;
+void imprimir_resultado(vector<int>& cidm) {
+    vector<int> solucion;
+    solucion.reserve(cidm.size());
+    for (int i = 0; i < cidm.size(); i++) {
+        if(cidm[i] == INCLUIDO) {
+            solucion.push_back(i+1);
+        }
+    }
+
+    cout << solucion.size() << " ";
+    for (int i = 0; i < solucion.size(); i++) {
+        cout << solucion[i] << " ";
+    }
+    cout << endl;
 }
