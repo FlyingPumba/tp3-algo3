@@ -96,11 +96,43 @@ funcion resolver_aux:
 Veamos el costo de las distintas partes del algoritmo.
 
 En la función \textit{resolver} tenemos un ciclo de $\Theta(n)$ más un llamado al constructor de la estructura vector para construir el primer conjunto dominante que se realiza solo una vez. Este constructor tiene costo $\Theta(n)$\footnote{Referencia: \url{http://www.cplusplus.com/reference/vector/vector/vector/}}, y dentro del ciclo solo tenemos operaciones constantes (asignación), por lo que el costo, sin contar el llamado a la función \textit{resolver_aux}, es de $\Theta(n)$.
-En la función \textit{resolver_aux} tenemos 5 ciclos distintos, 2 anidados entre sí y otros 3 anidados entre sí.
 
-Los primeros 2 corresponden al chequeo de indepedencia. Dentro de ellos solo hay operaciones de costo constante (una asignacion y dos comparaciones) y se repiten cada uno $|dom|$ veces, donde $dom$ es el conjunto dominante actual. Luego, el chequeo de independencia toma: $\mathcal{O}(|dom|*|dom|)$, que en el peor caso es $\mathcal{O}(n^2)$.
+En la función \textit{resolver_aux} tenemos 5 ciclos distintos, 2 anidados entre sí y otros 3 anidados entre sí. Veamos los primeros:
 
-De los otros 3 ciclos anidados, el primero corresponde a la iteración sobre el conjunto $dom$ mientras vamos probando quitar distintos nodos, y los otros 2 corresponden al chequeo de dominancia de los nuevos conjuntos generados.
+\begin{codesnippet}
+Para i desde 0 hasta |dom| hacer:
+    Para j desde i+1 hasta |dom| hacer:
+        Si matriz_adyacencia[dom[i]][dom[j]] == TRUE hacer
+            dom NO es independiente
+\end{codesnippet}
+
+Estos ciclos anidados corresponden al chequeo de indepedencia. Dentro de ellos solo hay operaciones de costo constante (una asignacion y dos comparaciones) y se repiten cada uno $|dom|$ veces, donde $dom$ es el conjunto dominante actual. Luego, el chequeo de independencia toma: $\mathcal{O}(|dom|*|dom|)$, que en el peor caso es $\mathcal{O}(n^2)$.
+
+Y los ciclos restantes:
+
+\begin{codesnippet}
+Para i desde 0 hasta |dom| hacer
+    Crear un vector nuevo llamado copia con los mismos nodos que dom.
+    Borrar el nodo en la posicion i del vector copia.
+    // Chequeamos si el conjunto copia es dominante:
+    Para i desde 0 hasta n hacer:
+        Si i no pertenece a copia hacer
+            Bool nodo_valido = FALSE
+            Para j desde 0 hasta |copia| hacer:
+                Si copia[j] == i hacer
+                    nodo_valido = TRUE
+                Si matriz_adyacencia[i][copia[j]] == TRUE hacer
+                    nodo_valido = TRUE
+            Si nodo_valido == FALSE hacer
+                copia NO es dominante
+    Si copia es dominante hacer
+        Hacer un llamado recursivo a resolver_aux, pasando como parametro la matriz
+            de adyacencia, cidm, copia y la cantidad de nodos en el grafo.
+        Llamemos nuevo_cidm al conjunto que devuelve el llamado recursivo.
+        Devolvemos el conjunto con menor cardinal entre cidm y nuevo_cidm.
+\end{codesnippet}
+
+De estos 3 ciclos anidados, el primero corresponde a la iteración sobre el conjunto $dom$ mientras vamos probando quitar distintos nodos, y los otros 2 corresponden al chequeo de dominancia de los nuevos conjuntos generados.
 El primer ciclo se ejecuta $|dom|$ veces, mientras que el segundo y el tercero $n$ y $|copia|$ veces respectivamente, donde $copia$ es el nuevo conjunto generado (como se muestra en el pseudocódigo). Además dentro del primer ciclo utilizamos la función \textit{erase} de vectores que permite borrar un elemento dado su índice y el constructor de la estructura vector por copia. Ambas operaciones tiene costo en el peor caso lineal en la cantidad de elementos del vector original \footnote{Referencias: \url{http://www.cplusplus.com/reference/vector/vector/erase/} y \url{http://www.cplusplus.com/reference/vector/vector/vector/}}. El resto de las operaciones en los 3 ciclos es de costo constante (comparaciones y asignaciones).
 
 Luego, la complejidad de los 3 ciclos nos queda: $\mathcal{O}(|dom|*(|dom| + |copia| + |n|* (|copia|)))$, que asintoticamente equivale a $\mathcal{O}(n^3)$
@@ -113,8 +145,6 @@ Luego, el peor caso posible es que revisemos todas las posibles combinaciones de
 
 Entonces, la complejidad final del algoritmo es:
 $$\mathcal{O}(2^n*n^3)$$
-
-%hablas de "los primeros dos ciclos", "los otros tres ciclos" y yo me quede como WTFF osea, no es que este mal, pero te hace volver al pseudocodigo y me marea, por ahi se entiende mas rapido si describis que hace cada ciclo cuando hablas de los ciclos
 
 \subsection{Ejercicio C}
 
