@@ -10,14 +10,15 @@
 #include <dirent.h>
 #include <string.h>
 #include <sstream>
+#include <math.h>
 using namespace std;
 
 #define INFINITO -1
+#define MAX_N 9
 
 typedef vector<int> Vec;
 typedef vector<Vec> Matriz;
 
-void medir_tiempos(ofstream &data_file, int n, int m, Matriz matriz);
 void start_timer();
 double stop_timer();
 vector<int> resolver(int n, Matriz matriz);
@@ -53,8 +54,17 @@ int main() {
 
     // abro archivo de output
     ofstream data_file;
-    data_file.open("datos_ej2.dat");
-    data_file << "n m sin_podas poda_A poda_B ambas_podas\n";
+    data_file.open("datos-ej2.dat");
+    data_file << "n sin-podas poda-A poda-B ambas-podas ";
+    data_file << "sin-podas-div-2n poda-A-div-2n poda-B-div-2n ambas-podas-div-2n ";
+    data_file << "sin-podas-div-2nn3 poda-A-div-2nn3 poda-B-div-2nn3 ambas-podas-div-2nn3";
+    data_file << "\n";
+
+    vector<int> cant_tests_n(MAX_N+1, 0);
+    vector<double> tiempos_sin_podas(MAX_N+1, 0);
+    vector<double> tiempos_poda_A(MAX_N+1, 0);
+    vector<double> tiempos_poda_B(MAX_N+1, 0);
+    vector<double> tiempos_ambas_podas(MAX_N+1, 0);
 
     for (int i = 0; i < tests.size(); i++) {
         cout << tests[i] << endl;
@@ -85,45 +95,65 @@ int main() {
         }
 
         cout << n << " " << m << endl;
-        if (n < 10) {
-            medir_tiempos(data_file, n, m, matriz);
+        if (n <= MAX_N) {
+            // medir tiempos:
+            poda_A = false;
+            poda_B = false;
+            start_timer();
+            resolver(n, matriz);
+            tiempos_sin_podas[n] += stop_timer();
+
+            poda_A = true;
+            poda_B = false;
+            start_timer();
+            resolver(n, matriz);
+            tiempos_poda_A[n] += stop_timer();
+
+            poda_A = false;
+            poda_B = true;
+            start_timer();
+            resolver(n, matriz);
+            tiempos_poda_B[n] += stop_timer();
+
+            poda_A = true;
+            poda_B = true;
+            start_timer();
+            resolver(n, matriz);
+            tiempos_ambas_podas[n] += stop_timer();
+
+            cant_tests_n[n] += 1;
         }
         infile.close();
         infile.clear();
     }
 
+    for (int i = 0; i <= MAX_N; i++) {
+        if (cant_tests_n[i] != 0) {
+            double time_sin_podas = tiempos_sin_podas[i]/(double)cant_tests_n[i];
+            double time_poda_A = tiempos_poda_A[i]/(double)cant_tests_n[i];
+            double time_poda_B = tiempos_poda_B[i]/(double)cant_tests_n[i];
+            double time_ambas_podas = tiempos_ambas_podas[i]/(double)cant_tests_n[i];
+            data_file << i << " " << time_sin_podas << " " << time_poda_A << " " << time_poda_B << " " << time_ambas_podas << " ";
+
+            double exponencial = pow(4,i);
+            time_sin_podas = time_sin_podas/exponencial;
+            time_poda_A = time_poda_A/exponencial;
+            time_poda_B = time_poda_B/exponencial;
+            time_ambas_podas = time_ambas_podas/exponencial;
+            data_file << time_sin_podas << " " << time_poda_A << " " << time_poda_B << " " << time_ambas_podas << " ";
+
+            double cubica = pow(i,3);
+            time_sin_podas = time_sin_podas/cubica;
+            time_poda_A = time_poda_A/cubica;
+            time_poda_B = time_poda_B/cubica;
+            time_ambas_podas = time_ambas_podas/cubica;
+            data_file << time_sin_podas << " " << time_poda_A << " " << time_poda_B << " " << time_ambas_podas << "\n";
+        }
+    }
+
     data_file.close();
     return 0;
 }
-
-void medir_tiempos(ofstream &data_file, int n, int m, Matriz matriz) {
-    poda_A = false;
-    poda_B = false;
-    start_timer();
-    resolver(n, matriz);
-    double time_sin_podas = stop_timer();
-
-    poda_A = true;
-    poda_B = false;
-    start_timer();
-    resolver(n, matriz);
-    double time_poda_A = stop_timer();
-
-    poda_A = false;
-    poda_B = true;
-    start_timer();
-    resolver(n, matriz);
-    double time_poda_B = stop_timer();
-
-    poda_A = true;
-    poda_B = true;
-    start_timer();
-    resolver(n, matriz);
-    double time_ambas_podas = stop_timer();
-
-    data_file << n << " " << m << " " << time_sin_podas << " " << time_poda_A << " " << time_poda_B << " " << time_ambas_podas << "\n";
-}
-
 
 void start_timer() {
     start_time = chrono::high_resolution_clock::now();

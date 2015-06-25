@@ -123,19 +123,183 @@ $$\mathcal{O}(2^n*n^3)$$
 
 Consideraciones:
 \begin{itemize}
-    \item Cada medición corresponde a un caso de test.
     \item Los casos de tests para esta experimentacion corresponden a grafos generados aleatoriamente, variando la cantidad de nodos y ejes.
     \item Los tiempos de ejecución se midieron con la biblioteca chrono y estos fueron convertidos a nanosegundos.
     \item Los valores aleatorios que fuimos tomando fueron generados con una distribución uniforme para el rango requerido.
     \item Los detalles de los parametros son:
         \begin{itemize}
-            \item $2 \leq n \leq 12$
+            \item $2 \leq n \leq 9$
             \item $0 \leq m \leq n*(n-1)/2$
             \item Luego, para cada eje, se eligieron 2 nodos tales que $1 \leq v \leq n$, $1 \leq w \leq n$ y $(v,w) \notin X(G)$ donde $G$ es el grafo que estamos armando. Esto permite que el grafo tenga exactamente $m$ ejes (y no una cantidad menor que se podría dar al poner ejes que ya estaban).
         \end{itemize}
     \item Para cada caso de test, se midió la ejecución del algoritmo con y sin podas.
+    \item Para cada $n$ se promediaron los resultados obtenidos para cada variaciones del algoritmo, con y sin podas.
 \end{itemize}
 
 Luego, queremos ver que el costo del algoritmo es, en el peor caso, el detallado en la sección Complejidad. La cota teórica calculada es $\mathcal{O}(2^n*n^3)$.
 
 Los resultados obtenidos fueron los siguientes:
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth
+    ]
+    \addplot[color=black] table[x=n,y=sin-podas]{datos/datos-ej2.dat};
+    \addplot[color=red] table[x=n,y=poda-A]{datos/datos-ej2.dat};
+    \legend{Sin podas, Poda A}
+    \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth
+    ]
+    \addplot[color=red] table[x=n,y=poda-A]{datos/datos-ej2.dat};
+    \addplot[color=black] table[x=n,y=poda-B]{datos/datos-ej2.dat};
+    \legend{Poda A,Poda B}
+    \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth
+    ]
+    \addplot[color=black] table[x=n,y=poda-B]{datos/datos-ej2.dat};
+    \addplot[color=red] table[x=n,y=ambas-podas]{datos/datos-ej2.dat};
+    \legend{Poda B, Ambas podas}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+% Si luego dividimos por $2^n$, obtenemos:
+%
+% \begin{center}
+%     \begin{tikzpicture}
+%     \begin{axis}[
+%         title={},
+%         xlabel={$n$},
+%         ylabel={Tiempos de ejecucion (nanoseconds)},
+%         scaled x ticks=false,
+%         scaled y ticks=false,
+%         enlargelimits=0.05,
+%         width=0.5\textwidth,
+%         height=0.5\textwidth
+%     ]
+%     \addplot[color=black] table[x=n,y=sin-podas-div-2n]{datos/datos-ej2.dat};
+%     \addplot[color=red] table[x=n,y=poda-A-div-2n]{datos/datos-ej2.dat};
+%     \legend{sin-podas-div-2n, poda-A-div-2n}
+%     \end{axis}
+%     \end{tikzpicture}
+%     \begin{tikzpicture}
+%     \begin{axis}[
+%         title={},
+%         xlabel={$n$},
+%         ylabel={},
+%         scaled x ticks=false,
+%         scaled y ticks=false,
+%         enlargelimits=0.05,
+%         width=0.5\textwidth,
+%         height=0.5\textwidth
+%     ]
+%     \addplot[color=red] table[x=n,y=poda-A-div-2n]{datos/datos-ej2.dat};
+%     \addplot[color=black] table[x=n,y=poda-B-div-2n]{datos/datos-ej2.dat};
+%     \legend{poda-A-div-2n,poda-B-div-2n}
+%     \end{axis}
+%     \end{tikzpicture}
+%
+%     \begin{tikzpicture}
+%     \begin{axis}[
+%         title={},
+%         xlabel={$n$},
+%         ylabel={Tiempos de ejecucion (nanoseconds)},
+%         scaled x ticks=false,
+%         scaled y ticks=false,
+%         enlargelimits=0.05,
+%         width=0.5\textwidth,
+%         height=0.5\textwidth
+%     ]
+%     \addplot[color=black] table[x=n,y=poda-B-div-2n]{datos/datos-ej2.dat};
+%     \addplot[color=red] table[x=n,y=ambas-podas-div-2n]{datos/datos-ej2.dat};
+%     \legend{poda-B-div-2n,ambas-podas-div-2n}
+%     \end{axis}
+%     \end{tikzpicture}
+% \end{center}
+
+Como se puede ver en los gráficos, los tiempos medidos tienen pinta exponencial, que se condice con la complejidad teórica calculada. Además, es claro que la poda B produce tiempos mucho mejores que la poda A, lo cual en principio no se esperaba.
+
+Veamos que pasa cuando los dividimos por $2^n*n^3$:
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth
+    ]
+    \addplot[color=black] table[x=n,y=sin-podas-div-2nn3]{datos/datos-ej2.dat};
+    \addplot[color=red] table[x=n,y=poda-A-div-2nn3]{datos/datos-ej2.dat};
+    \legend{Sin podas, Poda A}
+    \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth
+    ]
+    \addplot[color=red] table[x=n,y=poda-A-div-2nn3]{datos/datos-ej2.dat};
+    \addplot[color=black] table[x=n,y=poda-B-div-2nn3]{datos/datos-ej2.dat};
+    \legend{Poda A,Poda B}
+    \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth
+    ]
+    \addplot[color=black] table[x=n,y=poda-B-div-2nn3]{datos/datos-ej2.dat};
+    \addplot[color=red] table[x=n,y=ambas-podas-div-2nn3]{datos/datos-ej2.dat};
+    \legend{Poda B, Ambas podas}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+Al realizar la división, podemos ver que los gráficos tienden a una constante arriba de cero, lo cual es lo esperado. Por lo tanto, el algoritmo tendría una complejidad $\mathcal{O}(c*2^n*n^3)$, donde $c$ es la constante a la cual converge el gráfico.
