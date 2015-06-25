@@ -1,0 +1,38 @@
+\textit{Diseñar e implementar un algoritmo para CIDM que use la metaheurística GRASP.}
+
+\subsection{Ejercicio A}
+
+\textit{Explicar detalladamente el algoritmo implementado. Plantear distintos criterios de parada y de selección de la lista de candidatos (RCL) de la heurística golosa aleatorizada.}
+
+\medskip
+
+\subsubsection{Idea general}
+
+Como pide el enunciado, la idea general del algoritmo es usar la metaheurística GRASP, para lo cual es necesario tener implementaciones de: heurística constructiva golosa y heurística de búsqueda local, que fueron conveniemente implementadas en los puntos anteriores.
+Mostramos la estructura general de un algoritmo GRASP:
+
+\begin{codesnippet}
+Poner en mejor_solucion una primera solucion Random.
+Mientras no se cumpla el criterio de parada hacer:
+    Poner en nueva_solucion una solucion usando la funcion ConstruirGreedyRandom()
+    Intentar mejorar la nueva_solucion usando la funcion BusquedaLocal()
+    Si costo(nueva_solucion) < costo(mejor_solucion) hacer:
+        Poner en mejor_solucion la nueva_solucion
+\end{codesnippet}
+
+\subsubsection{Criterios de parada}
+
+\subsubsection{Selección de lista de candidatos (RCL)}
+
+\subsubsection{Pseudocódigo}
+\begin{codesnippet}
+funcion resolver:
+    Creamos un vector de n elementos, llenandolo con los nodos desde 0 a n-1.
+    llamamos a resolver_aux pasandole como parametro la matriz de adyacencia, el vector
+        recién creado y la cantidad de nodos en el grafo.
+\end{codesnippet}
+
+\subsection{Ejercicio B}
+
+\textit{Realizar una experimentación que permita observar los tiempos de ejecución y la calidad de las soluciones obtenidas.}
+\medskip
