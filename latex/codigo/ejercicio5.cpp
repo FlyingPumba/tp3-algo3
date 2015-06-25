@@ -139,7 +139,8 @@ void construir_greedy_random(Grafo& G, vector<int>& solucion) {
         nodos_visitados++;
         nodos.erase(nodos.begin()+indice);
 
-        for (list<int>::iterator itAdyU=G[nodo].begin(); itAdyU != G[nodo].end(); itAdyU++) {
+        for (list<int>::iterator itAdyU=G[nodo].begin();
+         itAdyU != G[nodo].end(); itAdyU++) {
             int v = *itAdyU;
             int index = get_indice_nodo(nodos, v);
             if (index != -1) {
@@ -152,13 +153,15 @@ void construir_greedy_random(Grafo& G, vector<int>& solucion) {
 }
 
 void busqueda_local(Grafo& G, vector<int>& solucionInicial) {
-  // Criterio de Vecindad 2: Cambiamos, al  menos,  tres vectices de la solucion inicial por dos
+  // Criterio de Vecindad 2: Cambiamos, al  menos,
+  //  tres vectices de la solucion inicial por dos
   int n = G.size();
   // Genero soluciones vecinas
   for (int u = 0; u < n; u++) {
     vector<int> solucionAuxiliar = solucionInicial;
     if (solucionInicial[u] == NO_INCLUIDO && G[u].size() > 1) {
-      // Para los INCLUIDOS en la solucionInicial me fijo en sus adyacentes para encontrar algun adyacente que tambien esta INCLUIDO
+      // Para los INCLUIDOS en la solucionInicial me fijo en sus adyacentes
+      // para encontrar algun adyacente que tambien esta INCLUIDO
       int cantINCLUIDOS = 0;
       solucionAuxiliar[u] = INCLUIDO;
       for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end(); itAdyU++) {
@@ -196,7 +199,8 @@ bool solucion_posible(Grafo& G, vector<int>& solucionCambiar, int cantCambios) {
   for (int u = 0; u < n && !finCiclo; u++) {
     // Si esta INCLUIDO, sus adyacentes no pueden estar INCLUIDOS
     if (solucionCambiar[u] == INCLUIDO && G[u].size() > 0) {
-      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end() && !finCiclo; ++itAdyU) {
+      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end() 
+        && !finCiclo; ++itAdyU) {
         int v = *itAdyU;
         if (solucionCambiar[v] == INCLUIDO) {
           esSolucion = false;
@@ -204,9 +208,11 @@ bool solucion_posible(Grafo& G, vector<int>& solucionCambiar, int cantCambios) {
         }
       }
     } else if (G[u].size() > 0) {
-      // Si esta NO INCLUIDO, al menos uno de sus adyacentes tiene que estar INCLUIDO
+      // Si esta NO INCLUIDO, al menos uno de sus adyacentes
+      // tiene que estar INCLUIDO
       bool adyINCLUIDO = false;
-      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end() && !finCiclo; ++itAdyU) {
+      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end() 
+        && !finCiclo; ++itAdyU) {
         int v = *itAdyU;
         if (solucionCambiar[v] == INCLUIDO) {
           adyINCLUIDO = true;

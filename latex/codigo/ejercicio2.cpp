@@ -70,7 +70,8 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
         }
 
         if(indep) {
-            // Sabemos que si Dom es dominante e independiente, entonces cualquier subconjunto de Dom es no-dominante
+            // Sabemos que si Dom es dominante e independiente,
+            // entonces cualquier subconjunto de Dom es no-dominante
             // Luego, devolvemos el que tiene menor cardinal entre dom y cidm
             if (dom_size < cidm_size) {
                 return dom;
@@ -81,17 +82,18 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
     }
 
     for (int i = 0; i < dom_size; i++) {
-        // copio dom y borro el i-esimo nodo de la copia (no es el nodo numero i, sino el nodo en la posicion i del vector)
+        // copio dom y borro el i-esimo nodo de la copia 
+        //(no es el nodo numero i, sino el nodo en la posicion i del vector)
         vector<int> copia(dom);
         copia.erase(copia.begin() + i);
         // chequeo si la copia es dominante
         bool copia_dominante = true;
         for (int i = 0; i < n; i++) {
-            // chequeo si el nodo i está en copia o es adyacente a alguno en copia
+            // chequeo si el nodo i esta en copia o es adyacente a alguno en copia
             bool nodo = false;
             for (int j = 0; j < copia.size(); j++) {
                 if (copia[j] == i) {
-                    // el nodo i está en copia
+                    // el nodo i esta en copia
                     nodo = true;
                     break;
                 } else if (matriz[i][copia[j]] == 1) {
@@ -105,7 +107,9 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
                 break;
             }
         }
-        // Sabemos que si Copia no es dominante, entonces ningun subconjunto de Copia es dominante, por lo que ni siquiera los evaluo
+        // Sabemos que si Copia no es dominante, entonces ningun 
+        //subconjunto de Copia es dominante,
+        // por lo que ni siquiera los evaluo
         if (copia_dominante) {
             vector<int> nuevo_cidm = resolver_aux(n, matriz, copia, cidm);
             if (nuevo_cidm.size() < cidm_size) {

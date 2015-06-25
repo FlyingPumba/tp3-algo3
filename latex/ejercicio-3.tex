@@ -121,7 +121,9 @@ Veamos un ejemplo de instancias donde la heurística golosa no funciona. Suponga
 \end{figure}
 
 
-Veamos que en este grafo $G=(V,E)$ tenemos $|V| = 1 + k*(k-1)$ nodos y nuestro algoritmo goloso arroja una solución de tamaño $1 + k*(k-2)$ es decir, solo quedan sin seleccionar $k$ nodos. Sin embargo, la solución optima sólo utiliza $k$ nodos. Notemos que el error es cuadrático.
+Veamos que en este grafo $G=(V,E)$ tenemos $|V| = n = 1 + k*(k-1)$ por lo tanto, los $n$ para los cuales esta familia de instancias existe son los que satisfacen la ecuación con $k$ entero. Ahora, el algoritmo goloso arroja una solución de tamaño $1 + k*(k-2)$ es decir, solo quedan sin seleccionar $k$ nodos. Sin embargo, la solución optima sólo utiliza $k$ nodos.\\ 
+
+Por lo que el error de la solución golosa es de $1 + k*(k-2) - k = 1 + k^2 -2k -k = 1 + k^2 - 3k = k^2 - 3k + 1$ que es cuadrático en el tamaño de k
 
 \subsection{Ejercicio D}
 

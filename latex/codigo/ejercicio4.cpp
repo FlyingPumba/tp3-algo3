@@ -139,7 +139,8 @@ void goloso(Grafo& G, vector<int>& solucionInicial) {
       if(visitado[nodos[u].numero] == false){
         visitado[nodos[u].numero] = true;
         solucionInicial[nodos[u].numero] = INCLUIDO;
-          for (list<int>::iterator itAdyU=G[nodos[u].numero].begin(); itAdyU != G[nodos[u].numero].end(); ++itAdyU) {
+          for (list<int>::iterator itAdyU=G[nodos[u].numero].begin();
+           itAdyU != G[nodos[u].numero].end(); ++itAdyU) {
               int v = *itAdyU;
               visitado[v] = true;
 
@@ -159,7 +160,8 @@ void vecindad_primer_criterio(Grafo& G, vector<int>& solucionInicial) {
     if (solucionInicial[u] == NO_INCLUIDO && G[u].size() > 1) {
       int cantINCLUIDOS = 0;
       solucionAuxiliar[u] = INCLUIDO;
-      // Me fijo si el vectice NO INCLUIDO tiene al menos dos vectores adyacentes INCLUIDOS
+      // Me fijo si el vectice NO INCLUIDO tiene al menos
+      // dos vectores adyacentes INCLUIDOS
       for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end(); ++itAdyU) {
         int v = *itAdyU;
         if (solucionInicial[v] == INCLUIDO) {
@@ -184,13 +186,15 @@ void vecindad_primer_criterio(Grafo& G, vector<int>& solucionInicial) {
 }
 
 void vecindad_segundo_criterio(Grafo& G, vector<int>& solucionInicial) {
-  // Criterio de Vecindad 2: Cambiamos k vertices por, a lo sumo, k-1 vertices, , donde k > 1
+  // Criterio de Vecindad 2: Cambiamos k vertices por, a lo sumo,
+  // k-1 vertices, , donde k > 1
   int n = G.size();
   // Genero soluciones vecinas
   for (int u = 0; u < n; u++) {
     vector<int> solucionAuxiliar = solucionInicial;
     if (solucionInicial[u] == NO_INCLUIDO && G[u].size() > 1) {
-      // Para los INCLUIDOS en la solucionInicial me fijo en sus adyacentes para encontrar algun adyacente que tambien esta INCLUIDO
+      // Para los INCLUIDOS en la solucionInicial me fijo en sus adyacentes
+      // para encontrar algun adyacente que tambien esta INCLUIDO
       int cantINCLUIDOS = 0;
       solucionAuxiliar[u] = INCLUIDO;
       for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end(); itAdyU++) {
@@ -225,7 +229,8 @@ bool solucion_posible(Grafo& G, vector<int>& solucionAuxiliar, int cantCambios) 
   for (int u = 0; u < n && !finCiclo; u++) {
     // Si esta INCLUIDO, sus adyacentes no pueden estar INCLUIDOS
     if (solucionAuxiliar[u] == INCLUIDO && G[u].size() > 0) {
-      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end() && !finCiclo; ++itAdyU) {
+      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end()
+       && !finCiclo; ++itAdyU) {
         int v = *itAdyU;
         if (solucionAuxiliar[v] == INCLUIDO) {
           esSolucion = false;
@@ -233,9 +238,11 @@ bool solucion_posible(Grafo& G, vector<int>& solucionAuxiliar, int cantCambios) 
         }
       }
     } else if (G[u].size() > 0) {
-      // Si esta NO INCLUIDO, al menos uno de sus adyacentes tiene que estar INCLUIDO
+      // Si esta NO INCLUIDO, al menos uno de sus adyacentes
+      // tiene que estar INCLUIDO
       bool adyINCLUIDO = false;
-      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end() && !finCiclo; ++itAdyU) {
+      for (list<int>::iterator itAdyU=G[u].begin(); itAdyU != G[u].end()
+       && !finCiclo; ++itAdyU) {
         int v = *itAdyU;
         if (solucionAuxiliar[v] == INCLUIDO) {
           adyINCLUIDO = true;
