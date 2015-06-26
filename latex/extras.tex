@@ -68,9 +68,9 @@ west})!0.5!({group c1r\pgfplots@group@rows.south}-|{group c1r\pgfplots@group@row
     },
     execute at end groupplot/.code={%
       \node [/pgfplots/every groupplot x label]
-{\pgfkeysvalueof{/pgfplots/groupplot xlabel}};  
-      \node [/pgfplots/every groupplot y label] 
-{\pgfkeysvalueof{/pgfplots/groupplot ylabel}};  
+{\pgfkeysvalueof{/pgfplots/groupplot xlabel}};
+      \node [/pgfplots/every groupplot y label]
+{\pgfkeysvalueof{/pgfplots/groupplot ylabel}};
     },
     group/only outer labels/.style =
 {
@@ -90,87 +90,51 @@ group/every plot/.code = {%
 }
 \makeatother
 
-\newcommand{\barGraphThree}[5]{
-\begin{tikzpicture}
-  \begin{groupplot}[
-      group style={
-          group size=3 by 1,
-          vertical sep=0pt,
-          ylabels at=edge left,
-          xlabels at=edge bottom,
-          horizontal sep=50pt,
-      },
-      legend style={at={(2.0,1.0)}},
-      ybar,
-      scaled ticks=false,
-      width=4/15*\textwidth,
-      height=5/15*\textwidth,
-      groupplot xlabel={Tamaño de imagen (pixel)},
-      groupplot ylabel={Tiempo de ejecucion (clocks)},
-      tickpos=left,
-      xtick=\empty,
-      ytick align=inside,
-      xtick align=inside,
-  ]
-  \nextgroupplot[xlabel={32x32}]
-      \addplot+[filter params={tipo}{#2}{h}{32}] table[x=h, y=#3]{datos/datos2.dat};
-      \addplot+[filter params={tipo}{#2}{h}{32}] table[x=h, y=#4]{datos/datos2.dat};
-      \addplot+[filter params={tipo}{#2}{h}{32}] table[x=h, y=#5]{datos/datos2.dat};
-  \nextgroupplot[xlabel={200x200}]
-      \addplot+[filter params={tipo}{#2}{h}{200}] table[x=h, y=#3]{datos/datos2.dat};
-      \addplot+[filter params={tipo}{#2}{h}{200}] table[x=h, y=#4]{datos/datos2.dat};
-      \addplot+[filter params={tipo}{#2}{h}{200}] table[x=h, y=#5]{datos/datos2.dat};
-  \nextgroupplot[xlabel={512x512}]
-      \addplot+[filter params={tipo}{#2}{h}{512}] table[x=h, y=#3]{datos/datos2.dat};
-      \addplot+[filter params={tipo}{#2}{h}{512}] table[x=h, y=#4]{datos/datos2.dat};
-      \addplot+[filter params={tipo}{#2}{h}{512}] table[x=h, y=#5]{datos/datos2.dat};
-  \legend{#3,#4,#5}
-  \end{groupplot}
-  \node (title) at ($(group c1r1.center)!1.0!(group c2r1.center)+(0,3cm)$) {#1};
-\end{tikzpicture}
+\newcommand{\barGraphExp}[2]{
+    \begin{tikzpicture}
+    \begin{axis}[
+        xlabel={Implementación},
+    	ylabel={Tiempo de ejecución (clocks)},
+        legend style={at={(1.4,1.0)}},
+        ybar,
+        scaled ticks=false,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        tickpos=left,
+        xtick=\empty,
+        ytick align=inside,
+        xtick align=inside,
+    	enlargelimits=0.05,
+        bar width=16,
+    ]
+    % How to process each item:
+    \renewcommand*{\do}[1]{\addplot+[color=black] table[x=n, y=##1]{datos/datos_blur.dat};}
+    % Process list:
+    \docsvlist{#2}
+    \legend{#2}
+    \end{axis}
+    \end{tikzpicture}
 }
 
-\newcommand{\barGraphFour}[6]{
-\begin{tikzpicture}
-  \begin{groupplot}[
-      group style={
-          group size=3 by 1,
-          vertical sep=0pt,
-          ylabels at=edge left,
-          xlabels at=edge bottom,
-          horizontal sep=50pt,
-      },
-      legend style={at={(2.0,1.0)}},
-      ybar,
-      scaled ticks=false,
-      width=4/15*\textwidth,
-      height=5/15*\textwidth,
-      groupplot xlabel={Tamaño de imagen (pixel)},
-      groupplot ylabel={Tiempo de ejecucion (clocks)},
-      tickpos=left,
-      xtick=\empty,
-      ytick align=inside,
-      xtick align=inside,
+\newcommand{\graficarDatosExp}[6]{
+  \begin{tikzpicture}
+  \begin{axis}[
+      title={#1},
+      xlabel={#2},
+      ylabel={#3},
+      scaled x ticks=false,
+      scaled y ticks=false,
+      enlargelimits=0.05,
+      width=0.5\textwidth,
+      height=0.5\textwidth
   ]
-  \nextgroupplot[xlabel={32x32}]
-      \addplot+[filter params={tipo}{#2}{h}{32}] table[x=h, y=#3]{datos/datos.dat};
-      \addplot+[filter params={tipo}{#2}{h}{32}] table[x=h, y=#4]{datos/datos.dat};
-      \addplot+[filter params={tipo}{#2}{h}{32}] table[x=h, y=#5]{datos/datos.dat};
-      \addplot+[filter params={tipo}{#2}{h}{32}] table[x=h, y=#6]{datos/datos.dat};
-  \nextgroupplot[xlabel={200x200}]
-      \addplot+[filter params={tipo}{#2}{h}{200}] table[x=h, y=#3]{datos/datos.dat};
-      \addplot+[filter params={tipo}{#2}{h}{200}] table[x=h, y=#4]{datos/datos.dat};
-      \addplot+[filter params={tipo}{#2}{h}{200}] table[x=h, y=#5]{datos/datos.dat};
-      \addplot+[filter params={tipo}{#2}{h}{200}] table[x=h, y=#6]{datos/datos.dat};
-  \nextgroupplot[xlabel={512x512}]
-      \addplot+[filter params={tipo}{#2}{h}{512}] table[x=h, y=#3]{datos/datos.dat};
-      \addplot+[filter params={tipo}{#2}{h}{512}] table[x=h, y=#4]{datos/datos.dat};
-      \addplot+[filter params={tipo}{#2}{h}{512}] table[x=h, y=#5]{datos/datos.dat};
-      \addplot+[filter params={tipo}{#2}{h}{512}] table[x=h, y=#6]{datos/datos.dat};
-  \legend{#3,#4,#5,#6}
-  \end{groupplot}
-  \node (title) at ($(group c1r1.center)!1.0!(group c2r1.center)+(0,3cm)$) {#1};
-\end{tikzpicture}
+  \addplot[color=black] table[x=#5,y=#6]{#4};
+  % \renewcommand*{\do}[1]{\addplot table[x=#5,y=##1]{#4};}
+  % %     % Process list:
+  % \docsvlist{#6}
+  % \legend{#6}
+  \end{axis}
+  \end{tikzpicture}
 }
 
 % ------------------------------------------------------------------------
