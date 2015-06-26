@@ -98,4 +98,42 @@ Devolver solucion
 \subsection{Ejercicio B}
 
 \textit{Realizar una experimentación que permita observar los tiempos de ejecución y la calidad de las soluciones obtenidas.}
+
 \medskip
+
+Consideraciones:
+
+\begin{itemize}
+    \item Todas las tomas de tiempos fueron hechas bajo las mismas condiciones (computadora, fuente de energia, minima cantidad de procesos abiertos).
+    \item Varias muestras fueron tomadas de cada dato para luego ser promediados y asi dar datos mas confiables.
+    \item En base a lo explicado anteriormente, realizamos experimentos basando los criterios de los algoritmos para asi crear diferentes versiones del mismo.
+    \item La diferencia entre ellas son los siguientes criterios:
+    \begin{itemize}
+        \item Criterio de parada 1: realizar $n$ iteraciones, con $n$ la cantidad de nodos del grafo.
+        \item Criterio de parada 2: sea k una constante, seguir iterando hasta que la mejor solucion parcial no se mejore durante k ciclos seguidos.
+
+        \item Criterio de lista de candidatos aleatoria 1: tomamos los nodos que tengan grado al menos $\alpha$ * $d_{max}$ ($\alpha$ constante) con $d_{max}$ el mayor de los grados entre los nodos no visitados.
+        \item Criterio de lista de candidatos aleatoria 2: tomar los k elementos de mayor grado no visitados hasta el momento, con k un valor constante entero.
+
+        \item Criterio de vecindad en búsqueda local 1: generar soluciones vecinas a partir de quitar k vértices que pertenecen al subconjunto CID de la solución inicial y agregar 1 vértice al subconjunto.
+        \item Criterio de vecindad en búsqueda local 2: generar soluciones vecinas a partir de quitar k vértices que pertenecen al subconjunto CID de la solución inicial y agregar, hasta, k-1 vértices al subconjunto.
+    \end{itemize}
+    \item Las versiones sobre las cuales experimentamos fueron:
+    \begin{itemize}
+        \item v111: criterio parada 1, criterio lista candidatos 1, criterio búsqueda local 1.
+        \item v112: criterio parada 1, criterio lista candidatos 1, criterio búsqueda local 2.
+        \item v121: criterio parada 1, criterio lista candidatos 2, criterio búsqueda local 1.
+        \item v122: criterio parada 1, criterio lista candidatos 2, criterio búsqueda local 2.
+        \item v211: criterio parada 2, criterio lista candidatos 1, criterio búsqueda local 1.
+        \item v212: criterio parada 2, criterio lista candidatos 1, criterio búsqueda local 2.
+        \item v221: criterio parada 2, criterio lista candidatos 2, criterio búsqueda local 1.
+        \item v222: criterio parada 2, criterio lista candidatos 2, criterio búsqueda local 2.
+    \end{itemize}
+    \item Cuando comparamos los tiempos de ejecución, el eje 'x' determina el tamaño de la entrada (que puede ser la cantidad de nodos, ejes del grafo o la suma de ellos). El eje 'y' representará el tiempo que tardo el algoritmo en nanosegundos.
+    \item La toma de tiempos en nanosegundos se realiza con la libreria 'chrono' de C++.
+    \item La aleatorización de algunas variables (por ejemplo, para elegir un candidato de la Lista Restringida de Candidatos RCL) se hizo con la función std::rand.
+    \item Para la comparacion de calidad de resultados, tomamos como eje 'x' la cantidad de nodos del grafo, le agregamos aristas aleatoriamente y luego corremos el algoritmo con las diferentes versiones. El eje 'y' en este caso seria la cantidad de nodos del CIDM que devuelve la version del algoritmo. Finalmente promediamos los resultados para cada 'x'.
+
+\end{itemize}
+
+\subsubsection{Tiempos de ejecución}
