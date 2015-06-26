@@ -358,151 +358,236 @@ Sabemos que cada iteración de las vecindades reduce, como mínimo, en 1 el card
 
 \medskip
 
-La función que utilizamos para llevar a cabo las mediciones fue \texttt{std::clock}\footnote{Referencia \url{http://en.cppreference.com/w/cpp/chrono/c/clock}}. La unidad temporal que utilizamos para este ejercicio fue nanosegundos.
-La complejidad teórica calculada es de $\mathcal{O}(n*(n + m))$ para cualquier combinación de solución inicial y criterio de vecindad.
-
-Para generar las instancias aleatorias utilizamos la función \texttt{std::rand}\footnote{Referencia \url{http://en.cppreference.com/w/cpp/numeric/random/rand}} con determinados intervalos de valores para la variables, para obtener instancias coherentes. El detalle de intervalos es el siguiente:
-
+Para llevar adelante las comparaciones, generamos instancias aleatorias con las siguientes caracteristicas:
 \begin{enumerate}
-	\item Cantidad de nodos $n$: 2 $\leq$ $n$ $\leq$ 50.
-    \item Cantidad de aristas $m$: 0 $\leq$ $m$ $\leq$ $\frac{n*(n-1)}{2}$.
-    \item Se generan $m$ ejes, asegurándose la validez de los mismos, es decir que no haya ejes repetidos ni loops.
+	\item Tomamos 10 muestras por cada valor de la cantidad de nodos $n$, desde 5 hasta 30, promediando sus valores.
+    \item Para cada valor de $n$, generamos instancias para cada valor posible de $m$ , es decir valores que van desde 0 hasta $\frac{n*(n-1)}{2}$, asegurándonos la validez de los aristas generadas, es decir que no haya ejes repetidos ni loops.
 \end{enumerate}
 
-Se generaron 500 instancias construidas de esta forma, en donde se midió no solo el tiempo de ejecución, sino también el tamaño del subconjunto generado, para los 4 tipos contemplados en la heurística:
+Contamos con 4 variantes posibles, que combinan dos modos de generar la solución inicial (BFS y Golosa) y dos criterios de vecindad:
 
 \begin{itemize}
-	\item Tipo B1: Utilizamos el BFS modificado para la solución original, y el primer criterio de vecindad.
-    \item Tipo G1: Utilizamos la heurística golosa para la solución original, y el primer criterio de vecindad.
-    \item Tipo B2: Utilizamos el BFS modificado para la solución original, y el segundo criterio de vecindad.
-    \item Tipo G2: Utilizamos la heurística golosa para la solución original, y el segundo criterio de vecindad.
+	\item \textbf{Tipo B1}: Utilizamos el BFS modificado para la solución inicial, y el primer criterio de vecindad.
+    \item \textbf{Tipo G1}: Utilizamos la heurística golosa para la solución inicial, y el primer criterio de vecindad.
+    \item \textbf{Tipo B2}: Utilizamos el BFS modificado para la solución inicial, y el segundo criterio de vecindad.
+    \item \textbf{Tipo G2}: Utilizamos la heurística golosa para la solución inicia;, y el segundo criterio de vecindad.
 \end{itemize}
 
-La medición de tiempos de los distintos tipos, arroja los siguientes gráficos para cada tipo:
+Es importante destacar los siguientes puntos:
 
-\begin{enumerate}
-\item \textbf{Tipo B1: BFS-Primer Criterio de Vecindad}
-
-\begin{figure}[H]
-        \centering
-        \begin{subfigure}[b]{0.5\textwidth}
-                \includegraphics[width=\textwidth]{imagenes/ejer4-grafB1-1.jpg}
-                \caption{Tiempos sin procesar}
-        \end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-          %(or a blank line to force the subfigure onto a new line)
-        \begin{subfigure}[b]{0.5\textwidth}
-                \includegraphics[width=\textwidth]{imagenes/ejer4-grafB1-2.jpg}
-                \caption{figura (a) / n*(n+m)}
-        \end{subfigure}
-
-\end{figure}
-
-\item \textbf{Tipo G1: Goloso-Primer Criterio de Vecindad}
-
-\begin{figure}[H]
-        \centering
-        \begin{subfigure}[b]{0.5\textwidth}
-                \includegraphics[width=\textwidth]{imagenes/ejer4-grafG1-1.jpg}
-                \caption{Tiempos sin procesar}
-        \end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-          %(or a blank line to force the subfigure onto a new line)
-        \begin{subfigure}[b]{0.5\textwidth}
-                \includegraphics[width=\textwidth]{imagenes/ejer4-grafG1-2.jpg}
-                \caption{figura (a) / n*(n+m)}
-        \end{subfigure}
-
-\end{figure}
-
-
-\item \textbf{Tipo B2: BFS-Segundo Criterio de Vecindad}
-
-\begin{figure}[H]
-        \centering
-        \begin{subfigure}[b]{0.5\textwidth}
-                \includegraphics[width=\textwidth]{imagenes/ejer4-grafB2-1.jpg}
-                \caption{Tiempos sin procesar}
-        \end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-          %(or a blank line to force the subfigure onto a new line)
-        \begin{subfigure}[b]{0.5\textwidth}
-                \includegraphics[width=\textwidth]{imagenes/ejer4-grafB2-2.jpg}
-                \caption{figura (a) / n*(n+m)}
-        \end{subfigure}
-
-\end{figure}
-
-
-
-\item \textbf{Tipo G2: Goloso-Segundo Criterio de Vecindad}
-
-\begin{figure}[H]
-        \centering
-        \begin{subfigure}[b]{0.5\textwidth}
-                \includegraphics[width=\textwidth]{imagenes/ejer4-grafG2-1.jpg}
-                \caption{Tiempos sin procesar}
-        \end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-          %(or a blank line to force the subfigure onto a new line)
-        \begin{subfigure}[b]{0.5\textwidth}
-                \includegraphics[width=\textwidth]{imagenes/ejer4-grafG2-2.jpg}
-                \caption{figura (a) / n*(n+m)}
-        \end{subfigure}
-
-\end{figure}
-
-
-\end{enumerate}
-
-Como podemos ver de los 4 gráficos, al dividir los tiempos por $n*(n+m)$, tienden a un número constante mayor a cero. Entonces nuestro algoritmo tendría complejidad $\mathcal{O}(c*n*(n+m))$, donde $c$ es la constante a la cual converge el gráfico. Por lo tanto concluimos que la complejidad temporal experimental coincide con nuestra predicción de complejidad.
-
-
-Por el lado de la calidad de las soluciones obtenidas con cada combinación, debemos comparar por un lado el uso del BFS modificado o de la heurística golosa como solución inicial y por el otro el uso del primer criterio de vecindad o el del segundo criterio de vecindad como método de mejora de la solución inicial:
 \begin{itemize}
-\item \textbf{BFS modificado vs Heurística golosa como solución inicial}. Para realizar la comparación, tomamos el tamaño de la solución final para cada instancia, usando primero el BFS modificado como solución inicial y luego la heurística golosa, para después restar al tamaño de la solución final del tipo B1/B2, el tamaño de la solución final del tipo G1/G2. :
-
-\begin{figure}[H]
-        \centering
-        \begin{subfigure}[b]{0.5\textwidth}
-                \includegraphics[width=\textwidth]{imagenes/ejer4-B1vsG1.jpg}
-                \caption{Usando el Primer Criterio de Vecindad}
-        \end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-          %(or a blank line to force the subfigure onto a new line)
-        \begin{subfigure}[b]{0.5\textwidth}
-                \includegraphics[width=\textwidth]{imagenes/ejer4-B2vsG2.jpg}
-                \caption{Usando el Segundo Criterio de Vecindad}
-        \end{subfigure}
-
-\end{figure}
-
+	\item En el caso de las comparaciones de los tiempos de ejecución, el eje de las abscisas esta determinado por la cantidad de nodos del grafo y el eje de las ordenadas representará el tiempo que tardo el algoritmo en nanosegundos.
+	\item En el caso de las comparaciones de las soluciones obtenidas, el eje de las abscisas esta determinado por la cantidad de nodos del grafo y el eje de las ordenadas representará el tamaño de la solución obtenida.
+	\item La toma de tiempos en nanosegundos se realizó usando la libreria 'chrono' de C++.
+	\item La aleatorización de los ejes en sus extremos particulares se realizó con la función std::rand.
 \end{itemize}
 
+\subsubsection{Tiempos de ejecución}
+Primero comparamos las maneras de obtener la solución inicial, para luego comparar las vecindades entre si. Por último comparamos las 4 combinaciones entre si.
+\begin{itemize}
+\item \textbf{Comparación BFS contra Goloso}
+\end{itemize}
+\begin{center}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={Cantidad de nodos del grafo(n)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=5
+    ]
+    \addplot[color=black] table[x index=0,y index=1]{datos/ej4/tiemposn.txt};
+    \addplot[color=red] table[x index=0,y index=3]{datos/ej4/tiemposn.txt};
+    \legend{B1, G1}
+    \end{axis}
+    \end{tikzpicture}
+		\begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={Cantidad de nodos del grafo(n)},
+        ylabel={},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=5
+    ]
+    \addplot[color=black] table[x index=0,y index=2]{datos/ej4/tiemposn.txt};
+    \addplot[color=red] table[x index=0,y index=4]{datos/ej4/tiemposn.txt};
+    \legend{B2, G2}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+Los graficos ponen en evidencia la paridad en terminos de ejecución temporal de ambas variantes. Si bien existe una minima diferencia en favor del Goloso, no es suficiente para concluir que esta es la mejor en terminos de ejecución temporal.
+\begin{itemize}
+\item \textbf{Comparación Primer Criterio de Vecindad contra Segundo Criterio de Vecindad}
+\end{itemize}
+\begin{center}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={Cantidad de nodos del grafo(n)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=5
+    ]
+    \addplot[color=black] table[x index=0,y index=1]{datos/ej4/tiemposn.txt};
+    \addplot[color=red] table[x index=0,y index=2]{datos/ej4/tiemposn.txt};
+    \legend{B1, B2}
+    \end{axis}
+    \end{tikzpicture}
+		\begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={Cantidad de nodos del grafo(n)},
+        ylabel={},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=5
+    ]
+    \addplot[color=black] table[x index=0,y index=3]{datos/ej4/tiemposn.txt};
+    \addplot[color=red] table[x index=0,y index=4]{datos/ej4/tiemposn.txt};
+    \legend{G1, G2}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+En este caso la similitud es mas evidente, por lo cual no podemos concluir que una sea mejor que la otra.
+\begin{itemize}
+\item \textbf{Comparación B1-G1-B2-G2}
+\end{itemize}
+\begin{center}
+
+		\begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={Cantidad de nodos del grafo(n)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=5
+    ]
+    \addplot[color=black] table[x index=0,y index=1]{datos/ej4/tiemposn.txt};
+    \addplot[color=red] table[x index=0,y index=3]{datos/ej4/tiemposn.txt};
+		\addplot[color=green] table[x index=0,y index=2]{datos/ej4/tiemposn.txt};
+		\addplot[color=blue] table[x index=0,y index=4]{datos/ej4/tiemposn.txt};
+    \legend{B1, G1, B2, G2}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+La ultima comparación pone en evidencia que la perfomance en terminos de ejecución temporal no difiere para las distintas variantes, lo cual va en sintonia con el hecho que todas tienen la misma complejidad temporal teorica, mostrada en el punto anterior. Por lo tanto la eleccion de que combinación es mejor sera resuelto por la calidad de las soluciones obtenidas con cada una de ellas.
+\subsubsection{Calidad de la solución}
+
+Repetimos el mismo procedimiento usado en la comparación de tiempos de ejecución, sin dejar de mencionar el hecho de que al generar las instancias de la manera descripta anteriormente, nos encontramos con el hecho que el tamaño de las soluciones no son enteros, lo cual responde a que promediamos para cada $n$ el tamaño de la solución para todas los valores de $m$ posibles.
+
+\begin{itemize}
+\item \textbf{Comparación BFS contra Goloso}
+\end{itemize}
+\begin{center}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={Cantidad de nodos del grafo(n)},
+        ylabel={Tamaño del conjunto solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=5
+    ]
+    \addplot[color=black] table[x index=0,y index=1]{datos/ej4/resultadosn.txt};
+    \addplot[color=red] table[x index=0,y index=2]{datos/ej4/resultadosn.txt};
+    \legend{B1, G1}
+    \end{axis}
+    \end{tikzpicture}
+		\begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={Cantidad de nodos del grafo(n)},
+        ylabel={},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=5
+    ]
+    \addplot[color=black] table[x index=0,y index=3]{datos/ej4/resultadosn.txt};
+    \addplot[color=red] table[x index=0,y index=4]{datos/ej4/resultadosn.txt};
+    \legend{B2, G2}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
 En ambos casos, se aprecia una paridad entre ambos soluciones, sin embargo hay una leve tendencia hacia la heurística golosa como mejor procedimiento para construir la solución inicial.
-
 \begin{itemize}
-	\item \textbf{Criterio de Vencindad}. El análisis comparado es el siguiente (utilizando la misma metodología que en el caso de BFS vs Golosa):
-
-    \begin{figure}[H]
-        \centering
-        \begin{subfigure}[b]{0.5\textwidth}
-                \includegraphics[width=\textwidth]{imagenes/ejer4-B1vsB2.jpg}
-                \caption{Usando BFS como solucion incial}
-        \end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-          %(or a blank line to force the subfigure onto a new line)
-        \begin{subfigure}[b]{0.5\textwidth}
-                \includegraphics[width=\textwidth]{imagenes/ejer4-G1vsG2.jpg}
-                \caption{Usando Goloso como solucion incial}
-        \end{subfigure}
-
-\end{figure}
-
-
+\item \textbf{Comparación Primer Criterio de Vecindad contra Segundo Criterio de Vecindad}
 \end{itemize}
+\begin{center}
 
-
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={Cantidad de nodos del grafo(n)},
+        ylabel={Tamaño del conjunto solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=5
+    ]
+    \addplot[color=black] table[x index=0,y index=1]{datos/ej4/resultadosn.txt};
+    \addplot[color=red] table[x index=0,y index=3]{datos/ej4/resultadosn.txt};
+    \legend{B1, B2}
+    \end{axis}
+    \end{tikzpicture}
+		\begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={Cantidad de nodos del grafo(n)},
+        ylabel={},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=5
+    ]
+    \addplot[color=black] table[x index=0,y index=2]{datos/ej4/resultadosn.txt};
+    \addplot[color=red] table[x index=0,y index=4]{datos/ej4/resultadosn.txt};
+    \legend{G1, G2}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
 
 Estos resultados nos inclinan a pensar que el segundo criterio de vecindad es el mejor criterio, lo cual es coherente con el hecho que el segundo criterio de vecindad es capaz de arreglar soluciones que el primer criterio de vecindad da como invalidas. Es decir, podríamos argumentar que como el primer criterio de vecindad es un caso particular del segundo criterio de vecindad (cuando no incluimos ningún vértice al subconjunto, mas allá del candidato) debería ser siempre mejor al primero. Sin embargo, la experimentación muestra casos donde el primer criterio es mejor, y eso se da en instancias donde arreglar una solución invalida nos inhibe de seguir explorando la solución original en búsqueda de un mejor caso. Por ejemplo:
 
@@ -628,3 +713,30 @@ Estos resultados nos inclinan a pensar que el segundo criterio de vecindad es el
 \end{itemize}
 
 Sin embargo estos tipos de instancias son muy particulares, por lo cual podemos afirmar que la \textbf{mejor combinación} para la \textbf{heurística de búsqueda local} planteada es aquella que toma como \textbf{solución inicial} la generada por la \textbf{heurística golosa} y luego es mejorada por el \textbf{segundo criterio de vecindad}.
+
+\begin{itemize}
+\item \textbf{Comparación B1-G1-B2-G2}
+\end{itemize}
+\begin{center}
+
+		\begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={Cantidad de nodos del grafo(n)},
+        ylabel={Tamaño del conjunto solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=5
+    ]
+    \addplot[color=black] table[x index=0,y index=1]{datos/ej4/resultadosn.txt};
+    \addplot[color=red] table[x index=0,y index=2]{datos/ej4/resultadosn.txt};
+		\addplot[color=green] table[x index=0,y index=3]{datos/ej4/resultadosn.txt};
+		\addplot[color=blue] table[x index=0,y index=4]{datos/ej4/resultadosn.txt};
+    \legend{B1, G1, B2, G2}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
