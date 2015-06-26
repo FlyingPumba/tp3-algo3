@@ -5,7 +5,7 @@ do
   if [ ${file: -3} == ".in" ]
   then
       echo ${file}
-      cat $file | ./exacto
+      cat $file | ./grasp
   else
       cat $file
       echo ""

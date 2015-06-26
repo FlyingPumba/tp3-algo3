@@ -1,4 +1,39 @@
+\textit{Realizar una experimentación sobre un conjunto nuevo de instancias para observar la performance de los métodos comparando nuevamente la calidad de las soluciones obtenidas y los tiempos de ejecución en función de los parámetros de la entrada.}
+\medskip
+
+En este ejercicio se busca comparar los tiempos de ejecución de los distintos algoritmos implmentados así como la calidad de las soluciones que devuelven.
+
+Al contrario que en las experimentaciones anteriores donde se utilizaban grafos aleatorios, en esta experimentación se busco concentrarnos en distintas familias de grafos, ya que cada una hace que ciertas implemencationes funcionen mejores que otras. Las familias de grafos elegidas fueron:
+\begin{itemize}
+    \item Grafos completos ($K_n$).
+    \item Grafos de nodos aislados, es decir, el complemento de los grafos completos.
+    \item Grafos de caminos ($P_n$).
+    \item Grafos de ciclos ($C_n$).
+\end{itemize}
+
+Algunas consideraciones generales:
+\begin{itemize}
+    \item Los tiempos de ejecución se midieron con la biblioteca chrono y estos fueron convertidos a nanosegundos.
+    \item Para el algoritmo Exacto se utilizaron todas las podas planteadas en el Ejercicio 2.
+    \item Para el algoritmo Goloso se utilizó su implementación en listas de adyacencia.
+    \item Para el algoritmo de Busqueda Local se utilizó como solución inicial el algoritmo Goloso y el criterio de vecindad 2, que genera soluciones vecinas a partir de quitar k vertices y agregar hasta k-1 vertices.
+    \item Para el algoritmo GRASP, se utilizó el criterio de parada 2, que sigue buscando soluciones hasta que pasan 10 iteraciones sin que cambie el cardinal de la mejor solucion. Además, se utilizaron las siguientes versiones de de los algoritmos:
+        \begin{itemize}
+            \item Busqueda Local utilizando el criterio de vecindad 1, que genera soluciones vecinas a partir de quitar k vertices y agregar 1 vertice.
+            \item Goloso utilizando listas de adyacencia.
+        \end{itemize}
+    \item Para todas las familias de grafos, nos abstuvimos de comparar el algoritmo Exacto a partir de $n \geq 12$ ya que la cantidad de tiempo que requiere a partir de ese valor es prohibitivo.
+\end{itemize}
+
 \subsection{Experimentación con Grafos completos}
+
+Consideraciones particulares de la familia de grafos:
+\begin{itemize}
+    \item Se generaron 100 casos de tests, con:
+    \item $1 \leq n \leq 100$
+    \item $m = \frac{n*(n-1)}{2}$.
+\end{itemize}
+
 \subsubsection{Tiempos de ejecución}
 \begin{center}
     \begin{tikzpicture}
@@ -9,12 +44,14 @@
         scaled x ticks=false,
         scaled y ticks=false,
         enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth
+        width=0.45\textwidth,
+        height=0.45\textwidth
     ]
-    \addplot[color=black] table[x=n,y=sin-podas-div-2nn3]{datos/datos-ej2.dat};
-    \addplot[color=red] table[x=n,y=poda-A-div-2nn3]{datos/datos-ej2.dat};
-    \legend{Sin podas, Poda A}
+    \addplot[color=black] table[x index=0,y index=3]{datos/grafo-completo-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-completo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-completo-local.dat};
+    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-completo-grasp.dat};
+    \legend{Exacto, Goloso, Busqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
     \begin{tikzpicture}
@@ -25,29 +62,320 @@
         scaled x ticks=false,
         scaled y ticks=false,
         enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth
+        width=0.45\textwidth,
+        height=0.45\textwidth
     ]
-    \addplot[color=red] table[x=n,y=poda-A-div-2nn3]{datos/datos-ej2.dat};
-    \addplot[color=black] table[x=n,y=poda-B-div-2nn3]{datos/datos-ej2.dat};
-    \legend{Poda A,Poda B}
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-completo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-completo-local.dat};
+    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-completo-grasp.dat};
+    \legend{Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-completo-local.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-completo-goloso.dat};
+    \legend{Goloso, Busqueda Local}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+Como se puede ver en los gráficos presentados, para esta familia de Grafos tenemos una clara diferencia de performance:
+\begin{enumerate}
+    \item En primer lugar con menor tiempo se encuentra la Busqueda Local.
+
+\end{enumerate}
+
+\subsubsection{Calidad de las soluciones}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tamaño de la solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x index=0,y index=2]{datos/grafo-completo-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=2]{datos/grafo-completo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-completo-local.dat};
+    \addplot[color=green] table[x index=0,y index=2]{datos/grafo-completo-grasp.dat};
+    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\subsection{Experimentación con Complemento de Grafos completos}
+
+Consideraciones particulares de la familia de grafos:
+\begin{itemize}
+    \item Se generaron 100 casos de tests, con:
+    \item $1 \leq n \leq 100$
+    \item $m = 0$.
+\end{itemize}
+
+\subsubsection{Tiempos de ejecución}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x index=0,y index=3]{datos/grafo-complemento-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-complemento-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-complemento-local.dat};
+    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-complemento-grasp.dat};
+    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x index=0,y index=3]{datos/grafo-complemento-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-complemento-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-complemento-local.dat};
+    \legend{Exacto, Goloso, Busqueda Local}
+    \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-complemento-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-complemento-local.dat};
+    \legend{Goloso, Busqueda Local}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\subsubsection{Calidad de las soluciones}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tamaño de la solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x index=0,y index=2]{datos/grafo-complemento-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=2]{datos/grafo-complemento-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-complemento-local.dat};
+    \addplot[color=green] table[x index=0,y index=2]{datos/grafo-complemento-grasp.dat};
+    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\subsection{Experimentación con Caminos}
+
+Consideraciones particulares de la familia de grafos:
+\begin{itemize}
+    \item Se generaron 100 casos de tests, con:
+    \item $1 \leq n \leq 100$
+    \item $m = n-1$.
+\end{itemize}
+
+\subsubsection{Tiempos de ejecución}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x index=0,y index=3]{datos/grafo-camino-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-camino-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-camino-local.dat};
+    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-camino-grasp.dat};
+    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-camino-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-camino-local.dat};
+    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-camino-grasp.dat};
+    \legend{Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-camino-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-camino-local.dat};
+    \legend{Goloso, Busqueda Local}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\subsubsection{Calidad de las soluciones}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tamaño de la solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x index=0,y index=2]{datos/grafo-camino-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=2]{datos/grafo-camino-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-camino-local.dat};
+    \addplot[color=green] table[x index=0,y index=2]{datos/grafo-camino-grasp.dat};
+    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\subsection{Experimentación con Ciclos}
+
+Consideraciones particulares de la familia de grafos:
+\begin{itemize}
+    \item Se generaron 100 casos de tests, con:
+    \item $1 \leq n \leq 100$
+    \item $m = n$.
+\end{itemize}
+
+\subsubsection{Tiempos de ejecución}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x index=0,y index=3]{datos/grafo-ciclo-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-ciclo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-ciclo-local.dat};
+    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-ciclo-grasp.dat};
+    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-ciclo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-ciclo-local.dat};
+    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-ciclo-grasp.dat};
+    \legend{Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-ciclo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-ciclo-local.dat};
+    \legend{Goloso, Busqueda Local}
     \end{axis}
     \end{tikzpicture}
 \end{center}
 
 \subsubsection{Calidad de las soluciones}
 
-\subsection{Experimentación con Complemento de Grafos completos}
-\subsubsection{Tiempos de ejecución}
-
-\subsubsection{Calidad de las soluciones}
-
-\subsection{Experimentación con Caminos}
-\subsubsection{Tiempos de ejecución}
-
-\subsubsection{Calidad de las soluciones}
-
-\subsection{Experimentación con Ciclos}
-\subsubsection{Tiempos de ejecución}
-
-\subsubsection{Calidad de las soluciones}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tamaño de la solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x index=0,y index=2]{datos/grafo-ciclo-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=2]{datos/grafo-ciclo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-ciclo-local.dat};
+    \addplot[color=green] table[x index=0,y index=2]{datos/grafo-ciclo-grasp.dat};
+    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
