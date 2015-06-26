@@ -69,7 +69,7 @@ int main() {
     Grafo G;
     vector<int> cidm;
 
-    FILE* file = fopen("grafo-complemento-grasp.txt","a+");
+    FILE* file = fopen("grafo-camino-grasp.dat","a+");
 
     int n, m;
     cin >> n;
@@ -99,7 +99,7 @@ int main() {
 
     fprintf(file, "%d %d %lu %7.8f\n",n, m, solucion.size() , d);
 
-    
+
     return 0;
 }
 
@@ -195,7 +195,7 @@ void construir_greedy_random(Grafo& G, vector<int>& solucion, bool criterio_gree
 
 void construir_greedy_random_primer_criterio(Grafo& G, vector<int>& solucion) {
     // Criterio de Restricted Candidate List 1: los nodos que cumplan la condicion
-    // de que su grado es 
+    // de que su grado es
   //por lo menos mejor_grado (de todos los nodos) * GREEDY_RANDOM_ALPHA.
     int n = G.size();
     Nodos nodos(n, Nodo());
@@ -212,7 +212,7 @@ void construir_greedy_random_primer_criterio(Grafo& G, vector<int>& solucion) {
     int nodos_visitados = 0;
     while (nodos_visitados < n) {
         int mejor_grado = nodos[0].grado;
-        int window_size = 0; // el maximo indice posible, 
+        int window_size = 0; // el maximo indice posible,
         //la RCL va a ser nodos[0...window_size]
         for (int i = 0; i < nodos.size(); i++) {
             if (nodos[i].grado >= mejor_grado * GREEDY_RANDOM_ALPHA) {
@@ -259,7 +259,7 @@ void construir_greedy_random_segundo_criterio(Grafo& G, vector<int>& solucion) {
     int nodos_visitados = 0;
     while (nodos_visitados < n) {
         int mejor_grado = nodos[0].grado;
-        int window_size = GREEDY_RANDOM_BETA;  
+        int window_size = GREEDY_RANDOM_BETA;
         // el maximo indice posible, la RCL va a ser nodos[0...window_size]
         int indice = random_in_range(0, min(window_size, (int)nodos.size()-1));
 

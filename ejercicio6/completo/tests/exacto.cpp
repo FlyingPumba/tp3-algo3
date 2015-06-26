@@ -15,7 +15,7 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
 // Implementacion.
 int main() {
 
-    FILE* file = fopen("grafo-completo-exacto.txt","a+");
+    FILE* file = fopen("grafo-completo-exacto.dat","a+");
 
     int n, m;
     cin >> n;

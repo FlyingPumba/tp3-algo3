@@ -1,5 +1,39 @@
 \subsection{Experimentación con Grafos completos}
 \subsubsection{Tiempos de ejecución}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth
+    ]
+    \addplot[color=black] table[x=n,y=sin-podas-div-2nn3]{datos/datos-ej2.dat};
+    \addplot[color=red] table[x=n,y=poda-A-div-2nn3]{datos/datos-ej2.dat};
+    \legend{Sin podas, Poda A}
+    \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth
+    ]
+    \addplot[color=red] table[x=n,y=poda-A-div-2nn3]{datos/datos-ej2.dat};
+    \addplot[color=black] table[x=n,y=poda-B-div-2nn3]{datos/datos-ej2.dat};
+    \legend{Poda A,Poda B}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
 
 \subsubsection{Calidad de las soluciones}
 

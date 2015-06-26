@@ -41,7 +41,7 @@ void imprimir_resultado(vector<int>& cidm);
 // Implementacion.
 int main() {
 
-    FILE* file = fopen("grafo-completo-local.txt","a+");
+    FILE* file = fopen("grafo-completo-local.dat","a+");
 
     int n, m;
     cin >> n;
