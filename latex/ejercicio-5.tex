@@ -290,10 +290,88 @@ Comparemos las versiones v121 con la versión v221:
 
 Viendo estos últimos gráficos es notoria la diferencia. La versión v221 es enormemente más rápida que la versión v121.
 Entonces concluimos que la gran diferencia reside en el criterio de parada de las iteraciones de GRASP.
-De por si el criterio 2 es más lógico, ya que el otro depende de la cantidad de nodos y el este va más a la raiz del problema, es decir, cuánto se puede optimizar la función hasta que ya no valga la pena.
+De por si el criterio 2 es más lógico, ya que el otro depende de la cantidad de nodos y este va más a la raiz del problema, es decir, cuánto se puede optimizar la función hasta que ya no valga la pena.
 Vale preguntarse, entonces, cuál es el criterio que da los resultados más precisos.
 Esa es una pregunta que responderemos a continuación.
 
 \subsubsection{Calidad de las respuestas}
 
+En las siguientes experimentaciones, veremos los resultados de las diferentes versiones medidos en la \textbf{cantidad de nodos} que tiene la aproximación a CIDM que devuelven los algoritmos. Por eso, los que cuenten con menor valor en el eje 'y' serán las mejores versiones:
 
+\begin{center}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={n (cantidad de nodos del grafo)},
+        ylabel={Tamaño del conjunto solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west
+    ]
+    \addplot[color=black] table[x=n,y=nv111]{datos/ej5/resultadosn.txt};
+    \addplot[color=red] table[x=n,y=nv112]{datos/ej5/resultadosn.txt};
+    \addplot[color=blue] table[x=n,y=nv121]{datos/ej5/resultadosn.txt};
+    \addplot[color=green] table[x=n,y=nv122]{datos/ej5/resultadosn.txt};
+    \legend{v111, v112, v121, v122}
+    \end{axis}
+    \end{tikzpicture}
+
+\end{center}
+
+Parecería ser que las soluciones de las versiones v121 y v122 son las mejores hasta ahora por tener menos nodos.
+Comparemos las demás versiones:
+
+\begin{center}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={n (cantidad de nodos del grafo)},
+        ylabel={Tamaño del conjunto solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west
+    ]
+    \addplot[color=black] table[x=n,y=nv211]{datos/ej5/resultadosn.txt};
+    \addplot[color=red] table[x=n,y=nv212]{datos/ej5/resultadosn.txt};
+    \addplot[color=blue] table[x=n,y=nv221]{datos/ej5/resultadosn.txt};
+    \addplot[color=green] table[x=n,y=nv222]{datos/ej5/resultadosn.txt};
+    \legend{v211, v212, v221, v222}
+    \end{axis}
+    \end{tikzpicture}
+
+\end{center}
+
+De estas últimas, las versiones v221 y v222 dan los mejores resultados.
+Veamos cuál es la diferencia que hay entre estas y las versiones v121 y v122:
+
+\begin{center}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={n (cantidad de nodos del grafo)},
+        ylabel={Tamaño del conjunto solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west
+    ]
+    \addplot[color=black] table[x=n,y=nv121]{datos/ej5/resultadosn.txt};
+    \addplot[color=red] table[x=n,y=nv122]{datos/ej5/resultadosn.txt};
+    \addplot[color=blue] table[x=n,y=nv221]{datos/ej5/resultadosn.txt};
+    \addplot[color=green] table[x=n,y=nv222]{datos/ej5/resultadosn.txt};
+    \legend{v121, v122, v221, v222}
+    \end{axis}
+    \end{tikzpicture}
+
+\end{center}
