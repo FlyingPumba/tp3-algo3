@@ -84,9 +84,9 @@ int main() {
     fprintf(file_in_n, "n t_v111 t_v112 t_v121 t_v122 t_v211 t_v212 t_v221 t_v222\n"); // n_v111 n_v112 n_v121 n_v122 n_v211 n_v212 n_v221 n_v222\n");
     fprintf(file_in_m, "m t_v111 t_v112 t_v121 t_v122 t_v211 t_v212 t_v221 t_v222\n"); // n_v111 n_v112 n_v121 n_v122 n_v211 n_v212 n_v221 n_v222\n");
 
-    int nodos_start = 5;
+    int nodos_start = 10;
     int nodos_end = 20;
-    int muestras = 10;
+    int muestras = 20;
 
     vector< vector<double> > tiempos_n_m(8, vector<double>(1+nodos_end+(nodos_end*(nodos_end-1))/2, 0));
     vector< vector<double> > tiempos_n(8, vector<double>(1+nodos_end, 0));

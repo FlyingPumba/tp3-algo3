@@ -98,4 +98,202 @@ Devolver solucion
 \subsection{Ejercicio B}
 
 \textit{Realizar una experimentación que permita observar los tiempos de ejecución y la calidad de las soluciones obtenidas.}
+
 \medskip
+
+Consideraciones:
+
+\begin{itemize}
+    \item Todas las tomas de tiempos fueron hechas bajo las mismas condiciones (computadora, fuente de energia, minima cantidad de procesos abiertos).
+    \item Varias muestras fueron tomadas de cada dato para luego ser promediados y asi dar datos mas confiables.
+    \item En base a lo explicado anteriormente, realizamos experimentos basando los criterios de los algoritmos para asi crear diferentes versiones del mismo.
+    \item La diferencia entre ellas son los siguientes criterios:
+    \begin{itemize}
+        \item Criterio de parada 1: realizar $n$ iteraciones, con $n$ la cantidad de nodos del grafo.
+        \item Criterio de parada 2: sea k una constante, seguir iterando hasta que la mejor solucion parcial no se mejore durante k ciclos seguidos.
+
+        \item Criterio de lista de candidatos aleatoria 1: tomamos los nodos que tengan grado al menos $\alpha$ * $d_{max}$ ($\alpha$ constante) con $d_{max}$ el mayor de los grados entre los nodos no visitados.
+        \item Criterio de lista de candidatos aleatoria 2: tomar los k elementos de mayor grado no visitados hasta el momento, con k un valor constante entero.
+
+        \item Criterio de vecindad en búsqueda local 1: generar soluciones vecinas a partir de quitar k vértices que pertenecen al subconjunto CID de la solución inicial y agregar 1 vértice al subconjunto.
+        \item Criterio de vecindad en búsqueda local 2: generar soluciones vecinas a partir de quitar k vértices que pertenecen al subconjunto CID de la solución inicial y agregar, hasta, k-1 vértices al subconjunto.
+    \end{itemize}
+    \item Las versiones sobre las cuales experimentamos fueron:
+    \begin{itemize}
+        \item v111: criterio parada 1, criterio lista candidatos 1, criterio búsqueda local 1.
+        \item v112: criterio parada 1, criterio lista candidatos 1, criterio búsqueda local 2.
+        \item v121: criterio parada 1, criterio lista candidatos 2, criterio búsqueda local 1.
+        \item v122: criterio parada 1, criterio lista candidatos 2, criterio búsqueda local 2.
+        \item v211: criterio parada 2, criterio lista candidatos 1, criterio búsqueda local 1.
+        \item v212: criterio parada 2, criterio lista candidatos 1, criterio búsqueda local 2.
+        \item v221: criterio parada 2, criterio lista candidatos 2, criterio búsqueda local 1.
+        \item v222: criterio parada 2, criterio lista candidatos 2, criterio búsqueda local 2.
+    \end{itemize}
+    \item Cuando comparamos los tiempos de ejecución, el eje 'x' determina el tamaño de la entrada (que puede ser la cantidad de nodos, ejes del grafo o la suma de ellos). El eje 'y' representará el tiempo que tardo el algoritmo en nanosegundos.
+    \item La toma de tiempos en nanosegundos se realiza con la libreria 'chrono' de C++.
+    \item La aleatorización de algunas variables (por ejemplo, para elegir un candidato de la Lista Restringida de Candidatos RCL) se hizo con la función std::rand.
+    \item Para la comparacion de calidad de resultados, tomamos como eje 'x' la cantidad de nodos del grafo, le agregamos aristas aleatoriamente y luego corremos el algoritmo con las diferentes versiones. El eje 'y' en este caso seria la cantidad de nodos del CIDM que devuelve la version del algoritmo. Finalmente promediamos los resultados para cada 'x'.
+
+\end{itemize}
+
+\subsubsection{Tiempos de ejecución}
+
+Primero, vamos a comparar de a cuatro versiones a la vez (todas al mismo tiempo es mas dificil de ver la diferencia).
+Como dijimos antes, estos grafos ejes puestos de forma aleatoria.
+Por cada instancia construida, tomamos los tiempos con cada versión muchas veces y promediamos los tiempos resultantes:
+
+\begin{center}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={n (cantidad de nodos del grafo)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=10
+    ]
+    \addplot[color=black] table[x=n,y=tv111]{datos/ej5/tiemposn.txt};
+    \addplot[color=red] table[x=n,y=tv112]{datos/ej5/tiemposn.txt};
+    \addplot[color=blue] table[x=n,y=tv121]{datos/ej5/tiemposn.txt};
+    \addplot[color=green] table[x=n,y=tv122]{datos/ej5/tiemposn.txt};
+    \legend{v111, v112, v121, v122}
+    \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={m (cantidad de ejes del grafo)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=70, xmax=170
+    ]
+    \addplot[color=black] table[x=m,y=tv111]{datos/ej5/tiemposm.txt};
+    \addplot[color=red] table[x=m,y=tv112]{datos/ej5/tiemposm.txt};
+    \addplot[color=blue] table[x=m,y=tv121]{datos/ej5/tiemposm.txt};
+    \addplot[color=green] table[x=m,y=tv122]{datos/ej5/tiemposm.txt};
+    \legend{v111, v112, v121, v122}
+    \end{axis}
+    \end{tikzpicture}
+
+\end{center}
+
+Vemos que la versión v121 fue la que menos tiempo tardó en ejecutarse.
+Si bien la comparación bajo la cantidad de aristas parece inestable, esto era predecible ya que los ejes son puestos de forma aleatoria y GRASP actúa en varias fases. Como la posición de los ejes es clave para que los algoritmos encuentren CIDMs, los tiempos del gráfico varian. Mas alla de eso, es importante ver que varian de forma parecida entre las distintas versiones y que además, se mantienen las diferencias entre veriones de cuando comparamos por cantidad de nodos (es decir, la que fue más rápida en una, también lo fue en la otra).
+
+Ahora veamos las otras cuatro versiones:
+
+\begin{center}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={n (cantidad de nodos del grafo)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=10
+    ]
+    \addplot[color=black] table[x=n,y=tv211]{datos/ej5/tiemposn.txt};
+    \addplot[color=red] table[x=n,y=tv212]{datos/ej5/tiemposn.txt};
+    \addplot[color=blue] table[x=n,y=tv221]{datos/ej5/tiemposn.txt};
+    \addplot[color=green] table[x=n,y=tv222]{datos/ej5/tiemposn.txt};
+    \legend{v211, v212, v221, v222}
+    \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={m (cantidad de ejes del grafo)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=70, xmax=170
+    ]
+    \addplot[color=black] table[x=m,y=tv211]{datos/ej5/tiemposm.txt};
+    \addplot[color=red] table[x=m,y=tv212]{datos/ej5/tiemposm.txt};
+    \addplot[color=blue] table[x=m,y=tv221]{datos/ej5/tiemposm.txt};
+    \addplot[color=green] table[x=m,y=tv222]{datos/ej5/tiemposm.txt};
+    \legend{v211, v212, v221, v222}
+    \end{axis}
+    \end{tikzpicture}
+
+\end{center}
+
+En este experimento, la versión v221 fue la que tardó menos.
+Hasta ahora obsevamos que el segundo criterio en la lista de candidatos y el primer criterio en la búsqueda local fueron los más veloces.
+
+\medskip
+
+Comparemos las versiones v121 con la versión v221:
+
+\begin{center}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={n (cantidad de nodos del grafo)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=10
+    ]
+    \addplot[color=black] table[x=n,y=tv121]{datos/ej5/tiemposn.txt};
+    \addplot[color=red] table[x=n,y=tv221]{datos/ej5/tiemposn.txt};
+    \legend{v121, v221}
+    \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={m (cantidad de ejes del grafo)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=70, xmax=170
+    ]
+    \addplot[color=black] table[x=m,y=tv121]{datos/ej5/tiemposm.txt};
+    \addplot[color=red] table[x=m,y=tv221]{datos/ej5/tiemposm.txt};
+    \legend{v121, v221}
+    \end{axis}
+    \end{tikzpicture}
+
+\end{center}
+
+Viendo estos últimos gráficos es notoria la diferencia. La versión v221 es enormemente más rápida que la versión v121.
+Entonces concluimos que la gran diferencia reside en el criterio de parada de las iteraciones de GRASP.
+De por si el criterio 2 es más lógico, ya que el otro depende de la cantidad de nodos y el este va más a la raiz del problema, es decir, cuánto se puede optimizar la función hasta que ya no valga la pena.
+Vale preguntarse, entonces, cuál es el criterio que da los resultados más precisos.
+Esa es una pregunta que responderemos a continuación.
+
+\subsubsection{Calidad de las respuestas}
+
+
