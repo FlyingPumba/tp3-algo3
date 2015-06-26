@@ -69,12 +69,6 @@ int main() {
     recibir_parametros(G);
     grasp(G, cidm, PRIMER_CRITERIO, PRIMER_CRITERIO, PRIMER_CRITERIO);
     imprimir_resultado(cidm);
-    grasp(G, cidm, PRIMER_CRITERIO, PRIMER_CRITERIO, PRIMER_CRITERIO);
-    imprimir_resultado(cidm);
-    grasp(G, cidm, PRIMER_CRITERIO, PRIMER_CRITERIO, PRIMER_CRITERIO);
-    imprimir_resultado(cidm);
-    grasp(G, cidm, PRIMER_CRITERIO, PRIMER_CRITERIO, PRIMER_CRITERIO);
-    imprimir_resultado(cidm);
     
     return 0;
 }
