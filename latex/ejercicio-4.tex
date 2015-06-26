@@ -108,7 +108,7 @@ Para llevar adelante exitosamente este intercambio, debemos buscar aquellos vér
 Sin embargo, para lograr una solución valida, los vértices quitados no pueden tener otros vértices adyacentes no incluidos en el subconjunto que, a su vez, no sean adyacentes al vértice agregado  y no sean dominados por otro vértice.
 
 \begin{itemize}
-	\item Ejemplo de solucion invalida:
+	\item Ejemplo de solución invalida:
 
     \tikz[every node/.style={draw,circle}] {
 		\node[fill=blue!40, text=white] (1) at (0, 0)  { 0 };
@@ -141,7 +141,7 @@ El procedimiento de búsqueda de los posibles soluciones vecinas funciona de la 
 \medskip
 
 \begin{codesnippet}
-Para todo vertice, u, en el Grafo:
+Para todo vértice, u, en el Grafo:
   Creamos un vector de tamaño n, llamado solucionAuxiliar, al cual le copiamos
   el contenido de la solucionInicial.
   Si solucionInicial[u] = NO INCLUIDO y |adyacentes a u| > 1 entonces:
@@ -162,9 +162,9 @@ En el procedimiento descripto anteriormente falta detallar el comportamiento de 
 
 \subsubsection{Segundo Criterio de Vecindad}
 El segundo criterio de vecindad implementado consiste en generar soluciones vecinas a partir de quitar k vértices que pertenecen al subconjunto CID de la solución inicial y agregar, hasta, k-1 vértices al subconjunto, donde k $\in \mathbb{N}$ y k $\geq$ 2. Logrando de esta manera, una reducción en el cardinal del subconjunto CID de, al menos, un vértice.
-El caso donde k = 2 no difiere del criterio aplicado en la primer vecindad, ya que k - 1 = 1. Sin embargo a partir de k $\geq$ 3 se observa un comportamiento distinto, ya que podemos agregar k-2 vértices para arreglar la solución, ademas del candidato original.
+El caso donde k = 2 no difiere del criterio aplicado en la primer vecindad, ya que k - 1 = 1. Sin embargo a partir de k $\geq$ 3 se observa un comportamiento distinto, ya que podemos agregar k-2 vértices para arreglar la solución, además del candidato original.
 
-En este caso, para los casos no contemplados en el criterio anterior, debemos buscar vértices no incluidos en CID en la solución inicial, que tengan, al menos k vértices adyacentes incluidos en CID, donde k $\geq$ 3, y que a su vez tengan hasta k-2 vértices que son adyacentes a los adyacentes del vertice buscado que no estan incluidos y no son dominados por otro vértice.
+En este caso, para los casos no contemplados en el criterio anterior, debemos buscar vértices no incluidos en CID en la solución inicial, que tengan, al menos k vértices adyacentes incluidos en CID, donde k $\geq$ 3, y que a su vez tengan hasta k-2 vértices que son adyacentes a los adyacentes del vértice buscado que no están incluidos y no son dominados por otro vértice.
 
 \begin{itemize}
 	\item Ejemplo de un caso 4-2, el cual fallaba en el criterio anterior:
@@ -249,11 +249,11 @@ Para todo vértice, u, en el Grafo:
        Interrumpir el ciclo
 \end{codesnippet}
 
-FFalta detallar los procedimientos \textit{arreglarSolucion} y \textit{esSolucion?}, los cuales se pueden realizar en una sola función que llamaremos \textit{esSolucion?} cuyo comportamiento es el siguiente:
+Falta detallar los procedimientos \textit{arreglarSolucion} y \textit{esSolucion?}, los cuales se pueden realizar en una sola función que llamaremos \textit{esSolucion?} cuyo comportamiento es el siguiente:
 \begin{itemize}
 	\item La función recibe como parámetros un vector con la solución a analizar y un entero con la cantidad de cambios posibles a realizar
 	\item Miramos cada vértice del grafo, los cuales o están INCLUIDOS o NO INCLUIDOS en el subconjunto CID.
-    \item Si el vértice esta INCLUIDO, sus adyacentes NO pueden estar INCLUIDOS. En caso de encontrar algun adyacente INCLUIDO, sabemos que el subconjunto analizado no es solución valida.
+    \item Si el vértice esta INCLUIDO, sus adyacentes NO pueden estar INCLUIDOS. En caso de encontrar algún adyacente INCLUIDO, sabemos que el subconjunto analizado no es solución valida.
     \item Si el vértice NO esta INCLUIDO, entonces, al menos, 1 vértice adyacente tiene que estar INCLUIDO. En caso de no encontrar algún vértice adyacente INCLUIDO, tenemos dos casos:
     \begin{enumerate}
     	\item La variable entera que representa la cantidad de cambios posibles es 0. En este caso sabemos que el subconjunto analizado no es solución valida.
@@ -350,7 +350,7 @@ Podemos concluir que la complejidad temporal de la heurística es independiente 
 \textbf{Cota superior para la cantidad de iteraciones:}
 \medskip
 
-Sabemos que cada iteración de las vecindades reduce, como mínimo, en 1 el cardinal del subconjunto CID. Por lo tanto, si partimos de una solución inicial en donde el cardinal del subconjunto es asintonticamente igual a la cantidad de vértices del Grafo, es posible que iteraremos hasta n-1 veces, hasta alcanzar una solución de 1 vértice. Es evidente que este es un caso extremo, de difícil realización, sin embargo brinda una cota superior a la cantidad de iteraciones.
+Sabemos que cada iteración de las vecindades reduce, como mínimo, en 1 el cardinal del subconjunto CID. Por lo tanto, si partimos de una solución inicial en donde el cardinal del subconjunto es asintoticamente igual a la cantidad de vértices del Grafo, es posible que iteraremos hasta n-1 veces, hasta alcanzar una solución de 1 vértice. Es evidente que este es un caso extremo, de difícil realización, sin embargo brinda una cota superior a la cantidad de iteraciones.
 
 \subsection{Ejercicio C}
 
@@ -358,7 +358,7 @@ Sabemos que cada iteración de las vecindades reduce, como mínimo, en 1 el card
 
 \medskip
 
-Para llevar adelante las comparaciones, generamos instancias aleatorias con las siguientes caracteristicas:
+Para llevar adelante las comparaciones, generamos instancias aleatorias con las siguientes características:
 \begin{enumerate}
 	\item Tomamos 10 muestras por cada valor de la cantidad de nodos $n$, desde 5 hasta 30, promediando sus valores.
     \item Para cada valor de $n$, generamos instancias para cada valor posible de $m$ , es decir valores que van desde 0 hasta $\frac{n*(n-1)}{2}$, asegurándonos la validez de los aristas generadas, es decir que no haya ejes repetidos ni loops.
@@ -378,7 +378,7 @@ Es importante destacar los siguientes puntos:
 \begin{itemize}
 	\item En el caso de las comparaciones de los tiempos de ejecución, el eje de las abscisas esta determinado por la cantidad de nodos del grafo y el eje de las ordenadas representará el tiempo que tardo el algoritmo en nanosegundos.
 	\item En el caso de las comparaciones de las soluciones obtenidas, el eje de las abscisas esta determinado por la cantidad de nodos del grafo y el eje de las ordenadas representará el tamaño de la solución obtenida.
-	\item La toma de tiempos en nanosegundos se realizó usando la libreria 'chrono' de C++.
+	\item La toma de tiempos en nanosegundos se realizó usando la librería 'chrono' de C++.
 	\item La aleatorización de los ejes en sus extremos particulares se realizó con la función std::rand.
 \end{itemize}
 
@@ -393,7 +393,7 @@ Primero comparamos las maneras de obtener la solución inicial, para luego compa
     \begin{axis}[
         title={},
         xlabel={Cantidad de nodos del grafo(n)},
-        ylabel={Tiempos de ejecucion (nanoseconds)},
+        ylabel={Tiempos de ejecución (nanoseconds)},
         scaled x ticks=false,
         scaled y ticks=false,
         enlargelimits=0.05,
@@ -426,7 +426,7 @@ Primero comparamos las maneras de obtener la solución inicial, para luego compa
     \end{axis}
     \end{tikzpicture}
 \end{center}
-Los graficos ponen en evidencia la paridad en terminos de ejecución temporal de ambas variantes. Si bien existe una minima diferencia en favor del Goloso, no es suficiente para concluir que esta es la mejor en terminos de ejecución temporal.
+Los gráficos ponen en evidencia la paridad en términos de ejecución temporal de ambas variantes. Si bien existe una mínima diferencia en favor del Goloso, no es suficiente para concluir que esta es la mejor en términos de ejecución temporal.
 \begin{itemize}
 \item \textbf{Comparación Primer Criterio de Vecindad contra Segundo Criterio de Vecindad}
 \end{itemize}
@@ -436,7 +436,7 @@ Los graficos ponen en evidencia la paridad en terminos de ejecución temporal de
     \begin{axis}[
         title={},
         xlabel={Cantidad de nodos del grafo(n)},
-        ylabel={Tiempos de ejecucion (nanoseconds)},
+        ylabel={Tiempos de ejecución (nanoseconds)},
         scaled x ticks=false,
         scaled y ticks=false,
         enlargelimits=0.05,
@@ -480,7 +480,7 @@ En este caso la similitud es mas evidente, por lo cual no podemos concluir que u
     \begin{axis}[
         title={},
         xlabel={Cantidad de nodos del grafo(n)},
-        ylabel={Tiempos de ejecucion (nanoseconds)},
+        ylabel={Tiempos de ejecución (nanoseconds)},
         scaled x ticks=false,
         scaled y ticks=false,
         enlargelimits=0.05,
@@ -498,7 +498,7 @@ En este caso la similitud es mas evidente, por lo cual no podemos concluir que u
     \end{tikzpicture}
 \end{center}
 
-La ultima comparación pone en evidencia que la perfomance en terminos de ejecución temporal no difiere para las distintas variantes, lo cual va en sintonia con el hecho que todas tienen la misma complejidad temporal teorica, mostrada en el punto anterior. Por lo tanto la eleccion de que combinación es mejor sera resuelto por la calidad de las soluciones obtenidas con cada una de ellas.
+La ultima comparación pone en evidencia que la perfomance en términos de ejecución temporal no difiere para las distintas variantes, lo cual va en sintonía con el hecho que todas tienen la misma complejidad temporal teórica, mostrada en el punto anterior. Por lo tanto la elección de que combinación es mejor sera resuelto por la calidad de las soluciones obtenidas con cada una de ellas.
 \subsubsection{Calidad de la solución}
 
 Repetimos el mismo procedimiento usado en la comparación de tiempos de ejecución, sin dejar de mencionar el hecho de que al generar las instancias de la manera descripta anteriormente, nos encontramos con el hecho que el tamaño de las soluciones no son enteros, lo cual responde a que promediamos para cada $n$ el tamaño de la solución para todas los valores de $m$ posibles.
@@ -622,7 +622,7 @@ Estos resultados nos inclinan a pensar que el segundo criterio de vecindad es el
 
 
 
-\item \textbf{Solución Golosa}: como el mayor grado, 3, es compartido por varios vertices, empezamos por el menor numero de etiqueta, que es el 5, y asi sucesivamente.
+\item \textbf{Solución Golosa}: como el mayor grado, 3, es compartido por varios vértices, empezamos por el menor numero de etiqueta, que es el 5, y así sucesivamente.
 
 \tikz[every node/.style={draw,circle}] {
 	\node (1) at (0, 0)  { 1 };

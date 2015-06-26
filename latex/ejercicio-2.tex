@@ -2,7 +2,7 @@
 
 \subsection{Ejercicio A}
 
-\textit{Explicar detalladamente el algoritmo implementado. Elaborar podas y estrategias que permitan mejorar los tiempos de resolucion.}
+\textit{Explicar detalladamente el algoritmo implementado. Elaborar podas y estrategias que permitan mejorar los tiempos de resolución.}
 
 \medskip
 
@@ -11,7 +11,7 @@ El algoritmo implementado se basa en la Técnica Algorítmica de \textit{Backtra
 
 En primer lugar notese que un conjunto dominante 'D' trivial es el conjunto de todos los nodos del grafo. Si bien este conjunto en principio no es independiente (a menos que $X(G) = \emptyset$), es el conjunto dominante más grande posible (no hay ningún nodo que quede afuera, es decir: $V(G) \setminus D = \emptyset$).
 
-Luego, la idea principal del algorítmo es empezar con este primer conjunto dominante e ir sacando nodos recursivamente mientras chequeamos dominancia e independencia. Cada vez que encontramos un conjunto dominante e independiente, nos fijamos su cardinal. Si el cardinal de este nuevo conjunto es menor que el mínimo hasta ese momento nos quedamos con el nuevo y lo guardamos como mínimo. En caso de que el cardinal sea mayor, seguimos quitando nodos para encontrar un conjunto más chico.
+Luego, la idea principal del algoritmo es empezar con este primer conjunto dominante e ir sacando nodos recursivamente mientras chequeamos dominancia e independencia. Cada vez que encontramos un conjunto dominante e independiente, nos fijamos su cardinal. Si el cardinal de este nuevo conjunto es menor que el mínimo hasta ese momento nos quedamos con el nuevo y lo guardamos como mínimo. En caso de que el cardinal sea mayor, seguimos quitando nodos para encontrar un conjunto más chico.
 
 \subsubsection{Podas}
 
@@ -29,7 +29,7 @@ Antes de mostrar cuales son las podas que utilizamos en el algoritmo, veamos alg
     \end{proof}
 
     \begin{lemma}
-        Sea C un conjunto no-dominante respecto a G. Entonces, cualquier subconjunto de C es no-dominate respecto a G.
+        Sea C un conjunto no-dominante respecto a G. Entonces, cualquier subconjunto de C es no-dominante respecto a G.
     \end{lemma}
     \begin{proof}[Demostración]
         Trivial. Sea H un subconjunto de C ($H \subseteq C$).
@@ -41,7 +41,7 @@ Antes de mostrar cuales son las podas que utilizamos en el algoritmo, veamos alg
         Luego H es no-dominante respecto a G.
     \end{proof}
 
-    Usando los resultados de estos dos lemas podemos optimizar el algortimo cortando ramas en el árbol de recursión.
+    Usando los resultados de estos dos lemas podemos optimizar el algoritmo cortando ramas en el árbol de recursión.
     \begin{itemize}
         \item \textbf{Poda A}: por el primer Lema, cada vez que encontramos un conjunto dominante e independiente podemos ahí mismo devolver el que tenga menor cardinal entre ese conjunto y el mínimo encontrado hasta ese momento. Esto es así ya que sabemos que cualquier subconjunto del nuevo conjunto es no-dominante.
         \item \textbf{Poda B}: por el segundo Lema, al momento de sacar un nodo de un conjunto podemos chequear si el subconjunto es dominante o no. En caso de que no lo sea, ni siquiera lo procesamos, ya que no es dominante y ninguno de sus subconjuntos lo será.
@@ -106,7 +106,7 @@ Para i desde 0 hasta |dom| hacer:
             dom NO es independiente
 \end{codesnippet}
 
-Estos ciclos anidados corresponden al chequeo de indepedencia. Dentro de ellos solo hay operaciones de costo constante (una asignacion y dos comparaciones) y se repiten cada uno $|dom|$ veces, donde $dom$ es el conjunto dominante actual. Luego, el chequeo de independencia toma: $\mathcal{O}(|dom|*|dom|)$, que en el peor caso es $\mathcal{O}(n^2)$.
+Estos ciclos anidados corresponden al chequeo de independencia. Dentro de ellos solo hay operaciones de costo constante (una asignación y dos comparaciones) y se repiten cada uno $|dom|$ veces, donde $dom$ es el conjunto dominante actual. Luego, el chequeo de independencia toma: $\mathcal{O}(|dom|*|dom|)$, que en el peor caso es $\mathcal{O}(n^2)$.
 
 Y los ciclos restantes:
 
@@ -153,10 +153,10 @@ $$\mathcal{O}(2^n*n^3)$$
 
 Consideraciones:
 \begin{itemize}
-    \item Los casos de tests para esta experimentacion corresponden a grafos generados aleatoriamente, variando la cantidad de nodos y ejes.
+    \item Los casos de tests para esta experimentación corresponden a grafos generados aleatoriamente, variando la cantidad de nodos y ejes.
     \item Los tiempos de ejecución se midieron con la biblioteca chrono y estos fueron convertidos a nanosegundos.
     \item Los valores aleatorios que fuimos tomando fueron generados con una distribución uniforme para el rango requerido.
-    \item Los detalles de los parametros son:
+    \item Los detalles de los parámetros son:
         \begin{itemize}
             \item $2 \leq n \leq 9$
             \item $0 \leq m \leq n*(n-1)/2$
@@ -175,7 +175,7 @@ Los resultados obtenidos fueron los siguientes:
     \begin{axis}[
         title={},
         xlabel={$n$},
-        ylabel={Tiempos de ejecucion (nanoseconds)},
+        ylabel={Tiempos de ejecución (nanoseconds)},
         scaled x ticks=false,
         scaled y ticks=false,
         enlargelimits=0.05,
@@ -208,7 +208,7 @@ Los resultados obtenidos fueron los siguientes:
     \begin{axis}[
         title={},
         xlabel={$n$},
-        ylabel={Tiempos de ejecucion (nanoseconds)},
+        ylabel={Tiempos de ejecución (nanoseconds)},
         scaled x ticks=false,
         scaled y ticks=false,
         enlargelimits=0.05,
@@ -285,7 +285,7 @@ Veamos que pasa cuando los dividimos por $2^n*n^3$:
     \begin{axis}[
         title={},
         xlabel={$n$},
-        ylabel={Tiempos de ejecucion (nanoseconds)},
+        ylabel={Tiempos de ejecución (nanoseconds)},
         scaled x ticks=false,
         scaled y ticks=false,
         enlargelimits=0.05,
@@ -317,7 +317,7 @@ Veamos que pasa cuando los dividimos por $2^n*n^3$:
     \begin{axis}[
         title={},
         xlabel={$n$},
-        ylabel={Tiempos de ejecucion (nanoseconds)},
+        ylabel={Tiempos de ejecución (nanoseconds)},
         scaled x ticks=false,
         scaled y ticks=false,
         width=0.5\textwidth,

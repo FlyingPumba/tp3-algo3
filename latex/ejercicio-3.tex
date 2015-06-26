@@ -12,9 +12,9 @@ Una vez que se recorre todo el arreglo, ya tenemos el $cidm$, solo resta mostrar
 Crear listas de adyacencia con el input
 Crear arreglo nodos que guarda numero de nodo y grado para cada nodo
 
-Ordenar arreglo nodos segun su grado
-Crear vector de booleanos visitado de tamano n para guardar nodos visitados
-Crear vector cidm para guardar la solucion
+Ordenar arreglo nodos según su grado
+Crear vector de booleanos visitado de tamaño n para guardar nodos visitados
+Crear vector cidm para guardar la solución
 
 Para cada nodo u en el arreglo ordenado:
 	Si el nodo no fue visitado:
@@ -33,9 +33,9 @@ mostrar cidm
 Crear matriz de adyacencia con el input
 Crear arreglo nodos que guarda numero de nodo y grado para cada nodo
 
-Ordenar arreglo nodos segun su grado
-Crear vector de booleanos visitado de tamano n para guardar nodos visitados
-Crear vector cidm para guardar la solucion
+Ordenar arreglo nodos según su grado
+Crear vector de booleanos visitado de tamaño n para guardar nodos visitados
+Crear vector cidm para guardar la solución
 
 Para cada nodo u en el arreglo ordenado:
 	Si el nodo no fue visitado:
@@ -84,7 +84,7 @@ $$ \mathcal{O}(n*log(n) + m)$$
 
 \subsection{Ejercicio C}
 
-Veamos un ejemplo de instancias donde la heurística golosa no funciona. Supongamos que tenemos un grafo $G$ con un nodo central $v$ y sean $w_i$ con $1 \leq i \leq k$ sus $k$ vecinos, y supongamos que todo $w_1$ tiene a su vez $k-2$ vecinos de grado 1, llamemoslos $u_{i,j}$ con $1 \leq i \leq k$ y $1 \leq j \leq k-2$. \\
+Veamos un ejemplo de instancias donde la heurística golosa no funciona. Supongamos que tenemos un grafo $G$ con un nodo central $v$ y sean $w_i$ con $1 \leq i \leq k$ sus $k$ vecinos, y supongamos que todo $w_1$ tiene a su vez $k-2$ vecinos de grado 1, llamémoslos $u_{i,j}$ con $1 \leq i \leq k$ y $1 \leq j \leq k-2$. \\
 
 \begin{figure}[H]
 	\centering
@@ -96,7 +96,7 @@ Veamos un ejemplo de instancias donde la heurística golosa no funciona. Suponga
 
 
 
- Ahora, al ordenar los nodos según su grado nos quedaría $v$ con $k$ vecinos, luego $w_i$ con $1 \leq i \leq k$, donde cada $w_i$ tiene grado $k-1$, y por último los $k * (k-2)$ nodos $u$ de grado 1. Al correr el algoritmo goloso, este arrojaría un DCIM con cardinalidad $k * (k-2) + 1$ ya que el algoritmo seleccionará a $v$ y a $u_{i,j}$ con $1 \leq i \leq k$ y $1 \leq j \leq k-2$. \\
+ Ahora, al ordenar los nodos según su grado nos quedaría $v$ con $k$ vecinos, luego $w_i$ con $1 \leq i \leq k$, donde cada $w_i$ tiene grado $k-1$, y por último los $k * (k-2)$ nodos $u$ de grado 1. Al correr el algoritmo goloso, este arrojaría un CIDM con cardinalidad $k * (k-2) + 1$ ya que el algoritmo seleccionará a $v$ y a $u_{i,j}$ con $1 \leq i \leq k$ y $1 \leq j \leq k-2$. \\
 
 \begin{figure}[H]
 \centering
@@ -107,7 +107,7 @@ Veamos un ejemplo de instancias donde la heurística golosa no funciona. Suponga
 \end{figure}
 
 
- Sin embargo, si seleccionamos a todos los  $w_i$ con $1 \leq i \leq k$, tendríamos un DCIM real con cardinalidad $k$ que es mucho menor que el arrojado por el algoritmo.
+ Sin embargo, si seleccionamos a todos los  $w_i$ con $1 \leq i \leq k$, tendríamos un CIDM real con cardinalidad $k$ que es mucho menor que el arrojado por el algoritmo.
 
 \begin{figure}[H]
 \centering
@@ -118,7 +118,7 @@ Veamos un ejemplo de instancias donde la heurística golosa no funciona. Suponga
 \end{figure}
 
 
-Veamos que en este grafo $G=(V,E)$ tenemos $|V| = n = 1 + k*(k-1)$ por lo tanto, los $n$ para los cuales esta familia de instancias existe son los que satisfacen la ecuación con $k$ entero. Ahora, el algoritmo goloso arroja una solución de tamaño $1 + k*(k-2)$ es decir, solo quedan sin seleccionar $k$ nodos. Sin embargo, la solución optima sólo utiliza $k$ nodos.\\
+Veamos que en este grafo $G=(V,E)$ tenemos $|V| = n = 1 + k*(k-1)$ por lo tanto, los $n$ para los cuales esta familia de instancias existe son los que satisfacen la ecuación con $k$ entero. Ahora, el algoritmo goloso arroja una solución de tamaño $1 + k*(k-2)$ es decir, solo quedan sin seleccionar $k$ nodos. Sin embargo, la solución óptima sólo utiliza $k$ nodos.\\
 
 Por lo que el error de la solución golosa es de $1 + k*(k-2) - k = 1 + k^2 -2k -k = 1 + k^2 - 3k = k^2 - 3k + 1$ que es cuadrático en el tamaño de k
 
@@ -374,4 +374,4 @@ n   &Tiempo(milis) &Tiempo(mili/($n$)) &Tiempo(mili/($n^2$))) &Tiempo(mili/($n*l
 }
 \end{table}
 
-Como podemos ver, la experimentación se condice con el cálculo teórico de la complejidad y arroja que es de $\mathcal{O}(n*log(n) + m)$, sin embargo, como el grafo no tiene aristas, aqui la complejidad es de $\mathcal{O}(n*log(n))$ siendo así más eficiente que en la implementación sobre matriz de adyacencia.
+Como podemos ver, la experimentación se condice con el cálculo teórico de la complejidad y arroja que es de $\mathcal{O}(n*log(n) + m)$, sin embargo, como el grafo no tiene aristas, aquí la complejidad es de $\mathcal{O}(n*log(n))$ siendo así más eficiente que en la implementación sobre matriz de adyacencia.

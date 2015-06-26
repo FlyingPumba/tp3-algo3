@@ -16,7 +16,7 @@ Sea G=(V,E) un grafo simple:
 
 \medskip
 
-Si definimos a G=(V,E) grafo simple para que represente al tablero de ajedrez que se forma en el ejercicio 3 del tp1, los nodos serían una cuadricula de la pinta (sin considerar los ejes, eso lo hacemos después):
+Si definimos a G=(V,E) grafo simple para que represente al tablero de ajedrez que se forma en el ejercicio 3 del TP1, los nodos serían una cuadricula de la pinta (sin considerar los ejes, eso lo hacemos después):
 
 \begin{figure}[h]
 \begin{center}
@@ -36,11 +36,11 @@ Ahora, como el ejercicio consiste en poner la \underline{mínima} cantidad de \u
 \end{center}
 \end{figure}
 
-\textit{Observación: como cualquier posición x que amenaza a otra posicion 'y' sería amenazada si pongo un caballo en 'y', podemos representar el problema con un grafo simple y no un digrafo.}
+\textit{Observación: como cualquier posición x que amenaza a otra posición 'y' sería amenazada si pongo un caballo en 'y', podemos representar el problema con un grafo simple y no un dígrafo.}
 
 \medskip
 
-Entonces los ejercicios son similares ya que lo que estamos buscando en el ejercicio del TP1 es la mínima cantidad de caballos para que todas las posiciones (nodos) tengan un caballo o esten amenazadas (dominadas).
+Entonces los ejercicios son similares ya que lo que estamos buscando en el ejercicio del TP1 es la mínima cantidad de caballos para que todas las posiciones (nodos) tengan un caballo o estén amenazadas (dominadas).
 
 Es decir, si los caballos son un conjunto D de vértices en V, queremos hallar \#(D) tal que:
 \begin{itemize}
@@ -57,11 +57,11 @@ Esto se debe a que existen respuestas para el problema del TP1 donde hay caballo
 \end{center}
 \end{figure}
 
-\textit{Observación: estos graficos fueron extraidos de la página: http://home.earthlink.net/~morgenstern/solution/knsols1.htm. El primero representa una solución óptima del ejercicio del TP1 con un tablero de 6x6 y la segunda imágen es para un tablero de 7x7. En ambas, se marcan con un punto negro los casilleros que tienen un caballo y, como vemos señalado en rojo, hay caballos en posiciones que se amenazan entre sí.}
+\textit{Observación: estos gráficos fueron extraídos de la página: http://home.earthlink.net/~morgenstern/solution/knsols1.htm. El primero representa una solución óptima del ejercicio del TP1 con un tablero de 6x6 y la segunda imagen es para un tablero de 7x7. En ambas, se marcan con un punto negro los casilleros que tienen un caballo y, como vemos señalado en rojo, hay caballos en posiciones que se amenazan entre sí.}
 
 \medskip
 
-Mas alla de eso, ambos problemas son de optimización combinatoria. Los conjuntos factibles son los vertices de un grafo que cumplen ciertas condiciones (si bien como dijimos antes, no son las mismas para los dos problemas) y la función de optimalidad consiste en minimizar la cantidad de vértices del conjunto.
+Mas allá de eso, ambos problemas son de optimización combinatoria. Los conjuntos factibles son los vértices de un grafo que cumplen ciertas condiciones (si bien como dijimos antes, no son las mismas para los dos problemas) y la función de optimalidad consiste en minimizar la cantidad de vértices del conjunto.
 
 \newpage
 
@@ -76,7 +76,7 @@ Supongamos (por absurdo) que D no es un conjunto dominante:
 \begin{itemize}
 \item[] $\Rightarrow$ $\exists$ v $\in$ V tal que v $\not\in$ D $\wedge$ $\forall$ w $\in$ D, (v,w) $\not\in$ E (no es vecino de ningún nodo en D).
 \item[] $\Rightarrow$ D$\cup$\{v\} es independiente ya que como D es independiente sucede que $\forall$ w $\in$ D$\cup$\{v\} $\not\exists$ x $\in$ D tal que (x,w) $\in$ E.
-\item[] $\Rightarrow$ Absurdo! pues D era maximal y $\exists$ D' = D$\cup$\{v\} tal que D' es independiente y D $\subset$ D', asi contradiciendo el hecho de que D es un conjunto independiente maximal.
+\item[] $\Rightarrow$ Absurdo! pues D era maximal y $\exists$ D' = D$\cup$\{v\} tal que D' es independiente y D $\subset$ D', así contradiciendo el hecho de que D es un conjunto independiente maximal.
 \end{itemize}
 Este absurdo vino de suponer que D no era dominante.\\
 Por lo tanto, si D es un conjunto independiente maximal $\Rightarrow$ D es dominante.
@@ -88,7 +88,7 @@ Por lo tanto, si D es un conjunto independiente maximal $\Rightarrow$ D es domin
 \medskip
 
 \begin{itemize}
-\item \textbf{El turista:} tenemos un conjunto de ciudades que forman un grafo simple conexo donde los nodos son las ciudades y dos nodos estan conectados si y solo si las ciudades son vecinas. Suponiendo que queremos conocer tantas culturas distintas como sea posible, decidimos que no queremos visitar ningun par de ciudades vecinas ya que sus culturas son muy similares. Como el problema que proponemos consiste en hallar un conjunto mínimo de ciudades (nodos en el mapa) tal que toda ciudad sea visitada o bien una ciudad vecina sea visitada pero no ambas (el conjunto de nodos sea independiente y dominante), podemos decir que estamos buscando un CIDM.
-\item \textbf{Spamear una red social:} supongamos que tenemos un virus que se ocupa de spamear Facebook de manera que un mensaje sea propagado por toda la red. Asumimos que los usuarios de Facebook son nodos en un grafo simple conexo y que dos nodos estan conectados si y solo si esos dos usuarios son amigos en la red. Ahora, el virus no quiere ser descubierto, asi que lo que debe hacer es infectar la menor cantidad de cuentas que no sean amigas, ya que si spamea demasiadas cuentas o un par de cuentas que son amigas, sería mucho más fácil de descubrirlo. Luego, estamos buscando el mínimo conjunto de nodos en la red de usuarios tal que todos los usuarios vean el mensaje (dominación) y dos amigos no sean infectados a la vez (independencia), el cual es un CIDM.
-\item \textbf{Cámaras de seguridad en un barrio:} tenemos casas en un barrio que representan los nodos de un grafo simple conexo, donde dos nodos estan conectados si y solo si sus casas respectivas con vecinas. Queremos poner cámaras de seguridad en el barrio de manera que toda casa tenga una cámara de seguridad o la tenga una casa vecina, ya que el rango de cobertura de la cámara es amplio y puede filmar la casa donde está y también las vecinas (dominación). No queremos poner cámaras en dos casas vecinas (independencia) para que no sea tan notorio y arruine el paisaje. A la vez, tenemos un presupuesto limitado, por lo cual queremos poner poner tan pocas cámaras como sea posible (minimalidad). Por lo tanto, el conjunto de casas que estamos buscando para ponerles cámaras es un CIDM.
+\item \textbf{El turista:} tenemos un conjunto de ciudades que forman un grafo simple conexo donde los nodos son las ciudades y dos nodos están conectados si y solo si las ciudades son vecinas. Suponiendo que queremos conocer tantas culturas distintas como sea posible, decidimos que no queremos visitar ningún par de ciudades vecinas ya que sus culturas son muy similares. Como el problema que proponemos consiste en hallar un conjunto mínimo de ciudades (nodos en el mapa) tal que toda ciudad sea visitada o bien una ciudad vecina sea visitada pero no ambas (el conjunto de nodos sea independiente y dominante), podemos decir que estamos buscando un CIDM.
+\item \textbf{Spamear una red social:} supongamos que tenemos un virus que se ocupa de spamear Facebook de manera que un mensaje sea propagado por toda la red. Asumimos que los usuarios de Facebook son nodos en un grafo simple conexo y que dos nodos están conectados si y solo si esos dos usuarios son amigos en la red. Ahora, el virus no quiere ser descubierto, así que lo que debe hacer es infectar la menor cantidad de cuentas que no sean amigas, ya que si spamea demasiadas cuentas o un par de cuentas que son amigas, sería mucho más fácil de descubrirlo. Luego, estamos buscando el mínimo conjunto de nodos en la red de usuarios tal que todos los usuarios vean el mensaje (dominación) y dos amigos no sean infectados a la vez (independencia), el cual es un CIDM.
+\item \textbf{Cámaras de seguridad en un barrio:} tenemos casas en un barrio que representan los nodos de un grafo simple conexo, donde dos nodos están conectados si y solo si sus casas respectivas con vecinas. Queremos poner cámaras de seguridad en el barrio de manera que toda casa tenga una cámara de seguridad o la tenga una casa vecina, ya que el rango de cobertura de la cámara es amplio y puede filmar la casa donde está y también las vecinas (dominación). No queremos poner cámaras en dos casas vecinas (independencia) para que no sea tan notorio y arruine el paisaje. A la vez, tenemos un presupuesto limitado, por lo cual queremos poner poner tan pocas cámaras como sea posible (minimalidad). Por lo tanto, el conjunto de casas que estamos buscando para ponerles cámaras es un CIDM.
 \end{itemize}
