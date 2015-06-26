@@ -74,6 +74,8 @@ static chrono::time_point<chrono::high_resolution_clock> start_time;
 
 // Implementacion.
 int main() {
+
+    srand(time(0)); // configuro el seed del random generator
     
     FILE* file_in_n_m = fopen("resultados_n_m.txt","w+");
     FILE* file_in_n = fopen("resultados_n.txt","w+");
@@ -117,55 +119,88 @@ int main() {
 
                 grasp(G, cidm, PRIMER_CRITERIO, PRIMER_CRITERIO, PRIMER_CRITERIO);
 
-                resultados_n_m[0][nodos+ejes] += cidm.size();
-                resultados_n[0][nodos] += cidm.size();
-                resultados_m[0][ejes] += cidm.size();
+                for (int i = 0; i < cidm.size(); i++) {
+                    if(cidm[i] == INCLUIDO) {
+                        resultados_n_m[0][nodos+ejes] += 1;
+                        resultados_n[0][nodos] += 1;
+                        resultados_m[0][ejes] += 1;
+                    }
+                }
+
 
                 grasp(G, cidm, PRIMER_CRITERIO, PRIMER_CRITERIO, SEGUNDO_CRITERIO);
 
-                resultados_n_m[1][nodos+ejes] += cidm.size();
-                resultados_n[1][nodos] += cidm.size();
-                resultados_m[1][ejes] += cidm.size();
+                for (int i = 0; i < cidm.size(); i++) {
+                    if(cidm[i] == INCLUIDO) {
+                        resultados_n_m[1][nodos+ejes] += 1;
+                        resultados_n[1][nodos] += 1;
+                        resultados_m[1][ejes] += 1;
+                    }
+                }
 
                 grasp(G, cidm, PRIMER_CRITERIO, SEGUNDO_CRITERIO, PRIMER_CRITERIO);
 
-                resultados_n_m[2][nodos+ejes] += cidm.size();
-                resultados_n[2][nodos] += cidm.size();
-                resultados_m[2][ejes] += cidm.size();
+                for (int i = 0; i < cidm.size(); i++) {
+                    if(cidm[i] == INCLUIDO) {
+                        resultados_n_m[2][nodos+ejes] += 1;
+                        resultados_n[2][nodos] += 1;
+                        resultados_m[2][ejes] += 1;
+                    }
+                }
 
                 grasp(G, cidm, PRIMER_CRITERIO, SEGUNDO_CRITERIO, SEGUNDO_CRITERIO);
 
-                resultados_n_m[3][nodos+ejes] += cidm.size();
-                resultados_n[3][nodos] += cidm.size();
-                resultados_m[3][ejes] += cidm.size();
+                for (int i = 0; i < cidm.size(); i++) {
+                    if(cidm[i] == INCLUIDO) {
+                        resultados_n_m[3][nodos+ejes] += 1;
+                        resultados_n[3][nodos] += 1;
+                        resultados_m[3][ejes] += 1;
+                    }
+                }
 
                 grasp(G, cidm, SEGUNDO_CRITERIO, PRIMER_CRITERIO, PRIMER_CRITERIO);
 
-                resultados_n_m[4][nodos+ejes] += cidm.size();
-                resultados_n[4][nodos] += cidm.size();
-                resultados_m[4][ejes] += cidm.size();
+                for (int i = 0; i < cidm.size(); i++) {
+                    if(cidm[i] == INCLUIDO) {
+                        resultados_n_m[4][nodos+ejes] += 1;
+                        resultados_n[4][nodos] += 1;
+                        resultados_m[4][ejes] += 1;
+                    }
+                }
 
                 grasp(G, cidm, SEGUNDO_CRITERIO, PRIMER_CRITERIO, SEGUNDO_CRITERIO);
 
-                resultados_n_m[5][nodos+ejes] += cidm.size();
-                resultados_n[5][nodos] += cidm.size();
-                resultados_m[5][ejes] += cidm.size();
+                for (int i = 0; i < cidm.size(); i++) {
+                    if(cidm[i] == INCLUIDO) {
+                        resultados_n_m[5][nodos+ejes] += 1;
+                        resultados_n[5][nodos] += 1;
+                        resultados_m[5][ejes] += 1;
+                    }
+                }
 
                 grasp(G, cidm, SEGUNDO_CRITERIO, SEGUNDO_CRITERIO, PRIMER_CRITERIO);
 
-                resultados_n_m[6][nodos+ejes] += cidm.size();
-                resultados_n[6][nodos] += cidm.size();
-                resultados_m[6][ejes] += cidm.size();
+                for (int i = 0; i < cidm.size(); i++) {
+                    if(cidm[i] == INCLUIDO) {
+                        resultados_n_m[6][nodos+ejes] += 1;
+                        resultados_n[6][nodos] += 1;
+                        resultados_m[6][ejes] += 1;
+                    }
+                }
 
                 grasp(G, cidm, SEGUNDO_CRITERIO, SEGUNDO_CRITERIO, SEGUNDO_CRITERIO);
 
-                resultados_n_m[7][nodos+ejes] += cidm.size();
-                resultados_n[7][nodos] += cidm.size();
-                resultados_m[7][ejes] += cidm.size();
+                for (int i = 0; i < cidm.size(); i++) {
+                    if(cidm[i] == INCLUIDO) {
+                        resultados_n_m[7][nodos+ejes] += 1;
+                        resultados_n[7][nodos] += 1;
+                        resultados_m[7][ejes] += 1;
+                    }
+                }
 
-                veces_n_m[nodos+ejes] = veces_n_m[nodos+ejes]+1;
-                veces_n[nodos] = veces_n[nodos]+1;
-                veces_m[ejes] = veces_m[ejes]+1;
+                veces_n_m[nodos+ejes] += 1;
+                veces_n[nodos] += 1;
+                veces_m[ejes] += 1;
                 
             }
         }
@@ -173,27 +208,27 @@ int main() {
 
     for (int index = 0; index <= nodos_end + (nodos_end*(nodos_end-1))/2; index++) {
         if (veces_n_m[index] > 0){
-            fprintf(file_in_n_m, "%d %7.0f %7.0f %7.0f %7.0f %7.0f %7.0f %7.0f %7.0f\n", index,
-                resultados_n_m[0][index]/veces_n_m[index], resultados_n_m[1][index]/veces_n_m[index],
+            fprintf(file_in_n_m, "%d %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n", index,
+                resultados_n_m[4][index]/veces_n_m[index], resultados_n_m[1][index]/veces_n_m[index],
                 resultados_n_m[2][index]/veces_n_m[index], resultados_n_m[3][index]/veces_n_m[index],
                 resultados_n_m[4][index]/veces_n_m[index], resultados_n_m[5][index]/veces_n_m[index],
                 resultados_n_m[6][index]/veces_n_m[index], resultados_n_m[7][index]/veces_n_m[index]);
         }
     }
 
-    for (int index = 0; index <= nodos_end; index++) {
-        if (veces_n[index] > 0){
-            fprintf(file_in_n, "%d %7.0f %7.0f %7.0f %7.0f %7.0f %7.0f %7.0f %7.0f\n", index,
-                resultados_n[0][index]/veces_n[index], resultados_n[1][index]/veces_n[index],
+    for (int index = 4; index <= nodos_end; index++) {
+        if (veces_n[index] > 4){
+            fprintf(file_in_n, "%d %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n", index,
+                resultados_n[4][index]/veces_n[index], resultados_n[1][index]/veces_n[index],
                 resultados_n[2][index]/veces_n[index], resultados_n[3][index]/veces_n[index],
                 resultados_n[4][index]/veces_n[index], resultados_n[5][index]/veces_n[index],
                 resultados_n[6][index]/veces_n[index], resultados_n[7][index]/veces_n[index]);
         }
     }
 
-    for (int index = 0; index <= (nodos_end*(nodos_end-1))/2; index++) {
-        if (veces_m[index] > 0){
-            fprintf(file_in_m, "%d %7.0f %7.0f %7.0f %7.0f %7.0f %7.0f %7.0f %7.0f\n", index,
+    for (int index = 4; index <= (nodos_end*(nodos_end-1))/2; index++) {
+        if (veces_m[index] > 4){
+            fprintf(file_in_m, "%d %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n", index,
                 resultados_m[0][index]/veces_m[index], resultados_m[1][index]/veces_m[index],
                 resultados_m[2][index]/veces_m[index], resultados_m[3][index]/veces_m[index],
                 resultados_m[4][index]/veces_m[index], resultados_m[5][index]/veces_m[index],
