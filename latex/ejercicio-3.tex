@@ -51,11 +51,8 @@ fin Para
 mostrar cidm
 \end{codesnippet}
 
-
-
 \subsection{Ejercicio B}
 Calculemos la complejidad del algoritmo. Para esto vamos a calcular la complejidad para una implementación sobre matriz de adyacencia y una sobre listas de adyacencia. A su vez dividiremos el algoritmo en tres etapas, la entrada de datos, la resolución del problema y la salida de datos. \\
-
 
 \begin{itemize}
 
@@ -90,8 +87,8 @@ $$ \mathcal{O}(n*log(n) + m)$$
 Veamos un ejemplo de instancias donde la heurística golosa no funciona. Supongamos que tenemos un grafo $G$ con un nodo central $v$ y sean $w_i$ con $1 \leq i \leq k$ sus $k$ vecinos, y supongamos que todo $w_1$ tiene a su vez $k-2$ vecinos de grado 1, llamemoslos $u_{i,j}$ con $1 \leq i \leq k$ y $1 \leq j \leq k-2$. \\
 
 \begin{figure}[H]
-\centering
-\begin{subfigure}[b]{0.5\textwidth}
+	\centering
+	\begin{subfigure}[b]{0.5\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/grafos-ej3-tp3-1.png}
                 \caption{}
         \end{subfigure}%
@@ -137,12 +134,11 @@ En la implementación sobre matrices arrojo los siguientes resultados:\\
 
 \begin{figure}[H]
         \centering
-\begin{subfigure}[b]{0.5\textwidth}
+\begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/completo-matriz-1.pdf}
                 \caption{Tiempos sin procesar, en milisegundos}
         \end{subfigure}%
-
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/completo-matriz-2.pdf}
                 \caption{Dividiendo a los tiempos por $n$}
         \end{subfigure}
@@ -151,12 +147,11 @@ En la implementación sobre matrices arrojo los siguientes resultados:\\
 
 \begin{figure}[H]
         \centering
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/completo-matriz-3.pdf}
                 \caption{Dividiendo a los tiempos por $n^2$}
         \end{subfigure}
-
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/completo-matriz-4.pdf}
                 \caption{Dividiendo a los tiempos por $m + n*log(n)$}
         \end{subfigure}
@@ -200,12 +195,11 @@ Veamos ahora los resultados en la implementación sobre listas de adyacencia:
 
 \begin{figure}[H]
         \centering
-\begin{subfigure}[b]{0.5\textwidth}
+\begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/completo-listas-1.pdf}
                 \caption{Tiempos sin procesar, en milisegundos}
         \end{subfigure}%
-
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/completo-listas-2.pdf}
                 \caption{Dividiendo a los tiempos por $n$}
         \end{subfigure}
@@ -213,12 +207,11 @@ Veamos ahora los resultados en la implementación sobre listas de adyacencia:
 
 \begin{figure}[H]
         \centering
-         \begin{subfigure}[b]{0.5\textwidth}
+         \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/completo-listas-3.pdf}
                 \caption{Dividiendo a los tiempos por $n^2$}
         \end{subfigure}
-
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/completo-listas-4.pdf}
                 \caption{Dividiendo a los tiempos por $m + n*log(n)$}
         \end{subfigure}
@@ -257,8 +250,6 @@ n   &Tiempo(milis) &Tiempo(mili/($n$)) &Tiempo(mili/($n^2$))) &Tiempo(mili/($n*l
 
 Como podemos ver, la experimentación se condice con el cálculo teórico de la complejidad y arroja que es de $\mathcal{O}(n*log(n) + m)$, aunque en un grafo completo es casi $\mathcal{O}(n^2)$.
 
-
-
 \subsubsection{Experimentación sobre el complemento del grafo completo}
 
 Se crearon instancias de complementos grafos completos con $1 \leq n \leq 1000$ y $m = 0$.
@@ -267,28 +258,25 @@ En la implementación sobre matrices arrojo los siguientes resultados:\\
 
 \begin{figure}[H]
         \centering
-\begin{subfigure}[b]{0.5\textwidth}
+\begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-matriz-1.pdf}
                 \caption{Tiempos sin procesar, en milisegundos}
         \end{subfigure}%
-
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-matriz-2.pdf}
                 \caption{Dividiendo a los tiempos por $n$}
         \end{subfigure}
-
-
 
 \end{figure}
 
 \begin{figure}[H]
         \centering
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-matriz-3.pdf}
                 \caption{Dividiendo a los tiempos por $n^2$}
         \end{subfigure}
-
-        \begin{subfigure}[b]{0.5\textwidth}
+		
+        \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-matriz-4.pdf}
                 \caption{Dividiendo a los tiempos por $m + n*log(n)$}
         \end{subfigure}
@@ -332,31 +320,26 @@ Veamos ahora los resultados en la implementación sobre listas de adyacencia:
 
 \begin{figure}[H]
         \centering
-\begin{subfigure}[b]{0.5\textwidth}
+\begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-listas-1.pdf}
                 \caption{Tiempos sin procesar, en milisegundos}
         \end{subfigure}%
-
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-listas-2.pdf}
                 \caption{Dividiendo a los tiempos por $n$}
         \end{subfigure}
-
-
 \end{figure}
 
 \begin{figure}[H]
         \centering
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-listas-3.pdf}
                 \caption{Dividiendo a los tiempos por $n^2$}
         \end{subfigure}
-
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{imagenes/vacio-listas-4.pdf}
                 \caption{Dividiendo a los tiempos por $m + n*log(n)$}
         \end{subfigure}
-
 \end{figure}
 
 A continuación, adjuntamos una tabla con los últimos 20 valores obtenidos en las instancias, teniendo en cuenta que los casos fueron previamente ordenados según el tamaño ($n$):
