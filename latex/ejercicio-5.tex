@@ -16,7 +16,7 @@ La estructura general de un algoritmo GRASP es:
 1. Poner en mejor_solucion una primera solucion Random.
 2. Mientras no se cumpla el criterio de parada hacer:
 3.     Poner en nueva_solucion una solucion usando la funcion ConstruirGreedyRandom()
-4.     Intentar mejorar la nueva_solucion usando la funcion BusquedaLocal()
+4.     Intentar mejorar la nueva_solucion usando la funcion BúsquedaLocal()
 5.     Si costo(nueva_solucion) < costo(mejor_solucion) hacer:
 6.         Poner en mejor_solucion la nueva_solucion
 \end{codesnippet}
@@ -26,7 +26,7 @@ En nuestro algoritmo se implementó de la siguiente forma:
     \item Se utilizo para la primera 'mejor_solución' Random el mismo método ConstruirGreedyRandom que se utiliza al generar una solución golosa randomizada.
     \item Los criterios de parada considerados se detallan más adelante.
     \item La función ConstruirGreedyRandom es una variación del algoritmo goloso implementado para el Ejercicio 3 (agregando lista de candidatos), detallado más adelante.
-    \item La función BusquedaLocal es identica al algoritmo implementado para el Ejercicio 4. En la experimentación se probo con los criterios de vecindad 1 y 2 expuestos en ese mismo Ejercicio.
+    \item La función BúsquedaLocal es identica al algoritmo implementado para el Ejercicio 4. En la experimentación se probo con los criterios de vecindad 1 y 2 expuestos en ese mismo Ejercicio.
     \item Definimos el costo de una solución como la cantidad de nodos de dicha solución, por lo que decimos que una es mejor que otra si la primera tiene menor cantidad de nodos.
     \item Si encontramos una solución con menor cantidad de nodos que la mejor hasta ese momento, la guardamos como mejor solución.
 \end{enumerate}
@@ -60,7 +60,7 @@ Al algoritmo con heurística constructiva golosa del Ejercicio 3 se lo modificó
 
 \subsubsection{Pseudocódigo}
 
-El esquema general del algoritmo GRASP ya se mostró en la sección Idea General, y el algoritmo de Busqueda Local es identico al utilizado en el Ejercicio 4, por lo que mostraremos aquí solo el pseudocódigo de la función ConstruirGreedyRandom (con el primer criterio de lista de candidatos, el segundo simplemente elige los k nodos de mayor grado, con k una constante):
+El esquema general del algoritmo GRASP ya se mostró en la sección Idea General, y el algoritmo de Búsqueda Local es identico al utilizado en el Ejercicio 4, por lo que mostraremos aquí solo el pseudocódigo de la función ConstruirGreedyRandom (con el primer criterio de lista de candidatos, el segundo simplemente elige los k nodos de mayor grado, con k una constante):
 
 \begin{codesnippet}
 Poner nodos = un vector de structs Nodo, que tiene el indice del nodo y su grado

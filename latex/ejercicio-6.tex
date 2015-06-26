@@ -16,13 +16,13 @@ Algunas consideraciones generales:
     \item Los tiempos de ejecución se midieron con la biblioteca chrono y estos fueron convertidos a nanosegundos.
     \item Para el algoritmo Exacto se utilizaron todas las podas planteadas en el Ejercicio 2.
     \item Para el algoritmo Goloso se utilizó su implementación en listas de adyacencia.
-    \item Para el algoritmo de Busqueda Local se utilizó como solución inicial el algoritmo Goloso y el criterio de vecindad 2, que genera soluciones vecinas a partir de quitar k vertices y agregar hasta k-1 vertices.
+    \item Para el algoritmo de Búsqueda Local se utilizó como solución inicial el algoritmo Goloso y el criterio de vecindad 2, que genera soluciones vecinas a partir de quitar k vertices y agregar hasta k-1 vertices.
     \item Para el algoritmo GRASP, se utilizó el criterio de parada 2, que sigue buscando soluciones hasta que pasan 10 iteraciones sin que cambie el cardinal de la mejor solucion. Además, se utilizaron las siguientes versiones de de los algoritmos:
         \begin{itemize}
-            \item Busqueda Local utilizando el criterio de vecindad 1, que genera soluciones vecinas a partir de quitar k vertices y agregar 1 vertice.
+            \item Búsqueda Local utilizando el criterio de vecindad 1, que genera soluciones vecinas a partir de quitar k vertices y agregar 1 vertice.
             \item Goloso utilizando listas de adyacencia.
         \end{itemize}
-    \item Para todas las familias de grafos, nos abstuvimos de comparar el algoritmo Exacto a partir de $n \geq 12$ ya que la cantidad de tiempo que requiere a partir de ese valor es prohibitivo.
+    \item Para todas las familias de grafos, nos abstuvimos de comparar el algoritmo Exacto a partir de $n \geq 14$ ya que la cantidad de tiempo que requiere a partir de ese valor es prohibitivo.
 \end{itemize}
 
 \subsection{Experimentación con Grafos completos}
@@ -35,6 +35,9 @@ Consideraciones particulares de la familia de grafos:
 \end{itemize}
 
 \subsubsection{Tiempos de ejecución}
+
+A continuación se presentan los tiempos de ejecución medidos para la familia de Grafos completos. Debido a las diferencias de magnitud entre las diferentes implementaciones, se muestran primero las 4 implementaciones juntas, luego las 3 mejores juntas y por último las 2 mejores juntas.
+
 \begin{center}
     \begin{tikzpicture}
     \begin{axis}[
@@ -45,13 +48,14 @@ Consideraciones particulares de la familia de grafos:
         scaled y ticks=false,
         enlargelimits=0.05,
         width=0.45\textwidth,
-        height=0.45\textwidth
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}}
     ]
     \addplot[color=black] table[x index=0,y index=3]{datos/grafo-completo-exacto.dat};
     \addplot[color=red] table[x index=0,y index=3]{datos/grafo-completo-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-completo-local.dat};
-    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-completo-grasp.dat};
-    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \addplot[color=ForestGreen] table[x index=0,y index=3]{datos/grafo-completo-grasp.dat};
+    \legend{Exacto, Goloso, Búsqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
     \begin{tikzpicture}
@@ -63,12 +67,13 @@ Consideraciones particulares de la familia de grafos:
         scaled y ticks=false,
         enlargelimits=0.05,
         width=0.45\textwidth,
-        height=0.45\textwidth
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}}
     ]
     \addplot[color=red] table[x index=0,y index=3]{datos/grafo-completo-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-completo-local.dat};
-    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-completo-grasp.dat};
-    \legend{Goloso, Busqueda Local, GRASP}
+    \addplot[color=ForestGreen] table[x index=0,y index=3]{datos/grafo-completo-grasp.dat};
+    \legend{Goloso, Búsqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
 
@@ -81,19 +86,22 @@ Consideraciones particulares de la familia de grafos:
         scaled y ticks=false,
         enlargelimits=0.05,
         width=0.45\textwidth,
-        height=0.45\textwidth
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}}
     ]
     \addplot[color=red] table[x index=0,y index=3]{datos/grafo-completo-local.dat};
     \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-completo-goloso.dat};
-    \legend{Goloso, Busqueda Local}
+    \legend{Goloso, Búsqueda Local}
     \end{axis}
     \end{tikzpicture}
 \end{center}
 
 Como se puede ver en los gráficos presentados, para esta familia de Grafos tenemos una clara diferencia de performance:
 \begin{enumerate}
-    \item En primer lugar con menor tiempo se encuentra la Busqueda Local.
-
+    \item En último lugar, con mayor tiempo, se encuentra el algoritmo Exacto. Esto era de esperarse ya que la complejidad exponencial de éste es mucho mayor a cualquiera de los algoritmos heurísticos. Notese aquí que pudimos experimentar con el algoritmo Exacto hasta un $n$ grande sin mayores problemas, esto se debe a que justo esta familia de Grafos es facil de resolver para este algoritmo, no sucediendo lo mismo con las otras familias de Grafos.
+    \item En tercer lugar se encuentra el algoritmo GRASP, lo que era de esperarse, ya que este algoritmo utiliza en su implementación los algoritmos de Búsqueda Local y Goloso, por lo que tiene sentido que tenga un tiempo de ejecución superior a ambos. Notese aquí la diferencia de magnitud entre el Exacto y GRASP, que indica que el último es bastante más rápido ($~10^9$ para Exacto y $~10^7$ para GRASP).
+    \item En segundo lugar se encuentra el algoritmo de Búsqueda Local, lo que también era esperado, ya que en esta experimentación utilizamos la version que obtiene su solución inicial utilizando un algoritmo Goloso, por lo que tiene sentido que que tenga un tiempo de ejecucución superior.
+    \item En primer lugar, con menor tiempo, quedó el algoritmo Goloso. Esto se condice con la complejidad teórica calculada para este algoritmo, mucho menor que las demás.
 \end{enumerate}
 
 \subsubsection{Calidad de las soluciones}
@@ -112,11 +120,15 @@ Como se puede ver en los gráficos presentados, para esta familia de Grafos tene
     \addplot[color=black] table[x index=0,y index=2]{datos/grafo-completo-exacto.dat};
     \addplot[color=red] table[x index=0,y index=2]{datos/grafo-completo-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-completo-local.dat};
-    \addplot[color=green] table[x index=0,y index=2]{datos/grafo-completo-grasp.dat};
-    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \addplot[color=ForestGreen] table[x index=0,y index=2]{datos/grafo-completo-grasp.dat};
+    \legend{Exacto, Goloso, Búsqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
 \end{center}
+
+Para esta familia de Grafos, el tamaño de un CIDM para cualquier problema es de tamaño 1. Esto puede verse facilmente ya que todos los nodos tienen grado $n-1$, por lo que desde cualquiera de ellos se puede dominar a todos los demás, y obtenemos una solución independiente ya que no hay otros nodos en el CIDM.
+
+Mirando el gráfico podemos ver que no hay nada que objetar en cuanto a la calidad de las soluciones obtenidas. Todos los algoritmos dieron en todos los problemas la mejor solución posible al elegir uno de los $n$ nodos.
 
 \subsection{Experimentación con Complemento de Grafos completos}
 
@@ -128,6 +140,9 @@ Consideraciones particulares de la familia de grafos:
 \end{itemize}
 
 \subsubsection{Tiempos de ejecución}
+
+A continuación se presentan los tiempos de ejecución medidos para la familia de Grafos de nodos aislados. Debido a las diferencias de magnitud entre las diferentes implementaciones, se muestran primero las 4 implementaciones juntasy  luego las 3 mejores juntas.
+
 \begin{center}
     \begin{tikzpicture}
     \begin{axis}[
@@ -138,13 +153,14 @@ Consideraciones particulares de la familia de grafos:
         scaled y ticks=false,
         enlargelimits=0.05,
         width=0.45\textwidth,
-        height=0.45\textwidth
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}}
     ]
     \addplot[color=black] table[x index=0,y index=3]{datos/grafo-complemento-exacto.dat};
     \addplot[color=red] table[x index=0,y index=3]{datos/grafo-complemento-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-complemento-local.dat};
-    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-complemento-grasp.dat};
-    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \addplot[color=ForestGreen] table[x index=0,y index=3]{datos/grafo-complemento-grasp.dat};
+    \legend{Exacto, Goloso, Búsqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
     \begin{tikzpicture}
@@ -161,27 +177,17 @@ Consideraciones particulares de la familia de grafos:
     \addplot[color=black] table[x index=0,y index=3]{datos/grafo-complemento-exacto.dat};
     \addplot[color=red] table[x index=0,y index=3]{datos/grafo-complemento-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-complemento-local.dat};
-    \legend{Exacto, Goloso, Busqueda Local}
-    \end{axis}
-    \end{tikzpicture}
-
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={},
-        xlabel={$n$},
-        ylabel={Tiempos de ejecucion (nanoseconds)},
-        scaled x ticks=false,
-        scaled y ticks=false,
-        enlargelimits=0.05,
-        width=0.45\textwidth,
-        height=0.45\textwidth
-    ]
-    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-complemento-goloso.dat};
-    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-complemento-local.dat};
-    \legend{Goloso, Busqueda Local}
+    \legend{Exacto, Goloso, Búsqueda Local}
     \end{axis}
     \end{tikzpicture}
 \end{center}
+
+Como se puede ver en los gráficos presentados, para esta familia de Grafos tenemos una clara diferencia de performance. Muchos de los resultados son analogos a los de la familia anterior, por lo que se omiten. A destacar queda:
+\begin{enumerate}
+    \item En último lugar, con mayor tiempo, se encuentra el algoritmo GRASP. Esto no era de esperarse, pero puede deberse a alguna facilidad del algoritmo Exacto con esta familia de Grafos en particular.
+    \item En tercer lugar se encuentra el algoritmo Exacto. Notese aquí que pudimos experimentar con el algoritmo Exacto hasta un $n$ grande sin mayores problemas, esto se debe a que justo esta familia de Grafos es facil de resolver para este algoritmo, no sucediendo lo mismo con las otras familias de Grafos.
+    \item La relacion GRASP $>$ Búsqueda Local $>$ Goloso se mantiene.
+\end{enumerate}
 
 \subsubsection{Calidad de las soluciones}
 \begin{center}
@@ -194,16 +200,21 @@ Consideraciones particulares de la familia de grafos:
         scaled y ticks=false,
         enlargelimits=0.05,
         width=0.45\textwidth,
-        height=0.45\textwidth
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}}
     ]
     \addplot[color=black] table[x index=0,y index=2]{datos/grafo-complemento-exacto.dat};
     \addplot[color=red] table[x index=0,y index=2]{datos/grafo-complemento-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-complemento-local.dat};
-    \addplot[color=green] table[x index=0,y index=2]{datos/grafo-complemento-grasp.dat};
-    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \addplot[color=ForestGreen] table[x index=0,y index=2]{datos/grafo-complemento-grasp.dat};
+    \legend{Exacto, Goloso, Búsqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
 \end{center}
+
+Para esta familia de Grafos, el tamaño de un CIDM para cualquier problema es de tamaño $n$. Esto puede verse facilmente ya que todos los nodos tienen grado $0$ (nodos aislados), por lo que para dominarlos a todos deben estar todos en el conjunto solución, y además al estar aislados cualquier subconjunto de nodos del grafo es independiente.
+
+Mirando el gráfico podemos ver que no hay nada que objetar en cuanto a la calidad de las soluciones obtenidas. Todos los algoritmos dieron en todos los problemas la mejor solución posible al elegir todos los $n$ nodos.
 
 \subsection{Experimentación con Caminos}
 
@@ -215,6 +226,9 @@ Consideraciones particulares de la familia de grafos:
 \end{itemize}
 
 \subsubsection{Tiempos de ejecución}
+
+A continuación se presentan los tiempos de ejecución medidos para la familia de Grafos Camino. Debido a las diferencias de magnitud entre las diferentes implementaciones, se muestran primero las 4 implementaciones juntas, luego las 3 mejores juntas y por último las 2 mejores juntas.
+
 \begin{center}
     \begin{tikzpicture}
     \begin{axis}[
@@ -230,8 +244,8 @@ Consideraciones particulares de la familia de grafos:
     \addplot[color=black] table[x index=0,y index=3]{datos/grafo-camino-exacto.dat};
     \addplot[color=red] table[x index=0,y index=3]{datos/grafo-camino-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-camino-local.dat};
-    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-camino-grasp.dat};
-    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \addplot[color=ForestGreen] table[x index=0,y index=3]{datos/grafo-camino-grasp.dat};
+    \legend{Exacto, Goloso, Búsqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
     \begin{tikzpicture}
@@ -243,12 +257,13 @@ Consideraciones particulares de la familia de grafos:
         scaled y ticks=false,
         enlargelimits=0.05,
         width=0.45\textwidth,
-        height=0.45\textwidth
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}}
     ]
     \addplot[color=red] table[x index=0,y index=3]{datos/grafo-camino-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-camino-local.dat};
-    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-camino-grasp.dat};
-    \legend{Goloso, Busqueda Local, GRASP}
+    \addplot[color=ForestGreen] table[x index=0,y index=3]{datos/grafo-camino-grasp.dat};
+    \legend{Goloso, Búsqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
 
@@ -261,14 +276,22 @@ Consideraciones particulares de la familia de grafos:
         scaled y ticks=false,
         enlargelimits=0.05,
         width=0.45\textwidth,
-        height=0.45\textwidth
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}}
     ]
     \addplot[color=red] table[x index=0,y index=3]{datos/grafo-camino-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-camino-local.dat};
-    \legend{Goloso, Busqueda Local}
+    \legend{Goloso, Búsqueda Local}
     \end{axis}
     \end{tikzpicture}
 \end{center}
+
+Como se puede ver en los gráficos presentados, para esta familia de Grafos tenemos una clara diferencia de performance. Muchos de los resultados son analogos a los de la familia anterior, por lo que se omiten. A destacar queda:
+\begin{enumerate}
+    \item En último lugar, con mayor tiempo, se encuentra el algoritmo Exacto. Notese aquí que los tiempos de este algoritmo crecen en forma desproporcionada a todos los demás, quedando evidenciada la complejidad exponencial. Para esta familia de Grafos se limitó el algoritmo Exacto a $n=13$.
+    \item En tercer lugar, se encuentra el algoritmo GRASP. En esta familia, la diferencia entre este algoritmo y los algoritmos Goloso y Búsqueda Local es más pronunciada. Esto muy probablemente se deba al criterio de parada elegido y que la solución inicial generada por el Goloso randomizado quizas no sea tan buena. Si esto fuera cierto, entonces al algoritmo le llevaría muchas iteraciones mejorar la solución hasta que no se pueda más.
+    \item La relacion GRASP $>$ Búsqueda Local $>$ Goloso se mantiene.
+\end{enumerate}
 
 \subsubsection{Calidad de las soluciones}
 \begin{center}
@@ -281,16 +304,42 @@ Consideraciones particulares de la familia de grafos:
         scaled y ticks=false,
         enlargelimits=0.05,
         width=0.45\textwidth,
-        height=0.45\textwidth
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}}
+    ]
+    \addplot[color=red] table[x index=0,y index=2]{datos/grafo-camino-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-camino-local.dat};
+    \addplot[color=ForestGreen] table[x index=0,y index=2]{datos/grafo-camino-grasp.dat};
+    \legend{Goloso, Búsqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}},
+        xmax=13
     ]
     \addplot[color=black] table[x index=0,y index=2]{datos/grafo-camino-exacto.dat};
     \addplot[color=red] table[x index=0,y index=2]{datos/grafo-camino-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-camino-local.dat};
-    \addplot[color=green] table[x index=0,y index=2]{datos/grafo-camino-grasp.dat};
-    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \addplot[color=ForestGreen] table[x index=0,y index=2]{datos/grafo-camino-grasp.dat};
+    \legend{Exacto, Goloso, Búsqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
 \end{center}
+
+Para esta familia de Grafos, el tamaño de un CIDM para cualquier problema es de tamaño $\lceil n/3 \rceil$. Esto puede verse facilmente ya que en un camino podemos elegir cada 3 nodos el del 'medio' de esos 3 para que domine a los otros 2.
+
+Mirando el gráfico podemos ver que la mejor calidad de soluciones se obtuvo utilizando el algoritmo de Búsqueda Local (viendose además que para los primeros 13 grafos, $0 \leq n \leq 13$, su solución tiene el mismo tamaño que la del algoritmo Exacto) y que la peor calidad se obtuvo utilizando el algoritmo Goloso.
+
+Al ver la calidad de las soluciones de GRASP, podemos ver que son mejores que las del algoritmo Goloso pero peores que las de Búsqueda Local. Lo primero tiene bastante sentido ya que el algoritmo GRASP parte de una solución inicial dada por un algoritmo Goloso, a la cual le aplica luego Búsqueda Local. Lo segundo no era esperado y la única explicación que encontramos es que la solución Golosa randomizada que utiliza el algoritmo GRASP como solución inicial sea consistentemente 'peor' que la solución Golosa estandar que utiliza el algoritmo de Búsqueda Local, ya que a la hora de mejorar la solución ambos utilizan el mismo criterio de búsqueda. Si esto no fuera así, el algoritmo GRASP debería poder mejorar la solución despues de varias iteraciones, pero no parece ocurrir.
 
 \subsection{Experimentación con Ciclos}
 
@@ -302,6 +351,9 @@ Consideraciones particulares de la familia de grafos:
 \end{itemize}
 
 \subsubsection{Tiempos de ejecución}
+
+A continuación se presentan los tiempos de ejecución medidos para la familia de Grafos Ciclos. Debido a las diferencias de magnitud entre las diferentes implementaciones, se muestran primero las 4 implementaciones juntas, luego las 3 mejores juntas y por último las 2 mejores juntas.
+
 \begin{center}
     \begin{tikzpicture}
     \begin{axis}[
@@ -317,8 +369,8 @@ Consideraciones particulares de la familia de grafos:
     \addplot[color=black] table[x index=0,y index=3]{datos/grafo-ciclo-exacto.dat};
     \addplot[color=red] table[x index=0,y index=3]{datos/grafo-ciclo-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-ciclo-local.dat};
-    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-ciclo-grasp.dat};
-    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \addplot[color=ForestGreen] table[x index=0,y index=3]{datos/grafo-ciclo-grasp.dat};
+    \legend{Exacto, Goloso, Búsqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
     \begin{tikzpicture}
@@ -330,12 +382,13 @@ Consideraciones particulares de la familia de grafos:
         scaled y ticks=false,
         enlargelimits=0.05,
         width=0.45\textwidth,
-        height=0.45\textwidth
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}}
     ]
     \addplot[color=red] table[x index=0,y index=3]{datos/grafo-ciclo-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-ciclo-local.dat};
-    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-ciclo-grasp.dat};
-    \legend{Goloso, Busqueda Local, GRASP}
+    \addplot[color=ForestGreen] table[x index=0,y index=3]{datos/grafo-ciclo-grasp.dat};
+    \legend{Goloso, Búsqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
 
@@ -348,14 +401,17 @@ Consideraciones particulares de la familia de grafos:
         scaled y ticks=false,
         enlargelimits=0.05,
         width=0.45\textwidth,
-        height=0.45\textwidth
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}}
     ]
     \addplot[color=red] table[x index=0,y index=3]{datos/grafo-ciclo-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-ciclo-local.dat};
-    \legend{Goloso, Busqueda Local}
+    \legend{Goloso, Búsqueda Local}
     \end{axis}
     \end{tikzpicture}
 \end{center}
+
+Como se puede ver en los gráficos presentados, para esta familia de Grafos tenemos una clara diferencia de performance. En esta familia se obtuvieron los mismos resultados relativos que para la familia anterior, por lo que el análisis es análogo y se omite para no repetir.
 
 \subsubsection{Calidad de las soluciones}
 
@@ -369,13 +425,37 @@ Consideraciones particulares de la familia de grafos:
         scaled y ticks=false,
         enlargelimits=0.05,
         width=0.45\textwidth,
-        height=0.45\textwidth
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}}
+    ]
+    \addplot[color=red] table[x index=0,y index=2]{datos/grafo-ciclo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-ciclo-local.dat};
+    \addplot[color=ForestGreen] table[x index=0,y index=2]{datos/grafo-ciclo-grasp.dat};
+    \legend{Goloso, Búsqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth,
+        legend style={at={(0.62,0.98)}},
+        xmax=13
     ]
     \addplot[color=black] table[x index=0,y index=2]{datos/grafo-ciclo-exacto.dat};
     \addplot[color=red] table[x index=0,y index=2]{datos/grafo-ciclo-goloso.dat};
     \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-ciclo-local.dat};
-    \addplot[color=green] table[x index=0,y index=2]{datos/grafo-ciclo-grasp.dat};
-    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \addplot[color=ForestGreen] table[x index=0,y index=2]{datos/grafo-ciclo-grasp.dat};
+    \legend{Exacto, Goloso, Búsqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
 \end{center}
+
+Para esta familia de Grafos, el tamaño de un CIDM para cualquier problema es de tamaño $\lceil n/3 \rceil$. Esto puede verse facilmente ya que en un ciclo, al igual que la familia anterior, podemos elegir cada 3 nodos el del 'medio' de esos 3 para que domine a los otros 2.
+
+En esta familia se obtuvieron los mismos resultados relativos que para la familia anterior, por lo que el análisis es análogo y se omite para no repetir.
