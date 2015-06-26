@@ -11,7 +11,28 @@ Al contrario que en las experimentaciones anteriores donde se utilizaban grafos 
     \item Grafos de ciclos ($C_n$).
 \end{itemize}
 
+Algunas consideraciones generales:
+\begin{itemize}
+    \item Los tiempos de ejecución se midieron con la biblioteca chrono y estos fueron convertidos a nanosegundos.
+    \item Para el algoritmo Exacto se utilizaron todas las podas planteadas en el Ejercicio 2.
+    \item Para el algoritmo Goloso se utilizó su implementación en listas de adyacencia.
+    \item Para el algoritmo de Busqueda Local se utilizó como solución inicial el algoritmo Goloso y el criterio de vecindad 2, que genera soluciones vecinas a partir de quitar k vertices y agregar hasta k-1 vertices.
+    \item Para el algoritmo GRASP, se utilizó el criterio de parada 2, que sigue buscando soluciones hasta que pasan 10 iteraciones sin que cambie el cardinal de la mejor solucion. Además, se utilizaron las siguientes versiones de de los algoritmos:
+        \begin{itemize}
+            \item Busqueda Local utilizando el criterio de vecindad 1, que genera soluciones vecinas a partir de quitar k vertices y agregar 1 vertice.
+            \item Goloso utilizando listas de adyacencia.
+        \end{itemize}
+    \item Para todas las familias de grafos, nos abstuvimos de comparar el algoritmo Exacto a partir de $n \geq 12$ ya que la cantidad de tiempo que requiere a partir de ese valor es prohibitivo.
+\end{itemize}
+
 \subsection{Experimentación con Grafos completos}
+
+Consideraciones particulares de la familia de grafos:
+\begin{itemize}
+    \item Se generaron 100 casos de tests, con:
+    \item $1 \leq n \leq 100$
+    \item $m = \frac{n*(n-1)}{2}$.
+\end{itemize}
 
 \subsubsection{Tiempos de ejecución}
 \begin{center}
@@ -69,9 +90,23 @@ Al contrario que en las experimentaciones anteriores donde se utilizaban grafos 
     \end{tikzpicture}
 \end{center}
 
+Como se puede ver en los gráficos presentados, para esta familia de Grafos tenemos una clara diferencia de performance:
+\begin{enumerate}
+    \item En primer lugar con menor tiempo se encuentra la Busqueda Local.
+
+\end{enumerate}
+
 \subsubsection{Calidad de las soluciones}
 
 \subsection{Experimentación con Complemento de Grafos completos}
+
+Consideraciones particulares de la familia de grafos:
+\begin{itemize}
+    \item Se generaron 100 casos de tests, con:
+    \item $1 \leq n \leq 100$
+    \item $m = 0$.
+\end{itemize}
+
 \subsubsection{Tiempos de ejecución}
 \begin{center}
     \begin{tikzpicture}
@@ -131,6 +166,14 @@ Al contrario que en las experimentaciones anteriores donde se utilizaban grafos 
 \subsubsection{Calidad de las soluciones}
 
 \subsection{Experimentación con Caminos}
+
+Consideraciones particulares de la familia de grafos:
+\begin{itemize}
+    \item Se generaron 100 casos de tests, con:
+    \item $1 \leq n \leq 100$
+    \item $m = n-1$.
+\end{itemize}
+
 \subsubsection{Tiempos de ejecución}
 \begin{center}
     \begin{tikzpicture}
@@ -190,6 +233,14 @@ Al contrario que en las experimentaciones anteriores donde se utilizaban grafos 
 \subsubsection{Calidad de las soluciones}
 
 \subsection{Experimentación con Ciclos}
+
+Consideraciones particulares de la familia de grafos:
+\begin{itemize}
+    \item Se generaron 100 casos de tests, con:
+    \item $1 \leq n \leq 100$
+    \item $m = n$.
+\end{itemize}
+
 \subsubsection{Tiempos de ejecución}
 \begin{center}
     \begin{tikzpicture}
