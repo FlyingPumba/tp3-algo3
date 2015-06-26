@@ -69,7 +69,7 @@ int main() {
     Grafo G;
     vector<int> cidm;
 
-    FILE* file = fopen("grafo-completo-grasp.txt","a+");
+    FILE* file = fopen("grafo-completo-grasp.dat","a+");
 
     int n, m;
     cin >> n;

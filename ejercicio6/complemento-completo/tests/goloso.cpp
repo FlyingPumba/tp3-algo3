@@ -37,7 +37,7 @@ vector<int> resolver(int n, Grafo G, Nodos nodos);
 // Implementacion.
 int main() {
 
-    FILE* file = fopen("grafo-complemento-goloso.txt","a+");
+    FILE* file = fopen("grafo-complemento-goloso.dat","a+");
 
     
     int n, m;

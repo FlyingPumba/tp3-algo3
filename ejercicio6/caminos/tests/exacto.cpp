@@ -15,7 +15,7 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
 // Implementacion.
 int main() {
 
-    FILE* file = fopen("grafo-complemento-exacto.txt","a+");
+    FILE* file = fopen("grafo-camino-exacto.dat","a+");
 
     int n, m;
     cin >> n;
@@ -40,7 +40,7 @@ int main() {
     double d = double(std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count());
 
     fprintf(file, "%d %d %lu %7.8f\n",n, m, cidm.size() , d);
-    
+
 
     fclose(file);
 
@@ -90,7 +90,7 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
     }
 
     for (int i = 0; i < dom_size; i++) {
-        // copio dom y borro el i-esimo nodo de la copia 
+        // copio dom y borro el i-esimo nodo de la copia
         //(no es el nodo numero i, sino el nodo en la posicion i del vector)
         vector<int> copia(dom);
         copia.erase(copia.begin() + i);
@@ -115,7 +115,7 @@ vector<int> resolver_aux(int n, Matriz matriz, vector<int> dom, vector<int> cidm
                 break;
             }
         }
-        // Sabemos que si Copia no es dominante, entonces ningun 
+        // Sabemos que si Copia no es dominante, entonces ningun
         //subconjunto de Copia es dominante,
         // por lo que ni siquiera los evaluo
         if (copia_dominante) {

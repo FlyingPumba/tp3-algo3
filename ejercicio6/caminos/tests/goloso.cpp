@@ -37,9 +37,9 @@ vector<int> resolver(int n, Grafo G, Nodos nodos);
 // Implementacion.
 int main() {
 
-    FILE* file = fopen("grafo-complemento-goloso.txt","a+");
+    FILE* file = fopen("grafo-camino-goloso.dat","a+");
 
-    
+
     int n, m;
     cin >> n;
     cin >> m;
@@ -67,16 +67,16 @@ int main() {
     std::chrono::time_point<std::chrono::high_resolution_clock> t1 = std::chrono::high_resolution_clock::now();
 
     vector<int> cidm = resolver(n, G, nodos);
-                                         
+
     std::chrono::time_point<std::chrono::high_resolution_clock> t2 = std::chrono::high_resolution_clock::now();
 
     double d = double(std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count());
 
     fprintf(file, "%d %d %lu %7.8f\n",n, m, cidm.size() , d);
-    
+
 
     fclose(file);
-   
+
 
     return 0;
 }
@@ -103,7 +103,3 @@ vector<int> resolver(int n, Grafo G, Nodos nodos) {
 
     return cidm;
 }
-
-
-
-
