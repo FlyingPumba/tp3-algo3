@@ -97,6 +97,26 @@ Como se puede ver en los gráficos presentados, para esta familia de Grafos tene
 \end{enumerate}
 
 \subsubsection{Calidad de las soluciones}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tamaño de la solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x index=0,y index=2]{datos/grafo-completo-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=2]{datos/grafo-completo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-completo-local.dat};
+    \addplot[color=green] table[x index=0,y index=2]{datos/grafo-completo-grasp.dat};
+    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
 
 \subsection{Experimentación con Complemento de Grafos completos}
 
@@ -164,6 +184,26 @@ Consideraciones particulares de la familia de grafos:
 \end{center}
 
 \subsubsection{Calidad de las soluciones}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tamaño de la solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x index=0,y index=2]{datos/grafo-complemento-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=2]{datos/grafo-complemento-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-complemento-local.dat};
+    \addplot[color=green] table[x index=0,y index=2]{datos/grafo-complemento-grasp.dat};
+    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
 
 \subsection{Experimentación con Caminos}
 
@@ -231,6 +271,26 @@ Consideraciones particulares de la familia de grafos:
 \end{center}
 
 \subsubsection{Calidad de las soluciones}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tamaño de la solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x index=0,y index=2]{datos/grafo-camino-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=2]{datos/grafo-camino-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-camino-local.dat};
+    \addplot[color=green] table[x index=0,y index=2]{datos/grafo-camino-grasp.dat};
+    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
 
 \subsection{Experimentación con Ciclos}
 
@@ -254,10 +314,10 @@ Consideraciones particulares de la familia de grafos:
         width=0.45\textwidth,
         height=0.45\textwidth
     ]
-    \addplot[color=black] table[x index=0,y index=3]{datos/grafo-camino-exacto.dat};
-    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-camino-goloso.dat};
-    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-camino-local.dat};
-    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-camino-grasp.dat};
+    \addplot[color=black] table[x index=0,y index=3]{datos/grafo-ciclo-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-ciclo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-ciclo-local.dat};
+    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-ciclo-grasp.dat};
     \legend{Exacto, Goloso, Busqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
@@ -272,9 +332,9 @@ Consideraciones particulares de la familia de grafos:
         width=0.45\textwidth,
         height=0.45\textwidth
     ]
-    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-camino-goloso.dat};
-    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-camino-local.dat};
-    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-camino-grasp.dat};
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-ciclo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-ciclo-local.dat};
+    \addplot[color=green] table[x index=0,y index=3]{datos/grafo-ciclo-grasp.dat};
     \legend{Goloso, Busqueda Local, GRASP}
     \end{axis}
     \end{tikzpicture}
@@ -290,11 +350,32 @@ Consideraciones particulares de la familia de grafos:
         width=0.45\textwidth,
         height=0.45\textwidth
     ]
-    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-camino-goloso.dat};
-    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-camino-local.dat};
+    \addplot[color=red] table[x index=0,y index=3]{datos/grafo-ciclo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=3]{datos/grafo-ciclo-local.dat};
     \legend{Goloso, Busqueda Local}
     \end{axis}
     \end{tikzpicture}
 \end{center}
 
 \subsubsection{Calidad de las soluciones}
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$n$},
+        ylabel={Tamaño de la solución},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.45\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x index=0,y index=2]{datos/grafo-ciclo-exacto.dat};
+    \addplot[color=red] table[x index=0,y index=2]{datos/grafo-ciclo-goloso.dat};
+    \addplot[color=blue] table[x index=0,y index=2]{datos/grafo-ciclo-local.dat};
+    \addplot[color=green] table[x index=0,y index=2]{datos/grafo-ciclo-grasp.dat};
+    \legend{Exacto, Goloso, Busqueda Local, GRASP}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
