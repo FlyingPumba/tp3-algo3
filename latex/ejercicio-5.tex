@@ -137,3 +137,163 @@ Consideraciones:
 \end{itemize}
 
 \subsubsection{Tiempos de ejecución}
+
+Primero, vamos a comparar de a cuatro versiones a la vez (todas al mismo tiempo es mas dificil de ver la diferencia).
+Como dijimos antes, estos grafos ejes puestos de forma aleatoria.
+Por cada instancia construida, tomamos los tiempos con cada versión muchas veces y promediamos los tiempos resultantes:
+
+\begin{center}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={n (cantidad de nodos del grafo)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=10
+    ]
+    \addplot[color=black] table[x=n,y=tv111]{datos/ej5/tiemposn.txt};
+    \addplot[color=red] table[x=n,y=tv112]{datos/ej5/tiemposn.txt};
+    \addplot[color=blue] table[x=n,y=tv121]{datos/ej5/tiemposn.txt};
+    \addplot[color=green] table[x=n,y=tv122]{datos/ej5/tiemposn.txt};
+    \legend{v111, v112, v121, v122}
+    \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={m (cantidad de ejes del grafo)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=70, xmax=170
+    ]
+    \addplot[color=black] table[x=m,y=tv111]{datos/ej5/tiemposm.txt};
+    \addplot[color=red] table[x=m,y=tv112]{datos/ej5/tiemposm.txt};
+    \addplot[color=blue] table[x=m,y=tv121]{datos/ej5/tiemposm.txt};
+    \addplot[color=green] table[x=m,y=tv122]{datos/ej5/tiemposm.txt};
+    \legend{v111, v112, v121, v122}
+    \end{axis}
+    \end{tikzpicture}
+
+\end{center}
+
+Vemos que la versión v121 fue la que menos tiempo tardó en ejecutarse.
+Si bien la comparación bajo la cantidad de aristas parece inestable, esto era predecible ya que los ejes son puestos de forma aleatoria y GRASP actúa en varias fases. Como la posición de los ejes es clave para que los algoritmos encuentren CIDMs, los tiempos del gráfico varian. Mas alla de eso, es importante ver que varian de forma parecida entre las distintas versiones y que además, se mantienen las diferencias entre veriones de cuando comparamos por cantidad de nodos (es decir, la que fue más rápida en una, también lo fue en la otra).
+
+Ahora veamos las otras cuatro versiones:
+
+\begin{center}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={n (cantidad de nodos del grafo)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=10
+    ]
+    \addplot[color=black] table[x=n,y=tv211]{datos/ej5/tiemposn.txt};
+    \addplot[color=red] table[x=n,y=tv212]{datos/ej5/tiemposn.txt};
+    \addplot[color=blue] table[x=n,y=tv221]{datos/ej5/tiemposn.txt};
+    \addplot[color=green] table[x=n,y=tv222]{datos/ej5/tiemposn.txt};
+    \legend{v211, v212, v221, v222}
+    \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={m (cantidad de ejes del grafo)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=70, xmax=170
+    ]
+    \addplot[color=black] table[x=m,y=tv211]{datos/ej5/tiemposm.txt};
+    \addplot[color=red] table[x=m,y=tv212]{datos/ej5/tiemposm.txt};
+    \addplot[color=blue] table[x=m,y=tv221]{datos/ej5/tiemposm.txt};
+    \addplot[color=green] table[x=m,y=tv222]{datos/ej5/tiemposm.txt};
+    \legend{v211, v212, v221, v222}
+    \end{axis}
+    \end{tikzpicture}
+
+\end{center}
+
+En este experimento, la versión v221 fue la que tardó menos.
+Hasta ahora obsevamos que el segundo criterio en la lista de candidatos y el primer criterio en la búsqueda local fueron los más veloces.
+
+\medskip
+
+Comparemos las versiones v121 con la versión v221:
+
+\begin{center}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={n (cantidad de nodos del grafo)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=10
+    ]
+    \addplot[color=black] table[x=n,y=tv121]{datos/ej5/tiemposn.txt};
+    \addplot[color=red] table[x=n,y=tv221]{datos/ej5/tiemposn.txt};
+    \legend{v121, v221}
+    \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={m (cantidad de ejes del grafo)},
+        ylabel={Tiempos de ejecucion (nanoseconds)},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west,
+        xmin=70, xmax=170
+    ]
+    \addplot[color=black] table[x=m,y=tv121]{datos/ej5/tiemposm.txt};
+    \addplot[color=red] table[x=m,y=tv221]{datos/ej5/tiemposm.txt};
+    \legend{v121, v221}
+    \end{axis}
+    \end{tikzpicture}
+
+\end{center}
+
+Viendo estos últimos gráficos es notoria la diferencia. La versión v221 es enormemente más rápida que la versión v121.
+Entonces concluimos que la gran diferencia reside en el criterio de parada de las iteraciones de GRASP.
+De por si el criterio 2 es más lógico, ya que el otro depende de la cantidad de nodos y el este va más a la raiz del problema, es decir, cuánto se puede optimizar la función hasta que ya no valga la pena.
+Vale preguntarse, entonces, cuál es el criterio que da los resultados más precisos.
+Esa es una pregunta que responderemos a continuación.
+
+\subsubsection{Calidad de las respuestas}
+
+
