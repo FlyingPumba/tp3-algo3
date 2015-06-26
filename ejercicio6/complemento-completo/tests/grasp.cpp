@@ -80,7 +80,7 @@ int main() {
 
     std::chrono::time_point<std::chrono::high_resolution_clock> t1 = std::chrono::high_resolution_clock::now();
 
-    grasp(G, cidm, PRIMER_CRITERIO, PRIMER_CRITERIO, PRIMER_CRITERIO);
+    grasp(G, cidm, SEGUNDO_CRITERIO, SEGUNDO_CRITERIO, PRIMER_CRITERIO);
 
 
  //   imprimir_resultado(cidm);
