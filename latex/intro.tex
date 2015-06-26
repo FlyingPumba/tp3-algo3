@@ -1,0 +1,12 @@
+Este Trabajo Práctico se centra alrededor del problema de \textit{Conjunto Independiente Dominante Mínimo} (CIDM) que consiste en hallar un conjunto
+independiente dominante de G con mínima cardinalidad.
+
+Como se sabe\footnote{Referencia: \url{https://en.wikipedia.org/wiki/Dominating_set}}, este problema pertenece a la categoria de problemas \textbf{NP}. Esto quiere decir, entre otras cosas, que no se conoce hasta el día de hoy una solución exacta en tiempo polinomial que lo resuelva.
+
+Es en el contexto de este tipo de problemas que cobra sentido el análisis de los algoritmos de solución aproximada. Dichos algoritmos no garantizan encontrar la mejor solución (de hecho, en algunos casos pueden dar soluciones bastante malas), pero a cambio podemos obtener dicha solución en tiempo polinomial.
+
+El objetivo de este Trabajo Práctico entonces, es estudiar la factibilidad de distintos algoritmos Heurísticos para el problema CIDM. En particular nos interesa implementar y experimentar con los algoritmos \textbf{Constructivo Goloso}, de \textbf{Búsqueda Local} y \textbf{GRASP}. Este último pertenece a la categoria de algoritmos de Metaheurística ya que combina los dos primeros (Goloso y Búsqueda Local) en un algoritmo.
+
+Además, para tener tiempos de ejecución y soluciones de referencia se implementó un algoritmo que resuelve el problema de forma exacta, pero tomando tiempo exponencial.
+
+Por último, se realizaron distintas experimentaciones para comparar los tiempos de ejecución y la calidad de las soluciones de los algoritmos mencionados.
